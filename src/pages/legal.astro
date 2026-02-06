@@ -1,0 +1,45 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="特定商取引法に基づく表記 | NOUVATION">
+  <head slot="head">
+    <!-- 検索エンジンにインデックスさせない、かつリンクを辿らせない設定 -->
+    <meta name="robots" content="noindex, nofollow">
+  </head>
+
+  <Header />
+  
+  <main class="pt-24 md:pt-32 bg-[#F6F6EE] min-h-screen">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 pb-24">
+      <h1 class="text-2xl md:text-3xl font-bold text-center mb-12 text-[#231815]">
+        特定商取引法に基づく表記
+      </h1>
+
+      <div class="bg-white rounded-3xl shadow-sm overflow-hidden">
+        <!-- PC用画像 (md以上で表示) -->
+        <img 
+          src="/images/privacy.jpg" 
+          alt="" 
+          class="hidden md:block w-full h-auto"
+          role="presentation"
+        />
+        <!-- スマホ用画像 (md未満で表示) -->
+        <img 
+          src="/images/privacy_sp.jpg" 
+          alt="" 
+          class="block md:hidden w-full h-auto"
+          role="presentation"
+        />
+      </div>
+      
+      <div class="mt-8 text-center">
+        <a href="/" class="text-[#2e7d32] font-bold hover:underline">トップページへ戻る</a>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
