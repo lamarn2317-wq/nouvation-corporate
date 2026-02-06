@@ -239,36 +239,47 @@
         logoImg.style.filter = 'brightness(0) saturate(100%) invert(100%)';
       }
     } else {
-      // メニューが閉じている時は、スクロール状態に応じて
-      if (isScrolled) {
-        // ガラス背景時は黒
-        if (menuToggleEl) {
-          (menuToggleEl as HTMLElement).style.color = '#000000';
-        }
-        if (menuIconEl) {
-          (menuIconEl as Element).setAttribute('stroke', '#000000');
-        }
-        if (closeIconEl) {
-          (closeIconEl as Element).setAttribute('stroke', '#000000');
-        }
-        if (logoImg) {
-          logoImg.style.filter = 'brightness(0) saturate(100%)';
-        }
-      } else {
-        // 最上部は白
-        if (menuToggleEl) {
-          (menuToggleEl as HTMLElement).style.color = '#E5E7EB';
-        }
-        if (menuIconEl) {
-          (menuIconEl as Element).setAttribute('stroke', '#E5E7EB');
-        }
-        if (closeIconEl) {
-          (closeIconEl as Element).setAttribute('stroke', '#E5E7EB');
-        }
-        if (logoImg) {
-          logoImg.style.filter = 'brightness(0) saturate(100%) invert(100%)';
-        }
+    // メニューが閉じている時は、スクロール状態に応じて
+    if (isScrolled) {
+      // ガラス背景時は黒
+      if (menuToggleEl) {
+        (menuToggleEl as HTMLElement).style.color = '#000000';
       }
+      if (menuIconEl) {
+        (menuIconEl as Element).setAttribute('stroke', '#000000');
+      }
+      if (closeIconEl) {
+        (closeIconEl as Element).setAttribute('stroke', '#000000');
+      }
+      if (logoImg) {
+        logoImg.style.filter = 'brightness(0) saturate(100%)';
+      }
+    } else {
+      // 最上部
+      // FVがないページ（背景が白っぽいページ）の場合は黒、FVがあるページは白にする
+      const hasFV = !!document.getElementById('fv-title');
+      const color = hasFV ? '#E5E7EB' : '#000000';
+      const filter = hasFV ? 'brightness(0) saturate(100%) invert(100%)' : 'brightness(0) saturate(100%)';
+
+      if (menuToggleEl) {
+        (menuToggleEl as HTMLElement).style.color = color;
+      }
+      if (menuIconEl) {
+        (menuIconEl as Element).setAttribute('stroke', color);
+      }
+      if (closeIconEl) {
+        (closeIconEl as Element).setAttribute('stroke', color);
+      }
+      if (logoImg) {
+        logoImg.style.filter = filter;
+      }
+
+      // ナビゲーションリンクの色も更新
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        (link as HTMLElement).style.color = color;
+      });
+    }
     }
   }
 
