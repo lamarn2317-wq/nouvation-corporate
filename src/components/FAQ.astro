@@ -1,10 +1,13 @@
 ---
 // FAQ Component
+
 // 型定義を追加
 interface FAQItem {
   question: string;
   answer: string;
-  isExpandable?: boolean; // ? をつけることで、あってもなくても良い（オプショナル）にする
+  isExpandable?: boolean;
+  ctaText?: string;
+  ctaLink?: string;
 }
 
 interface FAQGroup {
@@ -31,7 +34,32 @@ const faqGroups: FAQGroup[] = [
     items: [
       {
         question: 'Q. 農業AIサポートは何ができますか？',
-        answer: 'A. 仮テキスト'
+        answer: `A. LINE×AIで、あなた専属の「営農パートナー」を雇えます。
+
+まるで友達に質問するように。あなたのLINEに、専属の営農コンサルを。
+栽培の悩みから経営相談まで、NOUVATIONのマスコットキャラクター「ノヴェル君」が即答。
+あなたの地域や作物を学習し、使えば使うほど「あなた専用」のアドバイスができるようになります。
+
+【具体的な3つのサポート】
+
+1. 現場の疑問を「2秒」で解決
+病害虫対策や栽培方法、天気予報（OpenWeather社データ）など、作業の手を止めずにその場で解決できます。
+
+2. 経営と収益の相談
+補助金情報（Jグランツ）の案内や経営改善の壁打ちに加え、「契約販売の仲介サポート（優先枠）」※も提供。作るだけでなく「売る」まで支援します。
+
+3. あなたに寄り添うメンタルケア
+ユーザーの「都道府県」や「育てている作物」を学習。名前を呼んで励ましてくれたり、たまに関西弁で話しかけたりと、孤独になりがちな農作業の精神的な支えになります。
+
+【料金・お試し】
+
+通常月額 1,980円のところ、ローンチキャンペーンにつき【先着100名様限定】で月額 1,480円（永年適用）でご利用可能です。
+※101名様以降は条件が変更となります。今後、機能拡充（画像診断等）により定価が値上げされた場合も、本枠で登録された方は現在の価格のままご利用いただけます。
+
+※契約販売は確約ではありませんが、料理人や飲食店様から「野菜の要望」があった際に、会員様へ優先的にオファー（マッチング）をご案内する仕組みです。すでに成約実績もございます。`,
+        isExpandable: true,
+        ctaText: "まずは5通無料で試してみる",
+        ctaLink: "#" // 適切なリンク先に変更してください
       }
     ]
   },
@@ -58,7 +86,28 @@ const faqGroups: FAQGroup[] = [
     items: [
       {
         question: 'Q. 企業・団体との提携やスポンサー相談はできますか？',
-        answer: 'A. 仮テキスト'
+        answer: `A. はい、可能です。事業課題に合わせた「成果につながる提携」をご提案します。
+
+NOUVATIONは単なる認知拡大にとどまらず、「貴社アカウントの資産化（フォロワー増）」や「投資意欲の高い現役層への販路開拓」など、ビジネスの目的に直結するパートナーシップを強みとしています。
+
+【NOUVATIONならではの強み】
+
+• 決裁者へのリーチ：フォロワーの96%が現役世代（18〜64歳）。特に35〜54歳の決裁権を持つ層が6割以上を占めており、投資判断ができる経営層へダイレクトに届きます。
+• 結果へのコミット：「再生数5万回保証」や広告調整を含めた運用で、確実な到達をお約束します。
+• 高い行動喚起力：平均開封率 70%・クリック率 20%超。業界平均を大きく上回る、驚異のアクティブ率の公式LINEなどを活用し、認知を「行動」へ繋げます。
+
+例：ご提案できる連携方法
+• 共同企画・共同投稿PRメニュー（Reels /貴社アカウントの資産化）
+• ストーリーでのPR（リンク設置可/即時誘導）
+• 公式LINEバナー広告（リッチメニュー/常設枠・リッチメッセージ等）
+• 農家向けアンケート／ヒアリング協力（市場調査）
+• イベント・キャンペーンの告知協力
+
+【進め方】
+具体的なプランが決まっていなくても構いません。「新商品を広めたい」「若手農家と繋がりたい」などの目的と、大まかなご予算感をお知らせいただければ、最適な企画をご提案いたします。まずは[お問い合わせフォーム]よりお気軽にご連絡ください。
+
+※現在、長期的なパートナーシップをご希望の企業様向けに、次世代の農業界を共に創る「年間スポンサー」もご相談いただけます。`,
+        isExpandable: true
       }
     ]
   }
@@ -90,13 +139,24 @@ const faqGroups: FAQGroup[] = [
                 {item.isExpandable ? (
                   <details class="group">
                     <summary class="list-none cursor-pointer text-[#2e7d32] text-sm font-bold flex items-center group-open:mb-4">
-                      <span>詳細を見る</span>
+                      <span>回答を見る</span>
                       <svg class="w-4 h-4 ml-1 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                       </svg>
                     </summary>
                     <div class="text-sm md:text-base text-[#231815] leading-loose opacity-80 whitespace-pre-wrap border-t border-[#231815]/5 pt-4">
                       {item.answer}
+                      
+                      {item.ctaText && (
+                        <div class="mt-8">
+                          <a 
+                            href={item.ctaLink}
+                            class="inline-block bg-[#2e7d32] text-white px-8 py-4 rounded-full font-bold text-sm md:text-base hover:-translate-y-0.5 transition-all shadow-md hover:shadow-lg"
+                          >
+                            {item.ctaText}
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </details>
                 ) : (
