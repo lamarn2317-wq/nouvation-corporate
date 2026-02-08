@@ -1,7 +1,18 @@
 ---
 // FAQ Component
+// 型定義を追加
+interface FAQItem {
+  question: string;
+  answer: string;
+  isExpandable?: boolean; // ? をつけることで、あってもなくても良い（オプショナル）にする
+}
 
-const faqGroups = [
+interface FAQGroup {
+  title: string;
+  items: FAQItem[];
+}
+
+const faqGroups: FAQGroup[] = [
   {
     title: "", // 全般
     items: [
@@ -28,8 +39,17 @@ const faqGroups = [
     title: "市場価格に関するQ＆A",
     items: [
       {
-        question: 'Q. 表示している価格は「高値・中値・安値」のどれですか？平均ですか？',
-        answer: 'A. 仮テキスト'
+        question: 'Q. 表示している価格は「高値・中値・安値」のどれですか？',
+        answer: `A. NOUVATIONの市場価格速報は、「市場内の相対取引」をベースにした参考価格です。
+※契約単価・生産価格を保証するものではありません。
+
+全国主要7市場の取引情報をもとに、原則として 1kgあたりの「中値」を基準に表示しています。
+
+掲載する産地は、取引量が多い主要産地を優先しています。
+なお、データ上「中値」が確認できない場合に限り、代替指標として「高値」を表示することがあります。
+
+※相対取引価格は、等級・階級（例：大玉/中玉）、荷姿、出荷ロット等の条件により変動します。`,
+        isExpandable: true
       }
     ]
   },
@@ -66,7 +86,22 @@ const faqGroups = [
             {group.items.map((item) => (
               <div class="bg-white border border-[#231815]/10 rounded-2xl p-6 md:p-8 hover:shadow-md transition-shadow">
                 <h4 class="font-bold text-[#231815] mb-3 text-base md:text-lg">{item.question}</h4>
-                <p class="text-sm md:text-base text-[#231815] leading-loose opacity-80">{item.answer}</p>
+                
+                {item.isExpandable ? (
+                  <details class="group">
+                    <summary class="list-none cursor-pointer text-[#2e7d32] text-sm font-bold flex items-center group-open:mb-4">
+                      <span>詳細を見る</span>
+                      <svg class="w-4 h-4 ml-1 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                      </svg>
+                    </summary>
+                    <div class="text-sm md:text-base text-[#231815] leading-loose opacity-80 whitespace-pre-wrap border-t border-[#231815]/5 pt-4">
+                      {item.answer}
+                    </div>
+                  </details>
+                ) : (
+                  <p class="text-sm md:text-base text-[#231815] leading-loose opacity-80 whitespace-pre-wrap">{item.answer}</p>
+                )}
               </div>
             ))}
           </div>
