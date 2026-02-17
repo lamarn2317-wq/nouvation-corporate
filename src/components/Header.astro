@@ -185,7 +185,7 @@
   }
   
   #smart-header.scrolled .nav-link {
-    color: #1F2937;
+    color: #000000;
     transition: color 0.2s ease;
   }
   
@@ -201,6 +201,11 @@
   #smart-header.scrolled #menu-toggle svg {
     stroke: #000000;
     transition: stroke 0.2s ease;
+  }
+
+  /* メニューが開いている時のバツボタンは常に白 */
+  #smart-header:has(#mobile-menu:not(.hidden)) #menu-toggle svg#close-icon {
+    stroke: #FFFFFF !important;
   }
 </style>
 
@@ -234,6 +239,7 @@
       }
       if (closeIconEl) {
         (closeIconEl as Element).setAttribute('stroke', '#FFFFFF');
+        (closeIconEl as HTMLElement).style.stroke = '#FFFFFF';
       }
       if (logoImg) {
         logoImg.style.filter = 'brightness(0) saturate(100%) invert(100%)';
@@ -254,6 +260,12 @@
       if (logoImg) {
         logoImg.style.filter = 'brightness(0) saturate(100%)';
       }
+
+      // ナビゲーションリンクの色も更新
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        (link as HTMLElement).style.color = '#000000';
+      });
     } else {
       // 最上部
       // FVがないページ（背景が白っぽいページ）の場合は黒、FVがあるページは白にする
