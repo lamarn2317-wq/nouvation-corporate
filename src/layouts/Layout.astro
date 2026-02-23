@@ -49,12 +49,12 @@ const {
     <script is:inline src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
     <script is:inline>
       const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        duration: 1.0,
+        easing: (t) => 1 - Math.pow(1 - t, 3), // cubic-out: 最初が速く、後半滑らかに減速
         direction: 'vertical',
         gestureDirection: 'vertical',
         smooth: true,
-        mouseMultiplier: 1,
+        mouseMultiplier: 1.0,
         smoothTouch: false,
         touchMultiplier: 2,
         infinite: false,
