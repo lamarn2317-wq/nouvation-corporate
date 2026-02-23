@@ -44,29 +44,6 @@ const {
     <link rel="icon" type="image/png" href="/images/favicon.png" />
     <link rel="shortcut icon" type="image/png" href="/images/favicon.png" />
     <link rel="apple-touch-icon" href="/images/favicon.png" />
-
-    <!-- Smooth Scroll (Lenis) -->
-    <script is:inline src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-    <script is:inline>
-      const lenis = new Lenis({
-        duration: 1.0,
-        easing: (t) => 1 - Math.pow(1 - t, 3), // cubic-out: 最初が速く、後半滑らかに減速
-        direction: 'vertical',
-        gestureDirection: 'vertical',
-        smooth: true,
-        mouseMultiplier: 1.0,
-        smoothTouch: false,
-        touchMultiplier: 2,
-        infinite: false,
-      })
-
-      function raf(time) {
-        lenis.raf(time)
-        requestAnimationFrame(raf)
-      }
-
-      requestAnimationFrame(raf)
-    </script>
   </head>
   <body class="font-sans overflow-x-hidden antialiased" data-theme="dark">
     <div class="noise-texture"></div>
