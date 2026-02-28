@@ -5,7 +5,7 @@
 <section data-section-theme="dark" class="relative h-screen flex items-center justify-center overflow-hidden">
   <!-- Opening Animation Overlay -->
   <div id="opening-overlay" class="fixed inset-0 z-[100] bg-[#111111] flex items-center justify-center pointer-events-none">
-    <div class="opening-line w-full h-[1px] bg-white scale-x-0 origin-left"></div>
+    <div id="opening-line" class="opening-line w-full h-[1px] bg-white scale-x-0 origin-left"></div>
   </div>
 
   <!-- Background Video -->
@@ -40,6 +40,11 @@
     animation: line-shuin 1.0s cubic-bezier(0.65, 0, 0.35, 1) forwards;
   }
 
+  .opening-line.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+  }
+
   @keyframes line-shuin {
     0% { transform: scaleX(0); }
     100% { transform: scaleX(1); }
@@ -68,30 +73,36 @@
 <script>
   function initFVAnimation() {
     const overlay = document.getElementById('opening-overlay');
+    const line = document.getElementById('opening-line');
     const title = document.getElementById('fv-title');
     const desc = document.getElementById('fv-desc');
     
-    if (!overlay || !title || !desc) return;
+    if (!overlay || !line || !title || !desc) return;
 
     // 1. 横線が走り終わるのを待つ
     setTimeout(() => {
-      // 2. 背景は黒のまま、タイトルのズームアニメーションを開始（5秒かけて徐々に大きく）
-      title.classList.add('zoom-in');
+      // 2. 線をフェードアウトさせる
+      line.classList.add('fade-out');
 
-      // 3. タイトルのズームが進んだ後（約4秒後）に背景動画をフェードイン開始
+      // 3. 線が消え始めたらすぐにタイトルのズームアニメーションを開始（背景は黒のまま）
       setTimeout(() => {
-        overlay.classList.add('fade-out');
-        
-        // 4. 背景が見え始めた後に説明文を表示
-        setTimeout(() => {
-          desc.classList.add('fade-in');
-        }, 1000);
+        title.classList.add('zoom-in');
 
-        // 完全に消えたらオーバーレイを削除
+        // 4. タイトルのズームが進んだ後（約4秒後）に背景動画をフェードイン開始
         setTimeout(() => {
-          overlay.style.display = 'none';
-        }, 2000);
-      }, 4000);
+          overlay.classList.add('fade-out');
+          
+          // 5. 背景が見え始めた後に説明文を表示
+          setTimeout(() => {
+            desc.classList.add('fade-in');
+          }, 1000);
+
+          // 完全に消えたらオーバーレイを削除
+          setTimeout(() => {
+            overlay.style.display = 'none';
+          }, 2000);
+        }, 4000);
+      }, 300); // 線のフェードアウト開始から少しだけずらしてタイトル開始
     }, 1000);
   }
 
