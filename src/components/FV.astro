@@ -10,7 +10,7 @@
 
   <!-- Background Video -->
   <video 
-    autoplay 
+    id="fv-video"
     muted 
     loop 
     playsinline
@@ -76,6 +76,7 @@
     const line = document.getElementById('opening-line');
     const title = document.getElementById('fv-title');
     const desc = document.getElementById('fv-desc');
+    const video = document.getElementById('fv-video') as HTMLVideoElement;
     
     if (!overlay || !line || !title || !desc) return;
 
@@ -93,6 +94,11 @@
         // 4. タイトルのズームが進んだ後（約4秒後）に背景動画をフェードイン開始
         setTimeout(() => {
           overlay.classList.add('fade-out');
+          
+          // 背景が見え始めるこのタイミングで動画を再生開始
+          if (video) {
+            video.play().catch(e => console.error("Video play error:", e));
+          }
           
           // 5. 背景が見え始めた後に説明文を表示
           setTimeout(() => {
