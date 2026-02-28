@@ -47,21 +47,21 @@
 
   #opening-overlay.fade-out {
     opacity: 0;
-    transition: opacity 1.5s ease-in-out;
+    transition: opacity 2s ease-in-out;
   }
 
-  /* タイトルの4秒ズームアニメーション */
+  /* タイトルの5秒ズームアニメーション */
   #fv-title.zoom-in {
     opacity: 1;
     transform: scale(1);
-    transition: opacity 2s ease-out, transform 4s ease-out;
+    transition: opacity 3s ease-out, transform 5s cubic-bezier(0.1, 0, 0.2, 1);
   }
 
-  /* 説明文のフェードイン */
+  /* 説明文のフェードイン（タイトルの後に表示） */
   #fv-desc.fade-in {
     opacity: 1;
     transform: translateY(0);
-    transition: opacity 1.5s ease-out 2s, transform 1.5s ease-out 2s;
+    transition: opacity 1.5s ease-out;
   }
 </style>
 
@@ -75,19 +75,23 @@
 
     // 1. 横線が走り終わるのを待つ
     setTimeout(() => {
-      // 2. 背景（オーバーレイ）を消し始め、動画を見えるようにする
-      overlay.classList.add('fade-out');
-      
-      // 3. タイトルのズームアニメーションを開始（4秒かけて徐々に大きく）
+      // 2. 背景は黒のまま、タイトルのズームアニメーションを開始（5秒かけて徐々に大きく）
       title.classList.add('zoom-in');
 
-      // 4. 少し遅れて説明文を表示
-      desc.classList.add('fade-in');
-
-      // 完全に消えたらオーバーレイを削除
+      // 3. タイトルのズームが進んだ後（約4秒後）に背景動画をフェードイン開始
       setTimeout(() => {
-        overlay.style.display = 'none';
-      }, 1500);
+        overlay.classList.add('fade-out');
+        
+        // 4. 背景が見え始めた後に説明文を表示
+        setTimeout(() => {
+          desc.classList.add('fade-in');
+        }, 1000);
+
+        // 完全に消えたらオーバーレイを削除
+        setTimeout(() => {
+          overlay.style.display = 'none';
+        }, 2000);
+      }, 4000);
     }, 1000);
   }
 
