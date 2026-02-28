@@ -1,21 +1,60 @@
 ---
 // Voice (User Testimonials) Component
 
-const voices = [
+const voiceGroups = [
   {
-    age: '(仮)30代・施設野菜',
-    title: '「価値の高いメディアだと感じました」',
-    text: 'NOUVATIONさまの発信内容、市場情報や制度情報だけでなく現場目線の切り口がとても分かりやすく、農業に関わる方にとって価値の高いメデイアだと感じました。'
+    id: 'shisetsu',
+    category: '(仮)30代・施設野菜',
+    items: [
+      {
+        title: '「価値の高いメディアだと感じました」',
+        text: 'NOUVATIONさまの発信内容、市場情報や制度情報だけでなく現場目線の切り口がとても分かりやすく、農業に関わる方にとって価値の高いメデイアだと感じました。'
+      },
+      {
+        title: '「経営の判断材料として活用」',
+        text: '施設野菜はコスト管理が重要ですが、NOUVATIONの情報は非常に具体的で、日々の経営判断の大きな助けになっています。'
+      },
+      {
+        title: '「若手農家の強い味方」',
+        text: '周囲に相談できる相手が少ない中、オンラインでこれだけ質の高い情報に触れられるのは本当にありがたいです。'
+      }
+    ]
   },
   {
-    age: '(仮)20代・新規就農',
-    title: '「次世代の最優先事業は農業だと思う」',
-    text: '直接農業に携わっているわけではないのですが、祖父母が小さく農業を営んでいて、情報収集の一環としてフォローさせていただきました！個人的にも次世代の最優先事業は農業だと思うのでノーベーションさんには頑張っていただきたいです！！'
+    id: 'shinki',
+    category: '(仮)20代・新規就農',
+    items: [
+      {
+        title: '「次世代の最優先事業は農業だと思う」',
+        text: '直接農業に携わっているわけではないのですが、祖父母が小さく農業を営んでいて、情報収集の一環としてフォローさせていただきました！個人的にも次世代の最優先事業は農業だと思うのでノーベーションさんには頑張っていただきたいです！！'
+      },
+      {
+        title: '「就農前の不安が解消されました」',
+        text: '農業を始めるにあたって何から手をつければいいか不安でしたが、NOUVATIONのAIサポートやメディアを通じて、具体的なイメージが持てるようになりました。'
+      },
+      {
+        title: '「SNSでの繋がりが励みに」',
+        text: 'Instagramでの発信を見ていると、同じ志を持つ仲間が全国にいると感じられ、モチベーションの維持に繋がっています。'
+      }
+    ]
   },
   {
-    age: '(仮)50代・露地栽培',
-    title: '「非常に参考になる投稿」',
-    text: '毎日、天候や市場価格などの情報を丁寧に更新されており、非常に参考になる投稿ばかりで、勉強させていただいております。'
+    id: 'roji',
+    category: '(仮)50代・露地栽培',
+    items: [
+      {
+        title: '「非常に参考になる投稿」',
+        text: '毎日、天候や市場価格などの情報を丁寧に更新されており、非常に参考になる投稿ばかりで、勉強させていただいております。'
+      },
+      {
+        title: '「ベテランでも新しい発見がある」',
+        text: '長年農業をやってきましたが、最新のテクノロジーや市場の動向についてはNOUVATIONから学ぶことが多いです。'
+      },
+      {
+        title: '「市場価格の透明性が嬉しい」',
+        text: 'これまでは不透明だった市場の動きが、グラフで可視化されることで、納得感のある取引ができるようになりました。'
+      }
+    ]
   }
 ];
 ---
@@ -28,21 +67,106 @@ const voices = [
       <p class="text-[#231815]/70">利用者の声</p>
     </div>
 
-    <!-- Voice Cards -->
-    <div class="grid md:grid-cols-3 gap-8">
-      {voices.map((voice) => (
-        <div class="bg-white border border-[#231815]/10 rounded-2xl p-8 fade-up hover:border-[#2e7d32]/40 transition-all shadow-sm">
-          <div class="flex items-center mb-6">
-            {/* <div class="w-12 h-12 bg-[#2e7d32]/20 rounded-full mr-4 flex items-center justify-center text-[#231815] font-bold text-lg">
-              {voice.age.charAt(0)}
-            </div> */}
-            <span class="font-bold text-sm text-[#231815]">{voice.age}</span>
+    <!-- Voice Groups Grid -->
+    <div class="grid md:grid-cols-3 gap-12 md:gap-8">
+      {voiceGroups.map((group) => (
+        <div class="voice-slider-container fade-up" data-group-id={group.id}>
+          <!-- Category Header with Arrows -->
+          <div class="flex items-center justify-between mb-8 px-2">
+            <button class="prev-btn p-2 text-[#2e7d32] hover:opacity-50 transition-opacity disabled:opacity-20" aria-label="前の声へ">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            
+            <span class="font-bold text-sm text-[#231815] text-center flex-1">{group.category}</span>
+            
+            <button class="next-btn p-2 text-[#2e7d32] hover:opacity-50 transition-opacity disabled:opacity-20" aria-label="次の声へ">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
           </div>
-          
-          <h3 class="font-bold text-xl mb-4 text-[#231815]">{voice.title}</h3>
-          <p class="text-sm text-[#231815] leading-loose">{voice.text}</p>
+
+          <!-- Slider Track -->
+          <div class="overflow-hidden rounded-2xl shadow-sm bg-white border border-[#231815]/10">
+            <div class="slider-track flex transition-transform duration-500 ease-out">
+              {group.items.map((item) => (
+                <div class="slider-item min-w-full p-8">
+                  <h3 class="font-bold text-xl mb-4 text-[#231815] min-h-[3.5rem] flex items-center">{item.title}</h3>
+                  <p class="text-sm text-[#231815] leading-loose opacity-80">{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Dots Indicator -->
+          <div class="flex justify-center gap-2 mt-6">
+            {group.items.map((_, index) => (
+              <div class={`dot w-1.5 h-1.5 rounded-full transition-all duration-300 ${index === 0 ? 'bg-[#2e7d32] w-4' : 'bg-[#231815]/20'}`}></div>
+            ))}
+          </div>
         </div>
       ))}
     </div>
   </div>
 </section>
+
+<script>
+  function initVoiceSliders() {
+    const containers = document.querySelectorAll('.voice-slider-container');
+    
+    containers.forEach(container => {
+      const track = container.querySelector('.slider-track') as HTMLElement;
+      const items = container.querySelectorAll('.slider-item');
+      const prevBtn = container.querySelector('.prev-btn') as HTMLButtonElement;
+      const nextBtn = container.querySelector('.next-btn') as HTMLButtonElement;
+      const dots = container.querySelectorAll('.dot');
+      
+      let currentIndex = 0;
+      const totalItems = items.length;
+
+      function updateSlider() {
+        // スライド移動
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        
+        // ボタンの状態更新
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex === totalItems - 1;
+        
+        // ドットの更新
+        dots.forEach((dot, index) => {
+          if (index === currentIndex) {
+            dot.classList.add('bg-[#2e7d32]', 'w-4');
+            dot.classList.remove('bg-[#231815]/20');
+          } else {
+            dot.classList.remove('bg-[#2e7d32]', 'w-4');
+            dot.classList.add('bg-[#231815]/20');
+          }
+        });
+      }
+
+      prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+          currentIndex--;
+          updateSlider();
+        }
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (currentIndex < totalItems - 1) {
+          currentIndex++;
+          updateSlider();
+        }
+      });
+
+      // 初期状態の反映
+      updateSlider();
+    });
+  }
+
+  // Astroのライフサイクルに合わせて初期化
+  document.addEventListener('astro:page-load', initVoiceSliders);
+  // 初回読み込み時
+  initVoiceSliders();
+</script>
