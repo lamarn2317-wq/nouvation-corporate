@@ -103,13 +103,13 @@ const voiceGroups = [
                 </div>
               ))}
             </div>
-          </div>
 
-          <!-- Dots Indicator -->
-          <div class="flex justify-center gap-2 mt-6">
-            {group.items.map((_, index) => (
-              <div class={`dot w-1.5 h-1.5 rounded-full transition-all duration-300 ${index === 0 ? 'bg-[#2e7d32] w-4' : 'bg-[#231815]/20'}`}></div>
-            ))}
+            <!-- Dots Indicator (Now inside the white box) -->
+            <div class="flex justify-center gap-2 pb-6">
+              {group.items.map((_, index) => (
+                <div class={`dot w-1.5 h-1.5 rounded-full transition-all duration-300 ${index === 0 ? 'bg-[#2e7d32] w-4' : 'bg-[#231815]/20'}`}></div>
+              ))}
+            </div>
           </div>
         </div>
       ))}
@@ -135,9 +135,9 @@ const voiceGroups = [
         // スライド移動
         track.style.transform = `translateX(-${currentIndex * 100}%)`;
         
-        // ボタンの状態更新
-        prevBtn.disabled = currentIndex === 0;
-        nextBtn.disabled = currentIndex === totalItems - 1;
+        // ボタンの状態更新 (ループするので常に有効)
+        prevBtn.disabled = false;
+        nextBtn.disabled = false;
         
         // ドットの更新
         dots.forEach((dot, index) => {
@@ -154,15 +154,19 @@ const voiceGroups = [
       prevBtn.addEventListener('click', () => {
         if (currentIndex > 0) {
           currentIndex--;
-          updateSlider();
+        } else {
+          currentIndex = totalItems - 1; // 最初の次は最後に
         }
+        updateSlider();
       });
 
       nextBtn.addEventListener('click', () => {
         if (currentIndex < totalItems - 1) {
           currentIndex++;
-          updateSlider();
+        } else {
+          currentIndex = 0; // 最後の次は最初に
         }
+        updateSlider();
       });
 
       // 初期状態の反映
