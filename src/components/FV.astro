@@ -57,9 +57,9 @@
 
   /* タイトルの5秒ズームアニメーション */
   #fv-title.zoom-in {
-    opacity: 1;
-    transform: scale(1);
-    transition: opacity 3s ease-out, transform 5s cubic-bezier(0.1, 0, 0.2, 1);
+    opacity: 1 !important;
+    transform: scale(1) !important;
+    transition: opacity 3s ease-out, transform 5s cubic-bezier(0.1, 0, 0.2, 1) !important;
   }
 
   /* 説明文のフェードイン（タイトルの後に表示） */
@@ -85,7 +85,9 @@
       line.classList.add('fade-out');
 
       // 3. 線が消え始めたらすぐにタイトルのズームアニメーションを開始（背景は黒のまま）
+      // タイミングをより早く（100ms）に調整
       setTimeout(() => {
+        title.style.opacity = "1"; // 確実に表示開始
         title.classList.add('zoom-in');
 
         // 4. タイトルのズームが進んだ後（約4秒後）に背景動画をフェードイン開始
@@ -102,7 +104,7 @@
             overlay.style.display = 'none';
           }, 2000);
         }, 4000);
-      }, 300); // 線のフェードアウト開始から少しだけずらしてタイトル開始
+      }, 100); 
     }, 1000);
   }
 
