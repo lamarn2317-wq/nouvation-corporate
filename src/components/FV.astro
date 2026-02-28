@@ -5,7 +5,7 @@
 <section data-section-theme="dark" class="relative h-screen flex items-center justify-center overflow-hidden">
   <!-- Opening Animation Overlay -->
   <div id="opening-overlay" class="absolute inset-0 z-[100] bg-[#111111] flex items-center justify-center pointer-events-none">
-    <div id="opening-line" class="opening-line w-full h-[1px] bg-[#D4FF00] scale-x-0 origin-left"></div>
+    <div id="opening-line" class="opening-line w-full h-[1px] bg-[#2ea854] scale-x-0 origin-left"></div>
   </div>
 
   <!-- Background Video -->
@@ -90,7 +90,7 @@
         title.style.opacity = "1";
         title.classList.add('zoom-in');
 
-        // 4. タイトルのズームが進んだ後（3秒後）に背景動画をフェードイン開始
+        // 4. タイトルのズームが進んだ後（1.5秒後）に背景動画をフェードイン開始
         setTimeout(() => {
           overlay.classList.add('fade-out');
           
@@ -106,9 +106,9 @@
           setTimeout(() => {
             overlay.style.display = 'none';
           }, 1500);
-        }, 3000); // 4秒から3秒に短縮
+        }, 1500); // 3000msから1500msに大幅短縮
       }, 100); 
-    }, 800); // 1000msから800msに短縮
+    }, 600); // 800msから600msに短縮
   }
 
   // Astroの遷移対応
