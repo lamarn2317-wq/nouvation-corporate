@@ -3,6 +3,11 @@
 ---
 
 <section data-section-theme="dark" class="relative h-screen flex items-center justify-center overflow-hidden">
+  <!-- Opening Animation Overlay -->
+  <div id="opening-overlay" class="fixed inset-0 z-[100] bg-[#111111] flex items-center justify-center pointer-events-none">
+    <div class="opening-line w-full h-[1px] bg-white scale-x-0 origin-left"></div>
+  </div>
+
   <!-- Background Video -->
   <video 
     autoplay 
@@ -19,27 +24,66 @@
   <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#111111]"></div>
   
   <!-- Content -->
-  <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
+  <div id="fv-content" class="relative z-10 text-center px-4 max-w-5xl mx-auto opacity-0">
     <h1 id="fv-title" class="font-serif font-bold text-white tracking-wider opacity-0 translate-y-6 transition-all duration-[3000ms] ease-out block text-[2.8rem] md:text-[4.5rem]" style="line-height: 1.2; font-family: 'Shippori Mincho', 'YuMincho', 'Yu Mincho', 'Hiragino Mincho ProN', 'MS PMincho', serif;" >
       農業界に、情報で革新を。
     </h1>
-    <p class="text-base md:text-2xl font-medium text-[#E5E7EB] leading-loose mt-6">
+    <p id="fv-desc" class="text-base md:text-2xl font-medium text-[#E5E7EB] leading-loose mt-6 opacity-0 translate-y-4 transition-all duration-[2000ms] delay-500">
       農家が報われる社会を、情報とつながりで実現する<br class="hidden md:block" />
       <span class="text-white">次世代の農業インフラメディア</span>
     </p>
   </div>
 </section>
 
+<style>
+  .opening-line {
+    animation: line-shuin 1.0s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  }
+
+  @keyframes line-shuin {
+    0% { transform: scaleX(0); }
+    100% { transform: scaleX(1); }
+  }
+
+  #opening-overlay.fade-out {
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+  }
+
+  #fv-content.fade-in {
+    opacity: 1;
+    transition: opacity 1.5s ease-out;
+  }
+</style>
+
 <script>
   function initFVAnimation() {
+    const overlay = document.getElementById('opening-overlay');
+    const content = document.getElementById('fv-content');
     const title = document.getElementById('fv-title');
-    if (!title) return;
+    const desc = document.getElementById('fv-desc');
+    
+    if (!overlay || !content || !title || !desc) return;
 
-    // ページ読み込みから少し遅らせてアニメーション開始
+    // 1. 線が走り終わるのを待ってからオーバーレイをフェードアウト
     setTimeout(() => {
-      title.classList.remove('opacity-0', 'translate-y-6'); // HTMLの数値と合わせる
-      title.classList.add('opacity-100', 'translate-y-0');
-    }, 1500);
+      overlay.classList.add('fade-out');
+      
+      // 2. コンテンツ全体をフェードイン
+      setTimeout(() => {
+        content.classList.add('fade-in');
+        overlay.style.display = 'none';
+
+        // 3. タイトルと説明文のアニメーションを開始
+        setTimeout(() => {
+          title.classList.remove('opacity-0', 'translate-y-6');
+          title.classList.add('opacity-100', 'translate-y-0');
+          
+          desc.classList.remove('opacity-0', 'translate-y-4');
+          desc.classList.add('opacity-100', 'translate-y-0');
+        }, 300);
+      }, 600);
+    }, 1200);
   }
 
   // Astroの遷移対応
