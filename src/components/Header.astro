@@ -25,7 +25,7 @@
           href="https://line.me/R/ti/p/@356rpise" 
           target="_blank"
           rel="noopener noreferrer"
-          class="px-6 py-3 bg-[#2e7d32] text-white border-2 border-[#2e7d32] text-sm font-bold rounded-full transition-all hover:-translate-y-0.5 hover:bg-transparent hover:text-[#2e7d32] focus:outline-none min-h-[44px] flex items-center justify-center"
+          class="line-btn px-6 py-3 text-white text-sm font-bold rounded-full transition-all hover:-translate-y-0.5 focus:outline-none min-h-[44px] flex items-center justify-center"
           aria-label="LINE公式アカウントに登録する"
         >
           LINE登録
@@ -65,7 +65,7 @@
             href="https://line.me/R/ti/p/@356rpise" 
             target="_blank"
             rel="noopener noreferrer"
-            class="block w-full text-center px-6 py-4 bg-[#2e7d32] text-white text-base font-bold rounded-full hover:bg-[#2e7d32]/90 transition-colors"
+            class="line-btn block w-full text-center px-6 py-4 text-white text-base font-bold rounded-full"
           >
             LINE登録
           </a>
@@ -210,6 +210,21 @@
   /* メニューが開いている時のバツボタンは常に白 */
   #smart-header:has(#mobile-menu:not(.hidden)) #menu-toggle svg#close-icon {
     stroke: #FFFFFF !important;
+  }
+
+  /* LINE Button Custom Styles */
+  .line-btn {
+    background: linear-gradient(180deg, #2ea854 0%, #45d468 50%, #7aedaa 100%);
+    border: 1.5px solid rgba(130, 240, 160, 0.55);
+    box-shadow: 0 0 14px rgba(80, 220, 120, 0.45),
+                0 0 30px rgba(80, 220, 120, 0.18);
+    transition: all 0.3s ease;
+  }
+
+  .line-btn:hover {
+    box-shadow: 0 0 20px rgba(80, 220, 120, 0.65),
+                0 0 45px rgba(80, 220, 120, 0.28);
+    transform: translateY(-2px);
   }
 </style>
 
