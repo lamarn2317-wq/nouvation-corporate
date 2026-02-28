@@ -52,21 +52,21 @@
 
   #opening-overlay.fade-out {
     opacity: 0;
-    transition: opacity 2s ease-in-out;
+    transition: opacity 1.5s ease-in-out;
   }
 
-  /* タイトルの5秒ズームアニメーション */
+  /* タイトルのズームアニメーション */
   #fv-title.zoom-in {
     opacity: 1 !important;
     transform: scale(1) !important;
-    transition: opacity 3s ease-out, transform 5s cubic-bezier(0.1, 0, 0.2, 1) !important;
+    transition: opacity 2s ease-out, transform 4s cubic-bezier(0.1, 0, 0.2, 1) !important;
   }
 
-  /* 説明文のフェードイン（タイトルの後に表示） */
+  /* 説明文のフェードイン */
   #fv-desc.fade-in {
     opacity: 1;
     transform: translateY(0);
-    transition: opacity 1.5s ease-out;
+    transition: opacity 1.2s ease-out;
   }
 </style>
 
@@ -80,22 +80,20 @@
     
     if (!overlay || !line || !title || !desc) return;
 
-    // 1. 横線が走り終わるのを待つ
+    // 1. 横線が走り終わるのを待つ（少し早める）
     setTimeout(() => {
       // 2. 線をフェードアウトさせる
       line.classList.add('fade-out');
 
-      // 3. 線が消え始めたらすぐにタイトルのズームアニメーションを開始（背景は黒のまま）
-      // タイミングをより早く（100ms）に調整
+      // 3. 線が消え始めたらすぐにタイトルのズームアニメーションを開始
       setTimeout(() => {
-        title.style.opacity = "1"; // 確実に表示開始
+        title.style.opacity = "1";
         title.classList.add('zoom-in');
 
-        // 4. タイトルのズームが進んだ後（約4秒後）に背景動画をフェードイン開始
+        // 4. タイトルのズームが進んだ後（3秒後）に背景動画をフェードイン開始
         setTimeout(() => {
           overlay.classList.add('fade-out');
           
-          // 背景が見え始めるこのタイミングで動画を再生開始
           if (video) {
             video.play().catch(e => console.error("Video play error:", e));
           }
@@ -103,15 +101,14 @@
           // 5. 背景が見え始めた後に説明文を表示
           setTimeout(() => {
             desc.classList.add('fade-in');
-          }, 1000);
+          }, 800);
 
-          // 完全に消えたらオーバーレイを削除
           setTimeout(() => {
             overlay.style.display = 'none';
-          }, 2000);
-        }, 4000);
+          }, 1500);
+        }, 3000); // 4秒から3秒に短縮
       }, 100); 
-    }, 1000);
+    }, 800); // 1000msから800msに短縮
   }
 
   // Astroの遷移対応
