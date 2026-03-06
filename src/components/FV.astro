@@ -11,9 +11,11 @@
   <!-- Background Video -->
   <video 
     id="fv-video"
+    autoplay
     muted 
     loop 
     playsinline
+    poster="/images/fv_poster.jpg"
     class="absolute inset-0 w-full h-full object-cover"
     aria-label="農業の風景"
   >
@@ -85,7 +87,15 @@
           overlay.classList.add('fade-out');
           
           if (video) {
-            video.play().catch(e => console.error("Video play error:", e));
+            // 再生を確実に実行するための処理
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+              playPromise.catch(e => {
+                console.warn("Autoplay was prevented, retrying with muted...", e);
+                video.muted = true;
+                video.play().catch(err => console.error("Final play error:", err));
+              });
+            }
           }
           
           // 5. 背景が見え始めた後に説明文を表示
