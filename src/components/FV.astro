@@ -82,12 +82,21 @@
     
     if (!overlay || !line || !title || !desc) return;
 
+    // 1. 横線が走り終わるのを待つ
+    setTimeout(() => {
+      // 2. 線をフェードアウトさせる
+      line.classList.add('fade-out');
+
+      // 3. 線が消え始めたらすぐにタイトルのズームアニメーションを開始
+      setTimeout(() => {
+        title.style.opacity = "1";
+        title.classList.add('zoom-in');
+
         // 4. タイトルのズームが進んだ後（0.8秒後）に背景動画をフェードイン開始
         setTimeout(() => {
           overlay.classList.add('fade-out');
           
           if (video) {
-            // 再生を確実に実行するための処理
             const playPromise = video.play();
             if (playPromise !== undefined) {
               playPromise.catch(e => {
@@ -106,9 +115,9 @@
           setTimeout(() => {
             overlay.style.display = 'none';
           }, 1200);
-        }, 800); // 1500msから800msにさらに短縮
+        }, 800);
       }, 100); 
-    }, 400); // 600msから400msに短縮
+    }, 400);
   }
 
   // Astroの遷移対応
