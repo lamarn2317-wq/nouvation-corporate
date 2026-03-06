@@ -59,11 +59,7 @@ const voiceGroups = [
 ];
 ---
 
-<section data-section-theme="light" id="voice" class="pt-16 md:pt-24 pb-24 md:pb-32 bg-[#F0ECDE] relative">
-  <!-- Neon Edge Lines -->
-  <div class="hero-line hero-line--left"></div>
-  <div class="hero-line hero-line--right"></div>
-  
+<section data-section-theme="light" id="voice" class="pt-16 md:pt-24 pb-24 md:pb-32 bg-[#F0ECDE]">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
     <!-- Section Title -->
     <div class="text-center mb-20 fade-up">
@@ -182,62 +178,7 @@ const voiceGroups = [
   document.addEventListener('astro:page-load', initVoiceSliders);
   // 初回読み込み時
   initVoiceSliders();
-
-  // Neon Edge Lines Animation
-  function initNeonLines() {
-    const section = document.getElementById('voice');
-    const lines = section?.querySelectorAll('.hero-line');
-
-    if (!section || !lines?.length) return;
-
-    const updateLines = () => {
-      const rect = section.getBoundingClientRect();
-      const sectionH = rect.height;
-      
-      // セクションが画面内にある時のみ計算
-      // 画面上端からの距離に基づいて進捗を計算 (0 to 1)
-      const progress = Math.max(0, Math.min(1, -rect.top / (sectionH - window.innerHeight * 0.5)));
-      
-      lines.forEach((line) => {
-        (line as HTMLElement).style.height = `${progress * 100}%`;
-      });
-    };
-
-    window.addEventListener('scroll', updateLines, { passive: true });
-    updateLines();
-  }
-
-  document.addEventListener('astro:page-load', initNeonLines);
-  initNeonLines();
 </script>
 
 <style>
-  /* --- Neon Edge Lines --- */
-  .hero-line {
-    position: absolute;
-    top: 0;
-    width: 4px;
-    height: 0%;
-    z-index: 3;
-    pointer-events: none;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(120, 240, 160, 0.2) 15%,
-      rgba(120, 240, 160, 0.7) 50%,
-      #a0ffb4 85%,
-      #b8ffc8 100%
-    );
-    border-radius: 0 0 2px 2px;
-    box-shadow: 0 0 8px rgba(120, 240, 160, 0.6),
-                0 0 20px rgba(120, 240, 160, 0.3);
-  }
-
-  .hero-line--left {
-    left: clamp(16px, 4vw, 48px);
-  }
-
-  .hero-line--right {
-    right: clamp(16px, 4vw, 48px);
-  }
 </style>
