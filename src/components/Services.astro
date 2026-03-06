@@ -198,14 +198,20 @@ const marketPrices = await getMarketPrices();
           />
         </div>
         
-        <div class="mt-8 flex justify-center">
+        <div class="mt-8">
           <a 
             href="https://line.me/R/ti/p/@356rpise" 
             target="_blank"
             rel="noopener noreferrer"
-            class="line-btn px-10 py-4 text-white text-lg font-bold rounded-full transition-all hover:-translate-y-1 focus:outline-none flex items-center justify-center shadow-lg"
+            class="line-btn block w-full p-6 rounded-2xl text-center group focus:outline-none min-h-[44px] flex flex-col items-center justify-center text-white"
+            aria-label="公式LINEアカウントでAIサポートを無料で5通使ってみる"
           >
-            無料で5通使ってみる
+            <div class="flex items-center justify-center font-bold text-lg mb-2">            
+              <span>無料で5通使ってみる</span>
+            </div>
+            <span class="block text-xs text-white/80 group-hover:text-white font-bold transition-colors">
+              公式LINEで今すぐ体験
+            </span>
           </a>
         </div>
       </div>
