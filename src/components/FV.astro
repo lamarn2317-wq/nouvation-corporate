@@ -35,9 +35,29 @@
       <span class="text-white">次世代の農業インフラメディア</span>
     </p>
   </div>
+
+  <!-- Scroll Indicator -->
+  <div id="fv-scroll" class="absolute bottom-10 left-1/2 -translate-x-1/2 z-[110] flex flex-col items-center opacity-0 transition-opacity duration-1000">
+    <span class="text-white/60 text-[10px] uppercase tracking-[0.2em] mb-2 font-display">Scroll</span>
+    <div class="w-[1px] h-16 bg-white/20 relative overflow-hidden">
+      <div class="scroll-line-inner absolute top-0 left-0 w-full h-full bg-white"></div>
+    </div>
+  </div>
 </section>
 
 <style>
+  /* ... existing styles ... */
+  /* スクロール線の動くアニメーション */
+  .scroll-line-inner {
+    animation: scroll-line-anim 2.5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+
+  @keyframes scroll-line-anim {
+    0% { transform: translateY(-100%); }
+    50% { transform: translateY(0); }
+    100% { transform: translateY(100%); }
+  }
+</style>
   .opening-line {
     animation: line-shuin 1.0s cubic-bezier(0.65, 0, 0.35, 1) forwards;
   }
@@ -78,6 +98,7 @@
     const line = document.getElementById('opening-line');
     const title = document.getElementById('fv-title');
     const desc = document.getElementById('fv-desc');
+    const scroll = document.getElementById('fv-scroll');
     const video = document.getElementById('fv-video') as HTMLVideoElement;
     
     if (!overlay || !line || !title || !desc) return;
@@ -110,6 +131,7 @@
           // 5. 背景が見え始めた後に説明文を表示
           setTimeout(() => {
             desc.classList.add('fade-in');
+            if (scroll) scroll.style.opacity = "1";
           }, 600);
 
           setTimeout(() => {
