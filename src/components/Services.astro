@@ -339,17 +339,20 @@ const marketPrices = await getMarketPrices();
         p.item === selectedItem && p.market === selectedMarket
       );
 
-      // 日付順にソート（重要：2025-12-08などの形式に対応）
+      // 日付順にソート
       filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-      // 直近1週間（最新の日付から7日前まで）に絞り込む
-      if (filtered.length > 0) {
-        const lastDate = new Date(filtered[filtered.length - 1].date);
-        const oneWeekAgo = new Date(lastDate);
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-        
-        filtered = filtered.filter(p => new Date(p.date) >= oneWeekAgo);
-      }
+      // 表示基準日を「今日」に設定
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const oneWeekAgo = new Date(today);
+      oneWeekAgo.setDate(today.getDate() - 7);
+
+      // データの絞り込み（今日から7日前まで）
+      filtered = filtered.filter(p => {
+        const d = new Date(p.date);
+        return d >= oneWeekAgo && d <= today;
+      });
 
       if (chart) {
         chart.destroy();
@@ -369,11 +372,12 @@ const marketPrices = await getMarketPrices();
             borderWidth: 3,
             fill: true,
             tension: 0.4,
-            pointRadius: filtered.length > 30 ? 0 : 3,
+            pointRadius: 4,
             pointHoverRadius: 6,
             pointBackgroundColor: '#2e7d32',
             pointBorderColor: '#fff',
             pointBorderWidth: 2,
+            spanGaps: true, // データが欠けている日（休日）を線で繋ぐ
           }]
         } as any,
         options: {
@@ -405,6 +409,8 @@ const marketPrices = await getMarketPrices();
             x: {
               type: 'time',
               time: { unit: 'day', displayFormats: { day: 'M/d' } },
+              min: oneWeekAgo.getTime(), // グラフの左端を7日前に固定
+              max: today.getTime(),      // グラフの右端を今日に固定
               grid: { display: false },
               ticks: { font: { size: 10, family: 'monospace' }, color: '#231815' }
             },
