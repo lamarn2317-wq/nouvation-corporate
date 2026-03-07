@@ -68,9 +68,9 @@ const voiceGroups = [
     </div>
 
     <!-- Voice Groups Grid -->
-    <div class="grid md:grid-cols-3 gap-12 md:gap-8">
+    <div class="grid md:grid-cols-3 gap-12 md:gap-8 justify-items-center">
       {voiceGroups.map((group) => (
-        <div class="voice-slider-container fade-up" data-group-id={group.id}>
+        <div class="voice-slider-container fade-up w-full max-w-[380px] md:max-w-none" data-group-id={group.id}>
           <!-- Slider Track Container -->
           <div class="overflow-hidden rounded-2xl shadow-sm bg-white border border-[#231815]/10 flex flex-col h-[420px]">
             <!-- Category Header with Arrows (Now inside the white box) -->
