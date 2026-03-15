@@ -16,11 +16,18 @@
     loop 
     playsinline
     poster="/images/fv_poster.jpg"
-    class="absolute inset-0 w-full h-full object-cover"
+    class="absolute inset-0 w-full h-full object-cover hidden md:block"
     aria-label="農業の風景"
   >
     <source src="  https://pgwepetbondrqvwflaaw.supabase.co/storage/v1/object/public/nouvation/fv_v4.mp4" type="video/mp4" />
   </video>
+
+  <!-- Background GIF (SP only) -->
+<img
+src="https://pgwepetbondrqvwflaaw.supabase.co/storage/v1/object/public/nouvation/fv_sp.gif"
+alt="農業の風景"
+class="absolute inset-0 w-full h-full object-cover block md:hidden"
+/>
   
   <!-- Background Layers -->
   <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#111111]"></div>
@@ -116,7 +123,7 @@
         setTimeout(() => {
           overlay.classList.add('fade-out');
           
-          if (video) {
+          if (video && window.innerWidth >= 768) {
             const playPromise = video.play();
             if (playPromise !== undefined) {
               playPromise.catch(e => {
