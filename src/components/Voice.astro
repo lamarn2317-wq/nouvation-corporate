@@ -1,5 +1,5 @@
 ---
-// Voice (User Testimonials) Component
+// Voice (User Testimonials) Component - 3D Carousel
 
 const voiceGroups = [
   {
@@ -67,49 +67,51 @@ const voiceGroups = [
       <p class="text-[#231815]/70">利用者の声</p>
     </div>
 
-    <!-- Voice Groups Grid -->
+    <!-- 3D Carousel Voice Groups -->
     <div class="grid md:grid-cols-3 gap-12 md:gap-8 justify-items-center">
       {voiceGroups.map((group) => (
-        <div class="voice-slider-container fade-up w-full max-w-[380px] md:max-w-none" data-group-id={group.id}>
-          <!-- Slider Track Container -->
-          <div class="overflow-hidden rounded-2xl shadow-sm bg-white border border-[#231815]/10 flex flex-col h-[420px]">
-            <!-- Category Header with Arrows (Now inside the white box) -->
-            <div class="flex items-center justify-between pt-6 px-4">
-              <button class="prev-btn p-2 text-[#2e7d32] hover:opacity-50 transition-opacity disabled:opacity-20" aria-label="前の声へ">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-              </button>
-              
-              <span class="font-bold text-lg text-[#231815] text-center flex-1">{group.id === 'shisetsu' ? '施設野菜' : group.id === 'shinki' ? '新規就農' : '露地栽培'}</span>
-              
-              <button class="next-btn p-2 text-[#2e7d32] hover:opacity-50 transition-opacity disabled:opacity-20" aria-label="次の声へ">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-              </button>
-            </div>
+        <div class="voice-carousel fade-up w-full max-w-[380px] md:max-w-none" data-group-id={group.id}>
+          <!-- Category Header -->
+          <div class="flex items-center justify-between mb-4 px-2">
+            <button class="carousel-prev p-2 text-[#2e7d32] hover:opacity-50 transition-opacity" aria-label="前の声へ">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
 
-            <!-- Age Label (Static for now as per request) -->
-            <div class="pt-4 px-8 text-center">
-              <span class="text-sm font-bold text-[#231815]/60">{group.category.split('・')[0]}</span>
-            </div>
+            <span class="font-bold text-lg text-[#231815] text-center flex-1">{group.id === 'shisetsu' ? '施設野菜' : group.id === 'shinki' ? '新規就農' : '露地栽培'}</span>
 
-            <div class="slider-track flex transition-transform duration-500 ease-out flex-1">
-              {group.items.map((item) => (
-                <div class="slider-item min-w-full p-8 pt-4 overflow-y-auto scrollbar-thin scrollbar-thumb-[#2e7d32]/20">
-                  <h3 class="font-bold text-xl mb-4 text-[#231815] min-h-[3.5rem] flex items-center justify-center text-center">{item.title}</h3>
-                  <p class="text-sm text-[#231815] leading-loose opacity-80">{item.text}</p>
+            <button class="carousel-next p-2 text-[#2e7d32] hover:opacity-50 transition-opacity" aria-label="次の声へ">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <!-- 3D Scene -->
+          <div class="carousel-scene">
+            <div class="carousel-rotor">
+              {group.items.map((item, index) => (
+                <div class="carousel-card" data-index={index}>
+                  <div class="carousel-card-inner">
+                    <div class="pt-4 px-6 text-center">
+                      <span class="text-sm font-bold text-[#231815]/60">{group.category.split('・')[0]}</span>
+                    </div>
+                    <div class="p-6 pt-3">
+                      <h3 class="font-bold text-xl mb-4 text-[#231815] min-h-[3.5rem] flex items-center justify-center text-center">{item.title}</h3>
+                      <p class="text-sm text-[#231815] leading-loose opacity-80">{item.text}</p>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
+          </div>
 
-            <!-- Dots Indicator (Now inside the white box) -->
-            <div class="flex justify-center gap-2 pb-6">
-              {group.items.map((_, index) => (
-                <div class={`dot w-1.5 h-1.5 rounded-full transition-all duration-300 ${index === 0 ? 'bg-[#2e7d32] w-4' : 'bg-[#231815]/20'}`}></div>
-              ))}
-            </div>
+          <!-- Dots -->
+          <div class="flex justify-center gap-2 mt-4">
+            {group.items.map((_, index) => (
+              <div class={`carousel-dot w-1.5 h-1.5 rounded-full transition-all duration-300 ${index === 0 ? 'bg-[#2e7d32] w-4' : 'bg-[#231815]/20'}`}></div>
+            ))}
           </div>
         </div>
       ))}
@@ -117,29 +119,101 @@ const voiceGroups = [
   </div>
 </section>
 
-<script>
-  function initVoiceSliders() {
-    const containers = document.querySelectorAll('.voice-slider-container');
-    
-    containers.forEach(container => {
-      const track = container.querySelector('.slider-track') as HTMLElement;
-      const items = container.querySelectorAll('.slider-item');
-      const prevBtn = container.querySelector('.prev-btn') as HTMLButtonElement;
-      const nextBtn = container.querySelector('.next-btn') as HTMLButtonElement;
-      const dots = container.querySelectorAll('.dot');
-      
-      let currentIndex = 0;
-      const totalItems = items.length;
+<style>
+  .carousel-scene {
+    perspective: 800px;
+    height: 380px;
+    overflow: visible;
+    position: relative;
+  }
 
-      function updateSlider() {
-        // スライド移動
-        track.style.transform = `translateX(-${currentIndex * 100}%)`;
-        
-        // ボタンの状態更新 (ループするので常に有効)
-        prevBtn.disabled = false;
-        nextBtn.disabled = false;
-        
-        // ドットの更新
+  .carousel-rotor {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .carousel-card {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .carousel-card-inner {
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid rgba(35, 24, 21, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Active card */
+  .carousel-card[data-state="active"] {
+    transform: translateX(0) scale(1) rotateY(0deg);
+    opacity: 1;
+    z-index: 3;
+  }
+
+  /* Card going left (previous) */
+  .carousel-card[data-state="left"] {
+    transform: translateX(-65%) scale(0.8) rotateY(35deg);
+    opacity: 0.4;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Card going right (next) */
+  .carousel-card[data-state="right"] {
+    transform: translateX(65%) scale(0.8) rotateY(-35deg);
+    opacity: 0.4;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Hidden cards */
+  .carousel-card[data-state="hidden"] {
+    transform: translateX(0) scale(0.6) rotateY(0deg);
+    opacity: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  function initVoiceCarousels() {
+    const carousels = document.querySelectorAll('.voice-carousel');
+
+    carousels.forEach(carousel => {
+      const cards = carousel.querySelectorAll('.carousel-card');
+      const prevBtn = carousel.querySelector('.carousel-prev') as HTMLButtonElement;
+      const nextBtn = carousel.querySelector('.carousel-next') as HTMLButtonElement;
+      const dots = carousel.querySelectorAll('.carousel-dot');
+
+      let currentIndex = 0;
+      const totalCards = cards.length;
+
+      function updateCarousel() {
+        cards.forEach((card, index) => {
+          const el = card as HTMLElement;
+          if (index === currentIndex) {
+            el.setAttribute('data-state', 'active');
+          } else if (index === (currentIndex - 1 + totalCards) % totalCards) {
+            el.setAttribute('data-state', 'left');
+          } else if (index === (currentIndex + 1) % totalCards) {
+            el.setAttribute('data-state', 'right');
+          } else {
+            el.setAttribute('data-state', 'hidden');
+          }
+        });
+
         dots.forEach((dot, index) => {
           if (index === currentIndex) {
             dot.classList.add('bg-[#2e7d32]', 'w-4');
@@ -151,34 +225,21 @@ const voiceGroups = [
         });
       }
 
-      prevBtn.addEventListener('click', () => {
-        if (currentIndex > 0) {
-          currentIndex--;
-        } else {
-          currentIndex = totalItems - 1; // 最初の次は最後に
-        }
-        updateSlider();
+      prevBtn?.addEventListener('click', () => {
+        currentIndex = (currentIndex - 1 + totalCards) % totalCards;
+        updateCarousel();
       });
 
-      nextBtn.addEventListener('click', () => {
-        if (currentIndex < totalItems - 1) {
-          currentIndex++;
-        } else {
-          currentIndex = 0; // 最後の次は最初に
-        }
-        updateSlider();
+      nextBtn?.addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % totalCards;
+        updateCarousel();
       });
 
-      // 初期状態の反映
-      updateSlider();
+      // 初期状態
+      updateCarousel();
     });
   }
 
-  // Astroのライフサイクルに合わせて初期化
-  document.addEventListener('astro:page-load', initVoiceSliders);
-  // 初回読み込み時
-  initVoiceSliders();
+  document.addEventListener('astro:page-load', initVoiceCarousels);
+  initVoiceCarousels();
 </script>
-
-<style>
-</style>
