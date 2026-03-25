@@ -3,10 +3,10 @@
 ---
 
 <footer class="bg-[#0a0a0a] pt-20 pb-8 relative overflow-hidden">
-  <!-- 土の中がさりげなく見えるグラデーション -->
-  <div class="absolute inset-0 bg-gradient-to-b from-[#1a1208]/40 via-[#0a0a0a] to-[#0d0906]/30 pointer-events-none"></div>
-  <!-- 5秒に1回だけ薄く土の質感が浮かぶ -->
-  <div class="soil-reveal absolute inset-0 pointer-events-none bg-gradient-to-br from-[#2a1a0a]/0 via-[#3d2b1a]/0 to-[#1a1008]/0"></div>
+  <!-- 常時うっすら土の色 -->
+  <div class="absolute inset-0 bg-gradient-to-b from-[#1a1208] via-[#0f0a05] to-[#0a0a0a] pointer-events-none"></div>
+  <!-- 5秒に1回だけ土の質感がふわっと浮かぶ -->
+  <div class="soil-reveal absolute inset-0 pointer-events-none"></div>
 
   <!-- 微生物パーティクル -->
   <div class="absolute inset-0 pointer-events-none">
@@ -159,10 +159,14 @@
   }
 
   @keyframes soil-pulse {
-    0%, 100% { background: linear-gradient(to bottom right, rgba(42,26,10,0), rgba(61,43,26,0), rgba(26,16,8,0)); }
-    58% { background: linear-gradient(to bottom right, rgba(42,26,10,0), rgba(61,43,26,0), rgba(26,16,8,0)); }
-    62% { background: linear-gradient(to bottom right, rgba(42,26,10,0.12), rgba(61,43,26,0.08), rgba(26,16,8,0.1)); }
-    68% { background: linear-gradient(to bottom right, rgba(42,26,10,0.12), rgba(61,43,26,0.08), rgba(26,16,8,0.1)); }
-    75% { background: linear-gradient(to bottom right, rgba(42,26,10,0), rgba(61,43,26,0), rgba(26,16,8,0)); }
+    0%, 55% { opacity: 0; }
+    62% { opacity: 1; }
+    70% { opacity: 1; }
+    80% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  .soil-reveal {
+    background: radial-gradient(ellipse at 50% 50%, rgba(80,50,20,0.35) 0%, rgba(50,30,10,0.2) 40%, transparent 70%);
   }
 </style>
