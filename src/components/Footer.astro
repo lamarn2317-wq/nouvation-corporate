@@ -132,28 +132,20 @@
     width: var(--size);
     height: var(--size);
     border-radius: 50%;
-    background: var(--glow-color);
+    background: #ffffff;
     box-shadow:
-      0 0 4px var(--glow-color),
-      0 0 8px var(--glow-color),
-      0 0 16px var(--glow-color),
-      0 0 32px var(--glow-color);
-    animation: microbe-float var(--duration) ease-in-out var(--delay) infinite,
-               microbe-pulse var(--duration) ease-in-out var(--delay) infinite;
+      0 0 4px rgba(255,255,255,0.6),
+      0 0 12px rgba(255,255,255,0.3),
+      0 0 24px rgba(255,255,255,0.15);
+    animation: firefly var(--duration) ease-in-out var(--delay) infinite;
     opacity: 0;
   }
 
-  @keyframes microbe-float {
-    0%, 100% { transform: translate(0, 0); }
-    25% { transform: translate(8px, -12px); }
-    50% { transform: translate(-5px, -8px); }
-    75% { transform: translate(10px, 5px); }
-  }
-
-  @keyframes microbe-pulse {
-    0%, 100% { opacity: 0.2; }
-    30% { opacity: 0.8; }
+  @keyframes firefly {
+    0%, 100% { opacity: 0; }
+    40% { opacity: 0.9; }
     50% { opacity: 1; }
-    70% { opacity: 0.6; }
+    60% { opacity: 0.8; }
+    80% { opacity: 0; }
   }
 </style>
