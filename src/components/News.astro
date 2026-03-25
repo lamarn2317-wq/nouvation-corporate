@@ -17,13 +17,17 @@ const getCategoryStyle = (category: string) => {
 };
 ---
 
-<section data-section-theme="light" id="news" class="py-10 bg-[#F6F6EE]">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+<section data-section-theme="dark" id="news" class="news-section py-10 relative overflow-hidden">
+  <!-- 土のテクスチャ背景 -->
+  <div class="absolute inset-0 news-soil-bg"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-[#111111] via-transparent to-[#231815]/80"></div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
     <div class="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-10">
       <!-- Title -->
       <div class="flex items-center flex-shrink-0">
-        <h2 class="text-2xl font-bold text-[#231815] tracking-wider mr-4"><span class="font-maru">NEWS</span></h2>
-        <span class="text-xs text-[#231815]/70">お知らせ</span>
+        <h2 class="text-2xl font-bold text-white tracking-wider mr-4"><span class="font-maru">NEWS</span></h2>
+        <span class="text-xs text-white/50">お知らせ</span>
       </div>
 
       <!-- News Cards -->
@@ -33,20 +37,20 @@ const getCategoryStyle = (category: string) => {
           return (
             <a
               href={item.link || "#"}
-              class={`news-card group flex items-center justify-between gap-4 border-l-3 ${style.border} bg-white rounded-r-lg px-4 py-3 transition-all duration-300 hover:translate-x-1 hover:border-l-[#D4FF00] focus:outline-none`}
+              class={`news-card group flex items-center justify-between gap-4 border-l-3 ${style.border} bg-white/5 backdrop-blur-sm rounded-r-lg px-4 py-3 transition-all duration-300 hover:translate-x-1 hover:bg-white/10 hover:border-l-[#D4FF00] focus:outline-none`}
               aria-label={`${item.title}の詳細を見る`}
             >
               <div class="flex items-center gap-3 min-w-0">
-                <time class="text-xs text-[#231815]/40 font-mono whitespace-nowrap flex-shrink-0">{item.date}</time>
+                <time class="text-xs text-white/40 font-mono whitespace-nowrap flex-shrink-0">{item.date}</time>
                 <span class={`text-[10px] font-bold px-2.5 py-0.5 rounded-full whitespace-nowrap flex-shrink-0 ${style.badge}`}>
                   {item.category}
                 </span>
-                <span class="text-sm font-bold text-[#231815] group-hover:text-[#2e7d32] transition-colors truncate">
+                <span class="text-sm font-bold text-white/90 group-hover:text-[#D4FF00] transition-colors truncate">
                   {item.title}
                 </span>
               </div>
               <svg
-                class="flex-shrink-0 text-[#231815]/15 group-hover:text-[#2e7d32] transition-all duration-300 group-hover:translate-x-1"
+                class="flex-shrink-0 text-white/15 group-hover:text-[#D4FF00] transition-all duration-300 group-hover:translate-x-1"
                 width="16"
                 height="16"
                 viewBox="0 0 24 24"
@@ -65,7 +69,7 @@ const getCategoryStyle = (category: string) => {
       <div class="hidden md:flex items-center flex-shrink-0">
         <a
           href="#"
-          class="text-xs font-bold text-[#231815] hover:text-[#2e7d32] flex items-center group whitespace-nowrap transition-colors focus:outline-none rounded px-2 py-1"
+          class="text-xs font-bold text-white/60 hover:text-[#D4FF00] flex items-center group whitespace-nowrap transition-colors focus:outline-none rounded px-2 py-1"
           aria-label="すべてのニュースを見る"
         >
           VIEW ALL
@@ -87,7 +91,7 @@ const getCategoryStyle = (category: string) => {
       <div class="md:hidden w-full text-right">
         <a
           href="#"
-          class="text-xs font-bold text-[#231815] hover:text-[#2e7d32] transition-colors focus:outline-none rounded px-2 py-1"
+          class="text-xs font-bold text-white/60 hover:text-[#D4FF00] transition-colors focus:outline-none rounded px-2 py-1"
           aria-label="すべてのニュースを見る"
         >
           VIEW ALL →
@@ -98,11 +102,28 @@ const getCategoryStyle = (category: string) => {
 </section>
 
 <style>
+  .news-section {
+    background-color: #1a1510;
+  }
+
+  .news-soil-bg {
+    background:
+      /* 細かい土の粒感 */
+      radial-gradient(ellipse 1px 1px at 20% 30%, rgba(139, 119, 80, 0.15) 0%, transparent 100%),
+      radial-gradient(ellipse 2px 1px at 60% 70%, rgba(101, 82, 51, 0.12) 0%, transparent 100%),
+      radial-gradient(ellipse 1px 2px at 80% 20%, rgba(160, 140, 100, 0.1) 0%, transparent 100%),
+      /* 大きめの地面のムラ */
+      radial-gradient(ellipse 80px 40px at 30% 50%, rgba(80, 65, 40, 0.3) 0%, transparent 100%),
+      radial-gradient(ellipse 60px 30px at 70% 40%, rgba(60, 50, 30, 0.25) 0%, transparent 100%),
+      radial-gradient(ellipse 100px 50px at 50% 60%, rgba(70, 55, 35, 0.2) 0%, transparent 100%);
+    background-color: #1a1510;
+  }
+
   .news-card {
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
     border-left-width: 3px;
+    border-color: rgba(255, 255, 255, 0.05);
   }
   .news-card:hover {
-    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.06), 0 1px 4px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 4px 16px rgba(212, 255, 0, 0.06);
   }
 </style>
