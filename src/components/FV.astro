@@ -99,18 +99,23 @@ class="absolute inset-0 w-full h-full object-cover block md:hidden"
 </style>
 
 <script>
+  let fvAnimationStarted = false;
+
   function initFVAnimation() {
+    if (fvAnimationStarted) return;
+    fvAnimationStarted = true;
+
     const overlay = document.getElementById('opening-overlay');
     const line = document.getElementById('opening-line');
     const title = document.getElementById('fv-title');
     const desc = document.getElementById('fv-desc');
     const scroll = document.getElementById('fv-scroll');
     const video = document.getElementById('fv-video') as HTMLVideoElement;
-    
+
     if (!overlay || !line || !title || !desc) return;
 
-    // 1. 横線が走り終わるのを待つ
-    setTimeout(() => {
+    // 1. 横線アニメーションが完了するのを確実に待つ
+    line.addEventListener('animationend', () => {
       // 2. 線をフェードアウトさせる
       line.classList.add('fade-out');
 
@@ -122,7 +127,7 @@ class="absolute inset-0 w-full h-full object-cover block md:hidden"
         // 4. タイトルのズームが進んだ後（0.8秒後）に背景動画をフェードイン開始
         setTimeout(() => {
           overlay.classList.add('fade-out');
-          
+
           if (video && window.innerWidth >= 768) {
             const playPromise = video.play();
             if (playPromise !== undefined) {
@@ -133,7 +138,7 @@ class="absolute inset-0 w-full h-full object-cover block md:hidden"
               });
             }
           }
-          
+
           // 5. 背景が見え始めた後に説明文を表示
           setTimeout(() => {
             desc.classList.add('fade-in');
@@ -144,12 +149,15 @@ class="absolute inset-0 w-full h-full object-cover block md:hidden"
             overlay.style.display = 'none';
           }, 1200);
         }, 800);
-      }, 100); 
-    }, 400);
+      }, 100);
+    }, { once: true });
   }
 
   // Astroの遷移対応
-  document.addEventListener('astro:page-load', initFVAnimation);
+  document.addEventListener('astro:page-load', () => {
+    fvAnimationStarted = false;
+    initFVAnimation();
+  });
   // 初回実行
   initFVAnimation();
 </script>
