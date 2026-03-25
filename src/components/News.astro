@@ -17,41 +17,38 @@ const getCategoryStyle = (category: string) => {
 };
 ---
 
-<section data-section-theme="light" id="news" class="py-16 md:py-24 bg-[#F6F6EE]">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6">
-    <!-- Section Title -->
-    <div class="text-center mb-12 fade-up">
-      <h2 class="text-4xl md:text-[5rem] font-bold mb-2 leading-[1.2] text-[#231815]">
-        <span class="font-maru">NEWS</span>
-      </h2>
-      <p class="text-[#231815]/70">お知らせ</p>
-    </div>
+<section data-section-theme="light" id="news" class="py-10 bg-[#F6F6EE]">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-10">
+      <!-- Title -->
+      <div class="flex items-center flex-shrink-0">
+        <h2 class="text-2xl font-bold text-[#231815] tracking-wider mr-4"><span class="font-maru">NEWS</span></h2>
+        <span class="text-xs text-[#231815]/70">お知らせ</span>
+      </div>
 
-    <!-- News Cards -->
-    <div class="space-y-4">
-      {newsItems.map((item, index) => {
-        const style = getCategoryStyle(item.category);
-        return (
-          <a
-            href={item.link || "#"}
-            class={`news-card group block border-l-4 ${style.border} bg-white rounded-r-xl p-5 md:p-6 transition-all duration-300 hover:translate-x-1 hover:shadow-lg hover:border-l-[#D4FF00] focus:outline-none fade-up`}
-            style={`animation-delay: ${index * 80}ms`}
-            aria-label={`${item.title}の詳細を見る`}
-          >
-            <div class="flex items-center justify-between gap-4">
-              <div class="flex items-center gap-4 min-w-0">
-                <time class="text-xs text-[#231815]/40 font-mono whitespace-nowrap flex-shrink-0 tracking-wide">{item.date}</time>
-                <span class={`text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap flex-shrink-0 ${style.badge}`}>
+      <!-- News Cards -->
+      <div class="flex-grow w-full space-y-2">
+        {newsItems.map((item, index) => {
+          const style = getCategoryStyle(item.category);
+          return (
+            <a
+              href={item.link || "#"}
+              class={`news-card group flex items-center justify-between gap-4 border-l-3 ${style.border} bg-white rounded-r-lg px-4 py-3 transition-all duration-300 hover:translate-x-1 hover:border-l-[#D4FF00] focus:outline-none`}
+              aria-label={`${item.title}の詳細を見る`}
+            >
+              <div class="flex items-center gap-3 min-w-0">
+                <time class="text-xs text-[#231815]/40 font-mono whitespace-nowrap flex-shrink-0">{item.date}</time>
+                <span class={`text-[10px] font-bold px-2.5 py-0.5 rounded-full whitespace-nowrap flex-shrink-0 ${style.badge}`}>
                   {item.category}
                 </span>
-                <span class="text-sm md:text-base font-bold text-[#231815] group-hover:text-[#2e7d32] transition-colors truncate">
+                <span class="text-sm font-bold text-[#231815] group-hover:text-[#2e7d32] transition-colors truncate">
                   {item.title}
                 </span>
               </div>
               <svg
-                class="flex-shrink-0 text-[#231815]/20 group-hover:text-[#2e7d32] transition-all duration-300 group-hover:translate-x-1"
-                width="20"
-                height="20"
+                class="flex-shrink-0 text-[#231815]/15 group-hover:text-[#2e7d32] transition-all duration-300 group-hover:translate-x-1"
+                width="16"
+                height="16"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -59,41 +56,53 @@ const getCategoryStyle = (category: string) => {
               >
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
               </svg>
-            </div>
-          </a>
-        );
-      })}
-    </div>
+            </a>
+          );
+        })}
+      </div>
 
-    <!-- View All -->
-    <div class="text-center mt-10 fade-up">
-      <a
-        href="#"
-        class="inline-flex items-center gap-2 text-sm font-bold text-[#231815] border border-[#231815]/20 rounded-full px-8 py-3 hover:border-[#2e7d32] hover:text-[#2e7d32] transition-all duration-300 group focus:outline-none"
-        aria-label="すべてのニュースを見る"
-      >
-        VIEW ALL
-        <svg
-          class="transition-transform duration-300 group-hover:translate-x-1"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          aria-hidden="true"
+      <!-- View All -->
+      <div class="hidden md:flex items-center flex-shrink-0">
+        <a
+          href="#"
+          class="text-xs font-bold text-[#231815] hover:text-[#2e7d32] flex items-center group whitespace-nowrap transition-colors focus:outline-none rounded px-2 py-1"
+          aria-label="すべてのニュースを見る"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-        </svg>
-      </a>
+          VIEW ALL
+          <svg
+            class="ml-2 transition-transform group-hover:translate-x-1"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      </div>
+
+      <!-- View All (Mobile) -->
+      <div class="md:hidden w-full text-right">
+        <a
+          href="#"
+          class="text-xs font-bold text-[#231815] hover:text-[#2e7d32] transition-colors focus:outline-none rounded px-2 py-1"
+          aria-label="すべてのニュースを見る"
+        >
+          VIEW ALL →
+        </a>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
   .news-card {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    border-left-width: 3px;
   }
   .news-card:hover {
-    box-shadow: 0 8px 25px rgba(46, 125, 50, 0.08), 0 2px 10px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.06), 0 1px 4px rgba(0, 0, 0, 0.03);
   }
 </style>
