@@ -5,29 +5,34 @@
 <footer class="bg-[#0a0a0a] pt-20 pb-8 relative overflow-hidden">
   <!-- 土の世界レイヤー（普段は見えない） -->
   <div class="soil-world absolute inset-0 pointer-events-none">
-    <!-- 土の色ベース（もっと茶色く） -->
-    <div class="absolute inset-0 bg-gradient-to-b from-[#5a3d1e] via-[#3d2a14] to-[#2a1c0e]"></div>
-    <!-- ノイズテクスチャで土の質感 -->
-    <div class="absolute inset-0 opacity-40" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 512 512%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.7%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E');"></div>
-    <!-- 根っこのシルエット -->
-    <svg class="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice">
-      <path d="M200,0 Q210,100 190,200 Q170,300 200,400 Q220,500 180,600" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
-      <path d="M400,0 Q420,80 380,180 Q350,280 390,380 Q410,480 370,600" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" fill="none"/>
-      <path d="M700,0 Q680,120 720,240 Q750,340 710,450 Q690,550 730,600" stroke="rgba(255,255,255,0.12)" stroke-width="2" fill="none"/>
-      <path d="M1000,0 Q1020,90 980,200 Q960,310 1010,420 Q1030,530 990,600" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" fill="none"/>
-      <path d="M1250,0 Q1230,110 1270,220 Q1290,330 1240,440 Q1220,540 1260,600" stroke="rgba(255,255,255,0.08)" stroke-width="1" fill="none"/>
+    <!-- 土の色ベース（地層風グラデーション） -->
+    <div class="absolute inset-0" style="background: linear-gradient(180deg, #4a3220 0%, #5c3f24 15%, #6b4a2a 25%, #4e3518 40%, #3d2a14 55%, #5a3d1e 70%, #3a2510 85%, #2a1c0e 100%);"></div>
+    <!-- ノイズテクスチャ（強め） -->
+    <div class="absolute inset-0 opacity-60" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 512 512%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%228%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E');"></div>
+    <!-- 土の層の水平ライン -->
+    <div class="absolute inset-0 opacity-15" style="background: repeating-linear-gradient(180deg, transparent 0px, transparent 60px, rgba(255,255,255,0.08) 60px, rgba(255,255,255,0.08) 62px, transparent 62px, transparent 140px, rgba(180,130,60,0.1) 140px, rgba(180,130,60,0.1) 141px);"></div>
+    <!-- 根っこのシルエット（太く、はっきり） -->
+    <svg class="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice">
+      <path d="M200,0 Q210,100 190,200 Q170,300 200,400 Q220,500 180,600" stroke="rgba(255,255,255,0.2)" stroke-width="3" fill="none"/>
+      <path d="M400,0 Q420,80 380,180 Q350,280 390,380 Q410,480 370,600" stroke="rgba(255,255,255,0.15)" stroke-width="2.5" fill="none"/>
+      <path d="M700,0 Q680,120 720,240 Q750,340 710,450 Q690,550 730,600" stroke="rgba(255,255,255,0.18)" stroke-width="3" fill="none"/>
+      <path d="M1000,0 Q1020,90 980,200 Q960,310 1010,420 Q1030,530 990,600" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
+      <path d="M1250,0 Q1230,110 1270,220 Q1290,330 1240,440 Q1220,540 1260,600" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" fill="none"/>
       <!-- 横に広がる細い根 -->
-      <path d="M190,200 Q300,210 400,180" stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none"/>
-      <path d="M720,240 Q850,250 950,220" stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none"/>
-      <path d="M380,380 Q450,400 550,370" stroke="rgba(255,255,255,0.05)" stroke-width="1" fill="none"/>
+      <path d="M190,200 Q300,220 450,190 Q550,170 650,210" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" fill="none"/>
+      <path d="M720,240 Q850,260 1000,230 Q1100,210 1200,250" stroke="rgba(255,255,255,0.08)" stroke-width="1" fill="none"/>
+      <path d="M380,380 Q500,400 620,370 Q720,350 800,390" stroke="rgba(255,255,255,0.08)" stroke-width="1" fill="none"/>
+      <path d="M100,450 Q250,440 350,470 Q450,490 550,460" stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none"/>
     </svg>
-    <!-- 土中の小さな粒（鉱物・有機物） -->
-    <div class="absolute" style="left:12%;top:30%;width:6px;height:4px;background:rgba(180,140,80,0.25);border-radius:50%;"></div>
-    <div class="absolute" style="left:35%;top:55%;width:4px;height:3px;background:rgba(160,120,60,0.2);border-radius:50%;"></div>
-    <div class="absolute" style="left:58%;top:25%;width:5px;height:5px;background:rgba(200,160,90,0.2);border-radius:50%;"></div>
-    <div class="absolute" style="left:78%;top:65%;width:4px;height:3px;background:rgba(170,130,70,0.25);border-radius:50%;"></div>
-    <div class="absolute" style="left:45%;top:75%;width:7px;height:4px;background:rgba(150,110,50,0.2);border-radius:50%;"></div>
-    <div class="absolute" style="left:88%;top:40%;width:5px;height:3px;background:rgba(180,140,80,0.2);border-radius:50%;"></div>
+    <!-- 土中の粒・小石（大きめ） -->
+    <div class="absolute rounded-full" style="left:10%;top:28%;width:8px;height:6px;background:rgba(200,160,90,0.35);"></div>
+    <div class="absolute rounded-full" style="left:28%;top:52%;width:5px;height:5px;background:rgba(180,140,70,0.3);"></div>
+    <div class="absolute rounded-full" style="left:52%;top:22%;width:10px;height:7px;background:rgba(160,120,60,0.3);"></div>
+    <div class="absolute rounded-full" style="left:72%;top:62%;width:6px;height:6px;background:rgba(190,150,80,0.35);"></div>
+    <div class="absolute rounded-full" style="left:42%;top:72%;width:12px;height:8px;background:rgba(170,130,65,0.25);"></div>
+    <div class="absolute rounded-full" style="left:85%;top:38%;width:7px;height:5px;background:rgba(200,160,90,0.3);"></div>
+    <div class="absolute rounded-full" style="left:18%;top:78%;width:9px;height:6px;background:rgba(150,110,50,0.3);"></div>
+    <div class="absolute rounded-full" style="left:62%;top:45%;width:6px;height:4px;background:rgba(180,140,80,0.25);"></div>
   </div>
 
   <!-- 微生物パーティクル -->
@@ -178,14 +183,14 @@
 
   .soil-world {
     opacity: 0;
-    animation: soil-glimpse 10s ease-in-out infinite;
+    animation: soil-glimpse 13s ease-in-out infinite;
   }
 
   @keyframes soil-glimpse {
-    0%, 30% { opacity: 0; }
-    38% { opacity: 0.55; }
-    55% { opacity: 0.55; }
-    65% { opacity: 0; }
+    0%, 35% { opacity: 0; }
+    42% { opacity: 0.6; }
+    58% { opacity: 0.6; }
+    68% { opacity: 0; }
     100% { opacity: 0; }
   }
 </style>
