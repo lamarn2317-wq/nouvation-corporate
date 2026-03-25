@@ -2,8 +2,28 @@
 // Footer Component
 ---
 
-<footer class="bg-[#464237] pt-20 pb-8 relative overflow-hidden border-t border-[#2e7d32]/20 rough-texture">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+<footer class="bg-[#0a0a0a] pt-20 pb-8 relative overflow-hidden">
+  <!-- 微生物パーティクル -->
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="microbe" style="--x: 15%; --y: 25%; --size: 3px; --delay: 0s; --duration: 4s; --glow-color: #7fff7f;"></div>
+    <div class="microbe" style="--x: 30%; --y: 60%; --size: 2px; --delay: 0.8s; --duration: 3.5s; --glow-color: #7fffdf;"></div>
+    <div class="microbe" style="--x: 50%; --y: 40%; --size: 4px; --delay: 1.2s; --duration: 5s; --glow-color: #D4FF00;"></div>
+    <div class="microbe" style="--x: 70%; --y: 65%; --size: 2px; --delay: 0.3s; --duration: 3s; --glow-color: #7fff7f;"></div>
+    <div class="microbe" style="--x: 85%; --y: 30%; --size: 3px; --delay: 2s; --duration: 4.5s; --glow-color: #aaffaa;"></div>
+    <div class="microbe" style="--x: 25%; --y: 75%; --size: 2px; --delay: 1.5s; --duration: 3.8s; --glow-color: #D4FF00;"></div>
+    <div class="microbe" style="--x: 60%; --y: 20%; --size: 3px; --delay: 0.5s; --duration: 4.2s; --glow-color: #7fffbf;"></div>
+    <div class="microbe" style="--x: 40%; --y: 80%; --size: 2px; --delay: 2.5s; --duration: 3.2s; --glow-color: #aaffaa;"></div>
+    <div class="microbe" style="--x: 10%; --y: 55%; --size: 2px; --delay: 1.8s; --duration: 4.8s; --glow-color: #7fff7f;"></div>
+    <div class="microbe" style="--x: 90%; --y: 50%; --size: 3px; --delay: 0.7s; --duration: 3.6s; --glow-color: #D4FF00;"></div>
+    <div class="microbe" style="--x: 45%; --y: 15%; --size: 2px; --delay: 3s; --duration: 5.5s; --glow-color: #7fffdf;"></div>
+    <div class="microbe" style="--x: 75%; --y: 45%; --size: 4px; --delay: 1s; --duration: 4s; --glow-color: #aaffaa;"></div>
+    <div class="microbe" style="--x: 20%; --y: 85%; --size: 2px; --delay: 2.2s; --duration: 3.4s; --glow-color: #7fff7f;"></div>
+    <div class="microbe" style="--x: 55%; --y: 70%; --size: 3px; --delay: 0.2s; --duration: 4.6s; --glow-color: #D4FF00;"></div>
+    <div class="microbe" style="--x: 35%; --y: 35%; --size: 2px; --delay: 1.7s; --duration: 3.9s; --glow-color: #7fffbf;"></div>
+    <div class="microbe" style="--x: 80%; --y: 85%; --size: 2px; --delay: 2.8s; --duration: 5.2s; --glow-color: #aaffaa;"></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
     <!-- Footer Content Grid -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
       <!-- Company Info -->
@@ -103,5 +123,37 @@
     box-shadow: 0 0 20px rgba(80, 220, 120, 0.65),
                 0 0 45px rgba(80, 220, 120, 0.28) !important;
     transform: translateY(-4px) !important;
+  }
+
+  .microbe {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background: var(--glow-color);
+    box-shadow:
+      0 0 4px var(--glow-color),
+      0 0 8px var(--glow-color),
+      0 0 16px var(--glow-color),
+      0 0 32px var(--glow-color);
+    animation: microbe-float var(--duration) ease-in-out var(--delay) infinite,
+               microbe-pulse var(--duration) ease-in-out var(--delay) infinite;
+    opacity: 0;
+  }
+
+  @keyframes microbe-float {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(8px, -12px); }
+    50% { transform: translate(-5px, -8px); }
+    75% { transform: translate(10px, 5px); }
+  }
+
+  @keyframes microbe-pulse {
+    0%, 100% { opacity: 0.2; }
+    30% { opacity: 0.8; }
+    50% { opacity: 1; }
+    70% { opacity: 0.6; }
   }
 </style>
