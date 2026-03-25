@@ -1,101 +1,115 @@
 ---
-// Voice (User Testimonials) Component - 3D Tilt Cards
+// Voice (User Testimonials) Component
 
-const voiceItems = [
+const voiceGroups = [
   {
-    category: '施設野菜',
-    age: '30代',
-    title: '「価値の高いメディアだと感じました」',
-    text: 'NOUVATIONさまの発信内容、市場情報や制度情報だけでなく現場目線の切り口がとても分かりやすく、農業に関わる方にとって価値の高いメデイアだと感じました。'
+    id: 'shisetsu',
+    category: '(仮)30代・施設野菜',
+    items: [
+      {
+        title: '「価値の高いメディアだと感じました」',
+        text: 'NOUVATIONさまの発信内容、市場情報や制度情報だけでなく現場目線の切り口がとても分かりやすく、農業に関わる方にとって価値の高いメデイアだと感じました。'
+      },
+      {
+        title: '「経営の判断材料として活用」',
+        text: '施設野菜はコスト管理が重要ですが、NOUVATIONの情報は非常に具体的で、日々の経営判断の大きな助けになっています。'
+      },
+      {
+        title: '「若手農家の強い味方」',
+        text: '周囲に相談できる相手が少ない中、オンラインでこれだけ質の高い情報に触れられるのは本当にありがたいです。'
+      }
+    ]
   },
   {
-    category: '新規就農',
-    age: '20代',
-    title: '「次世代の最優先事業は農業だと思う」',
-    text: '直接農業に携わっているわけではないのですが、祖父母が小さく農業を営んでいて、情報収集の一環としてフォローさせていただきました！個人的にも次世代の最優先事業は農業だと思うのでノーベーションさんには頑張っていただきたいです！！'
+    id: 'shinki',
+    category: '(仮)20代・新規就農',
+    items: [
+      {
+        title: '「次世代の最優先事業は農業だと思う」',
+        text: '直接農業に携わっているわけではないのですが、祖父母が小さく農業を営んでいて、情報収集の一環としてフォローさせていただきました！個人的にも次世代の最優先事業は農業だと思うのでノーベーションさんには頑張っていただきたいです！！'
+      },
+      {
+        title: '「就農前の不安が解消されました」',
+        text: '農業を始めるにあたって何から手をつければいいか不安でしたが、NOUVATIONのAIサポートやメディアを通じて、具体的なイメージが持てるようになりました。'
+      },
+      {
+        title: '「SNSでの繋がりが励みに」',
+        text: 'Instagramでの発信を見ていると、同じ志を持つ仲間が全国にいると感じられ、モチベーションの維持に繋がっています。'
+      }
+    ]
   },
   {
-    category: '露地栽培',
-    age: '50代',
-    title: '「非常に参考になる投稿」',
-    text: '毎日、天候や市場価格などの情報を丁寧に更新されており、非常に参考になる投稿ばかりで、勉強させていただいております。'
-  },
-  {
-    category: '施設野菜',
-    age: '30代',
-    title: '「経営の判断材料として活用」',
-    text: '施設野菜はコスト管理が重要ですが、NOUVATIONの情報は非常に具体的で、日々の経営判断の大きな助けになっています。'
-  },
-  {
-    category: '新規就農',
-    age: '20代',
-    title: '「就農前の不安が解消されました」',
-    text: '農業を始めるにあたって何から手をつければいいか不安でしたが、NOUVATIONのAIサポートやメディアを通じて、具体的なイメージが持てるようになりました。'
-  },
-  {
-    category: '露地栽培',
-    age: '50代',
-    title: '「ベテランでも新しい発見がある」',
-    text: '長年農業をやってきましたが、最新のテクノロジーや市場の動向についてはNOUVATIONから学ぶことが多いです。'
-  },
-  {
-    category: '施設野菜',
-    age: '30代',
-    title: '「若手農家の強い味方」',
-    text: '周囲に相談できる相手が少ない中、オンラインでこれだけ質の高い情報に触れられるのは本当にありがたいです。'
-  },
-  {
-    category: '新規就農',
-    age: '20代',
-    title: '「SNSでの繋がりが励みに」',
-    text: 'Instagramでの発信を見ていると、同じ志を持つ仲間が全国にいると感じられ、モチベーションの維持に繋がっています。'
-  },
-  {
-    category: '露地栽培',
-    age: '50代',
-    title: '「市場価格の透明性が嬉しい」',
-    text: 'これまでは不透明だった市場の動きが、グラフで可視化されることで、納得感のある取引ができるようになりました。'
+    id: 'roji',
+    category: '(仮)50代・露地栽培',
+    items: [
+      {
+        title: '「非常に参考になる投稿」',
+        text: '毎日、天候や市場価格などの情報を丁寧に更新されており、非常に参考になる投稿ばかりで、勉強させていただいております。'
+      },
+      {
+        title: '「ベテランでも新しい発見がある」',
+        text: '長年農業をやってきましたが、最新のテクノロジーや市場の動向についてはNOUVATIONから学ぶことが多いです。'
+      },
+      {
+        title: '「市場価格の透明性が嬉しい」',
+        text: 'これまでは不透明だった市場の動きが、グラフで可視化されることで、納得感のある取引ができるようになりました。'
+      }
+    ]
   }
 ];
-
-const categoryColors: Record<string, string> = {
-  '施設野菜': 'from-[#2e7d32] to-[#45d468]',
-  '新規就農': 'from-[#1B5E20] to-[#2e7d32]',
-  '露地栽培': 'from-[#464237] to-[#6b6456]',
-};
-
-const categoryInitials: Record<string, string> = {
-  '施設野菜': '施',
-  '新規就農': '新',
-  '露地栽培': '露',
-};
 ---
 
 <section data-section-theme="light" id="voice" class="pt-16 md:pt-24 pb-24 md:pb-32 bg-[#F0ECDE]">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
     <!-- Section Title -->
-    <div class="text-center mb-16 fade-up">
+    <div class="text-center mb-20 fade-up">
       <h2 class="text-4xl md:text-[5rem] font-bold mb-4 leading-[1.2] text-[#231815]"><span class="font-maru">VOICE</span></h2>
       <p class="text-[#231815]/70">利用者の声</p>
     </div>
 
-    <!-- 3D Tilt Cards Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-      {voiceItems.map((item) => (
-        <div class="tilt-card fade-up bg-white rounded-xl p-5 border border-[#231815]/10 shadow-sm relative cursor-default" data-tilt>
-          <div class="tilt-glow rounded-xl"></div>
-          <div class="relative z-10">
-            <div class="flex items-center gap-3 mb-3">
-              <div class={`w-9 h-9 rounded-full bg-gradient-to-br ${categoryColors[item.category]} flex items-center justify-center text-white text-xs font-bold flex-shrink-0`}>
-                {categoryInitials[item.category]}
-              </div>
-              <div class="min-w-0">
-                <div class="font-bold text-sm text-[#231815] truncate">{item.category}</div>
-                <div class="text-xs text-[#231815]/50">(仮){item.age}</div>
-              </div>
+    <!-- Voice Groups Grid -->
+    <div class="grid md:grid-cols-3 gap-12 md:gap-8 justify-items-center">
+      {voiceGroups.map((group) => (
+        <div class="voice-slider-container fade-up w-full max-w-[380px] md:max-w-none" data-group-id={group.id}>
+          <!-- Slider Track Container -->
+          <div class="overflow-hidden rounded-2xl shadow-sm bg-white border border-[#231815]/10 flex flex-col h-[420px]">
+            <!-- Category Header with Arrows (Now inside the white box) -->
+            <div class="flex items-center justify-between pt-6 px-4">
+              <button class="prev-btn p-2 text-[#2e7d32] hover:opacity-50 transition-opacity disabled:opacity-20" aria-label="前の声へ">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              
+              <span class="font-bold text-lg text-[#231815] text-center flex-1">{group.id === 'shisetsu' ? '施設野菜' : group.id === 'shinki' ? '新規就農' : '露地栽培'}</span>
+              
+              <button class="next-btn p-2 text-[#2e7d32] hover:opacity-50 transition-opacity disabled:opacity-20" aria-label="次の声へ">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
             </div>
-            <h3 class="font-bold text-sm mb-2 text-[#231815] line-clamp-2 leading-snug">{item.title}</h3>
-            <p class="text-xs text-[#231815]/70 leading-relaxed line-clamp-4">{item.text}</p>
+
+            <!-- Age Label (Static for now as per request) -->
+            <div class="pt-4 px-8 text-center">
+              <span class="text-sm font-bold text-[#231815]/60">{group.category.split('・')[0]}</span>
+            </div>
+
+            <div class="slider-track flex transition-transform duration-500 ease-out flex-1">
+              {group.items.map((item) => (
+                <div class="slider-item min-w-full p-8 pt-4 overflow-y-auto scrollbar-thin scrollbar-thumb-[#2e7d32]/20">
+                  <h3 class="font-bold text-xl mb-4 text-[#231815] min-h-[3.5rem] flex items-center justify-center text-center">{item.title}</h3>
+                  <p class="text-sm text-[#231815] leading-loose opacity-80">{item.text}</p>
+                </div>
+              ))}
+            </div>
+
+            <!-- Dots Indicator (Now inside the white box) -->
+            <div class="flex justify-center gap-2 pb-6">
+              {group.items.map((_, index) => (
+                <div class={`dot w-1.5 h-1.5 rounded-full transition-all duration-300 ${index === 0 ? 'bg-[#2e7d32] w-4' : 'bg-[#231815]/20'}`}></div>
+              ))}
+            </div>
           </div>
         </div>
       ))}
@@ -103,17 +117,68 @@ const categoryInitials: Record<string, string> = {
   </div>
 </section>
 
+<script>
+  function initVoiceSliders() {
+    const containers = document.querySelectorAll('.voice-slider-container');
+    
+    containers.forEach(container => {
+      const track = container.querySelector('.slider-track') as HTMLElement;
+      const items = container.querySelectorAll('.slider-item');
+      const prevBtn = container.querySelector('.prev-btn') as HTMLButtonElement;
+      const nextBtn = container.querySelector('.next-btn') as HTMLButtonElement;
+      const dots = container.querySelectorAll('.dot');
+      
+      let currentIndex = 0;
+      const totalItems = items.length;
+
+      function updateSlider() {
+        // スライド移動
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        
+        // ボタンの状態更新 (ループするので常に有効)
+        prevBtn.disabled = false;
+        nextBtn.disabled = false;
+        
+        // ドットの更新
+        dots.forEach((dot, index) => {
+          if (index === currentIndex) {
+            dot.classList.add('bg-[#2e7d32]', 'w-4');
+            dot.classList.remove('bg-[#231815]/20');
+          } else {
+            dot.classList.remove('bg-[#2e7d32]', 'w-4');
+            dot.classList.add('bg-[#231815]/20');
+          }
+        });
+      }
+
+      prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+          currentIndex--;
+        } else {
+          currentIndex = totalItems - 1; // 最初の次は最後に
+        }
+        updateSlider();
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (currentIndex < totalItems - 1) {
+          currentIndex++;
+        } else {
+          currentIndex = 0; // 最後の次は最初に
+        }
+        updateSlider();
+      });
+
+      // 初期状態の反映
+      updateSlider();
+    });
+  }
+
+  // Astroのライフサイクルに合わせて初期化
+  document.addEventListener('astro:page-load', initVoiceSliders);
+  // 初回読み込み時
+  initVoiceSliders();
+</script>
+
 <style>
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .line-clamp-4 {
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
 </style>
