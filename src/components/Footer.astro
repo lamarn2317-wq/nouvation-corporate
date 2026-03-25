@@ -5,8 +5,8 @@
 <footer class="bg-[#0a0a0a] pt-20 pb-8 relative overflow-hidden">
   <!-- 土の世界レイヤー（普段は見えない） -->
   <div class="soil-world absolute inset-0 pointer-events-none">
-    <!-- 土の色ベース -->
-    <div class="absolute inset-0 bg-gradient-to-b from-[#3d2a14] via-[#2a1c0e] to-[#1a1008]"></div>
+    <!-- 土の色ベース（もっと茶色く） -->
+    <div class="absolute inset-0 bg-gradient-to-b from-[#5a3d1e] via-[#3d2a14] to-[#2a1c0e]"></div>
     <!-- ノイズテクスチャで土の質感 -->
     <div class="absolute inset-0 opacity-40" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 512 512%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.7%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E');"></div>
     <!-- 根っこのシルエット -->
@@ -183,8 +183,8 @@
 
   @keyframes soil-glimpse {
     0%, 30% { opacity: 0; }
-    38% { opacity: 0.45; }
-    55% { opacity: 0.45; }
+    38% { opacity: 0.55; }
+    55% { opacity: 0.55; }
     65% { opacity: 0; }
     100% { opacity: 0; }
   }
