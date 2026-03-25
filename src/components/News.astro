@@ -4,6 +4,17 @@ import { getNewsList } from '../lib/microcms';
 
 // MicroCMSからニュースを取得（エラー時はフォールバックデータを使用）
 const newsItems = await getNewsList(10);
+
+// カテゴリごとのラベル色を定義
+const getCategoryStyle = (category: string) => {
+  switch (category) {
+    case 'メディア掲載':
+    case 'UPDATE':
+      return 'bg-[#D4FF00] text-[#231815]';
+    default:
+      return 'bg-[#2e7d32] text-white';
+  }
+};
 ---
 
 <section data-section-theme="light" id="news" class="py-12 bg-[#F6F6EE] border-y border-gray-200">
@@ -17,19 +28,21 @@ const newsItems = await getNewsList(10);
 
       <!-- News List -->
       <div class="flex-grow w-full">
-        <ul class="space-y-4">
+        <ul class="space-y-3">
           {newsItems.map((item) => (
-            <li class="flex flex-col md:flex-row md:items-center gap-2 md:gap-6 border-b md:border-none border-[#231815]/20 pb-3 md:pb-0">
-              <time class="text-sm text-[#231815]/80 flex-shrink-0">{item.date}</time>
-              <span class="text-xs font-bold text-white bg-[#231815] px-3 py-1 rounded w-fit">
-                {item.category}
-              </span>
-              <a 
-                href={item.link || "#"} 
-                class="text-sm font-bold text-[#231815] hover:text-[#231815]/70 transition-colors line-clamp-1 focus:outline-none rounded px-1"
+            <li>
+              <a
+                href={item.link || "#"}
+                class="flex items-center gap-4 p-4 border border-[#231815]/10 rounded-xl hover:bg-white transition-colors group focus:outline-none"
                 aria-label={`${item.title}の詳細を見る`}
               >
-                {item.title}
+                <time class="text-sm text-[#231815]/50 font-mono whitespace-nowrap flex-shrink-0">{item.date}</time>
+                <span class={`text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap flex-shrink-0 ${getCategoryStyle(item.category)}`}>
+                  {item.category}
+                </span>
+                <span class="text-sm font-bold text-[#231815] group-hover:text-[#2e7d32] transition-colors truncate">
+                  {item.title}
+                </span>
               </a>
             </li>
           ))}
@@ -38,18 +51,18 @@ const newsItems = await getNewsList(10);
 
       <!-- View All Link (PC) -->
       <div class="hidden md:flex items-center flex-shrink-0">
-        <a 
-          href="#" 
-          class="text-xs font-bold text-[#231815] hover:text-[#231815]/70 flex items-center group whitespace-nowrap transition-colors focus:outline-none rounded px-2 py-1"
+        <a
+          href="#"
+          class="text-xs font-bold text-[#231815] hover:text-[#2e7d32] flex items-center group whitespace-nowrap transition-colors focus:outline-none rounded px-2 py-1"
           aria-label="すべてのニュースを見る"
         >
-          VIEW ALL 
-          <svg 
-            class="ml-2 transition-transform group-hover:translate-x-1" 
-            width="16" 
-            height="16" 
-            viewBox="0 0 24 24" 
-            fill="none" 
+          VIEW ALL
+          <svg
+            class="ml-2 transition-transform group-hover:translate-x-1"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
             stroke="currentColor"
             aria-hidden="true"
           >
@@ -60,9 +73,9 @@ const newsItems = await getNewsList(10);
 
       <!-- View All Link (Mobile) -->
       <div class="md:hidden w-full text-right">
-        <a 
-          href="#" 
-          class="text-xs font-bold text-[#231815] hover:text-[#231815]/70 transition-colors focus:outline-none rounded px-2 py-1"
+        <a
+          href="#"
+          class="text-xs font-bold text-[#231815] hover:text-[#2e7d32] transition-colors focus:outline-none rounded px-2 py-1"
           aria-label="すべてのニュースを見る"
         >
           VIEW ALL →
