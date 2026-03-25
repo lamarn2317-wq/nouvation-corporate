@@ -114,7 +114,7 @@ const marketPrices = await getMarketPrices();
           
           <div class="mt-8 p-6 bg-white border border-[#231815]/20 rounded-2xl inline-block">
             <div class="font-display text-4xl font-bold text-[#231815]">
-              <span id="followerCount">0</span><span class="text-2xl">+</span>
+              <span id="followerCount" class="digital-counter">0</span><span class="text-2xl">+</span>
               <span class="text-sm font-normal text-[#231815]/60 ml-2">Followers</span>
             </div>
           </div>
@@ -440,33 +440,36 @@ const marketPrices = await getMarketPrices();
     if (!target) return;
 
     const finalValue = 23000;
-    const duration = 2000; // 2秒かけてカウントアップ
-    const frameRate = 1000 / 60; // 60fps
+    const duration = 2000;
+    const frameRate = 1000 / 60;
     const totalFrames = Math.round(duration / frameRate);
     let currentFrame = 0;
 
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        // 画面に入ったらアニメーション開始
+        // グリッチ開始
+        target.classList.add('glitch');
+        setTimeout(() => target.classList.remove('glitch'), 300);
+
         const timer = setInterval(() => {
           currentFrame++;
           const progress = currentFrame / totalFrames;
-          // イージング（後半ゆっくりにする）
           const easeOutQuad = 1 - (1 - progress) * (1 - progress);
           const currentValue = Math.floor(easeOutQuad * finalValue);
-          
-          // カンマ区切りで表示
+
           target.textContent = currentValue.toLocaleString();
 
           if (currentFrame === totalFrames) {
             clearInterval(timer);
+            // 完了時にもう一度グリッチ
+            target.classList.add('glitch');
+            setTimeout(() => target.classList.remove('glitch'), 200);
           }
         }, frameRate);
-        
-        // 一度実行したら監視を止める
+
         observer.unobserve(target);
       }
-    }, { threshold: 0.5 }); // 50%見えたら開始
+    }, { threshold: 0.5 });
 
     observer.observe(target);
   }
