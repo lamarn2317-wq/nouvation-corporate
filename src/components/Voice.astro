@@ -1,116 +1,100 @@
 ---
-// Voice (User Testimonials) Component - 3D Carousel
+// Voice - 利用者の声 | Floating Card Design with Green Gradient
 
-const voiceGroups = [
+const categories = [
   {
     id: 'shisetsu',
-    category: '(仮)30代・施設野菜',
+    label: '施設野菜',
     items: [
-      {
-        title: '「価値の高いメディアだと感じました」',
-        text: 'NOUVATIONさまの発信内容、市場情報や制度情報だけでなく現場目線の切り口がとても分かりやすく、農業に関わる方にとって価値の高いメデイアだと感じました。'
-      },
-      {
-        title: '「経営の判断材料として活用」',
-        text: '施設野菜はコスト管理が重要ですが、NOUVATIONの情報は非常に具体的で、日々の経営判断の大きな助けになっています。'
-      },
-      {
-        title: '「若手農家の強い味方」',
-        text: '周囲に相談できる相手が少ない中、オンラインでこれだけ質の高い情報に触れられるのは本当にありがたいです。'
-      }
-    ]
-  },
-  {
-    id: 'shinki',
-    category: '(仮)20代・新規就農',
-    items: [
-      {
-        title: '「次世代の最優先事業は農業だと思う」',
-        text: '直接農業に携わっているわけではないのですが、祖父母が小さく農業を営んでいて、情報収集の一環としてフォローさせていただきました！個人的にも次世代の最優先事業は農業だと思うのでノーベーションさんには頑張っていただきたいです！！'
-      },
-      {
-        title: '「就農前の不安が解消されました」',
-        text: '農業を始めるにあたって何から手をつければいいか不安でしたが、NOUVATIONのAIサポートやメディアを通じて、具体的なイメージが持てるようになりました。'
-      },
-      {
-        title: '「SNSでの繋がりが励みに」',
-        text: 'Instagramでの発信を見ていると、同じ志を持つ仲間が全国にいると感じられ、モチベーションの維持に繋がっています。'
-      }
+      { age: '30代', quote: '価値の高いメディアだと感じました', text: 'NOUVATIONさまの発信内容、市場情報や制度情報だけでなく現場目線の切り口がとても分かりやすく、農業に関わる方にとって価値の高いメデイアだと感じました。' },
+      { age: '30代', quote: '経営の判断材料として活用', text: '施設野菜はコスト管理が重要ですが、NOUVATIONの情報は非常に具体的で、日々の経営判断の大きな助けになっています。' },
+      { age: '40代', quote: '若手農家の強い味方', text: '周囲に相談できる相手が少ない中、オンラインでこれだけ質の高い情報に触れられるのは本当にありがたいです。' },
     ]
   },
   {
     id: 'roji',
-    category: '(仮)50代・露地栽培',
+    label: '露地栽培',
     items: [
-      {
-        title: '「非常に参考になる投稿」',
-        text: '毎日、天候や市場価格などの情報を丁寧に更新されており、非常に参考になる投稿ばかりで、勉強させていただいております。'
-      },
-      {
-        title: '「ベテランでも新しい発見がある」',
-        text: '長年農業をやってきましたが、最新のテクノロジーや市場の動向についてはNOUVATIONから学ぶことが多いです。'
-      },
-      {
-        title: '「市場価格の透明性が嬉しい」',
-        text: 'これまでは不透明だった市場の動きが、グラフで可視化されることで、納得感のある取引ができるようになりました。'
-      }
+      { age: '50代', quote: '非常に参考になる投稿', text: '毎日、天候や市場価格などの情報を丁寧に更新されており、非常に参考になる投稿ばかりで、勉強させていただいております。' },
+      { age: '50代', quote: 'ベテランでも新しい発見がある', text: '長年農業をやってきましたが、最新のテクノロジーや市場の動向についてはNOUVATIONから学ぶことが多いです。' },
+      { age: '40代', quote: '市場価格の透明性が嬉しい', text: 'これまでは不透明だった市場の動きが、グラフで可視化されることで、納得感のある取引ができるようになりました。' },
+    ]
+  },
+  {
+    id: 'shinki',
+    label: '新規就農',
+    items: [
+      { age: '20代', quote: '次世代の最優先事業は農業だと思う', text: '直接農業に携わっているわけではないのですが、祖父母が小さく農業を営んでいて、情報収集の一環としてフォローさせていただきました！個人的にも次世代の最優先事業は農業だと思うのでノーベーションさんには頑張っていただきたいです！！' },
+      { age: '20代', quote: '就農前の不安が解消されました', text: '農業を始めるにあたって何から手をつければいいか不安でしたが、NOUVATIONのAIサポートやメディアを通じて、具体的なイメージが持てるようになりました。' },
+      { age: '20代', quote: 'SNSでの繋がりが励みに', text: 'Instagramでの発信を見ていると、同じ志を持つ仲間が全国にいると感じられ、モチベーションの維持に繋がっています。' },
     ]
   }
 ];
 ---
 
-<section data-section-theme="light" id="voice" class="pt-16 md:pt-24 pb-24 md:pb-32 bg-[#F0ECDE]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6">
-    <!-- Section Title -->
-    <div class="text-center mb-20 fade-up">
-      <h2 class="text-4xl md:text-[5rem] font-bold mb-4 leading-[1.2] text-[#231815]"><span class="font-maru">VOICE</span></h2>
-      <p class="text-[#231815]/70">利用者の声</p>
+<section id="voice" class="voice-section">
+  <!-- Gradient Background -->
+  <div class="voice-bg" aria-hidden="true">
+    <div class="voice-bg__gradient"></div>
+    <div class="voice-bg__noise"></div>
+    <!-- Floating circles -->
+    <div class="voice-bg__circle voice-bg__circle--1"></div>
+    <div class="voice-bg__circle voice-bg__circle--2"></div>
+    <div class="voice-bg__circle voice-bg__circle--3"></div>
+  </div>
+
+  <div class="voice-container">
+    <!-- Header -->
+    <div class="voice-header" data-voice-anim>
+      <p class="voice-eyebrow">VOICE</p>
+      <h2 class="voice-heading">利用者の声</h2>
     </div>
 
-    <!-- 3D Carousel Voice Groups -->
-    <div class="grid md:grid-cols-3 gap-12 md:gap-8 justify-items-center">
-      {voiceGroups.map((group) => (
-        <div class="voice-carousel fade-up w-full max-w-[380px] md:max-w-none" data-group-id={group.id}>
-          <!-- Category Header -->
-          <div class="flex items-center justify-between mb-4 px-2">
-            <button class="carousel-prev p-2 text-[#2e7d32] hover:opacity-50 transition-opacity" aria-label="前の声へ">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
-            </button>
+    <!-- Category Tabs -->
+    <div class="voice-tabs" data-voice-anim>
+      {categories.map((cat, i) => (
+        <button
+          class={`voice-tab ${i === 0 ? 'is-active' : ''}`}
+          data-tab={cat.id}
+        >
+          {cat.label}
+        </button>
+      ))}
+    </div>
 
-            <span class="font-bold text-lg text-[#231815] text-center flex-1">{group.id === 'shisetsu' ? '施設野菜' : group.id === 'shinki' ? '新規就農' : '露地栽培'}</span>
-
-            <button class="carousel-next p-2 text-[#2e7d32] hover:opacity-50 transition-opacity" aria-label="次の声へ">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
-          </div>
-
-          <!-- 3D Scene -->
-          <div class="carousel-scene">
-            <div class="carousel-rotor">
-              {group.items.map((item, index) => (
-                <div class="carousel-card" data-index={index}>
-                  <div class="carousel-card-inner">
-                    <div class="pt-4 px-6 text-center">
-                      <span class="text-sm font-bold text-[#231815]/60">{group.category.split('・')[0]}</span>
-                    </div>
-                    <div class="p-6 pt-3">
-                      <h3 class="font-bold text-xl mb-4 text-[#231815] min-h-[3.5rem] flex items-center justify-center text-center">{item.title}</h3>
-                      <p class="text-sm text-[#231815] leading-loose opacity-80">{item.text}</p>
-                    </div>
+    <!-- Card Panels -->
+    <div class="voice-panels">
+      {categories.map((cat, ci) => (
+        <div
+          class={`voice-panel ${ci === 0 ? 'is-active' : ''}`}
+          data-panel={cat.id}
+        >
+          <div class="voice-carousel" data-voice-anim>
+            {cat.items.map((item, i) => (
+              <article
+                class={`voice-card ${i === 0 ? 'is-current' : ''}`}
+                data-ci={i}
+              >
+                <div class="voice-card__inner">
+                  <div class="voice-card__top">
+                    <span class="voice-card__age">{item.age}</span>
+                    <span class="voice-card__deco">"</span>
                   </div>
+                  <h3 class="voice-card__quote">「{item.quote}」</h3>
+                  <p class="voice-card__body">{item.text}</p>
                 </div>
-              ))}
-            </div>
+              </article>
+            ))}
           </div>
 
           <!-- Dots -->
-          <div class="flex justify-center gap-2 mt-4">
-            {group.items.map((_, index) => (
-              <div class={`carousel-dot w-1.5 h-1.5 rounded-full transition-all duration-300 ${index === 0 ? 'bg-[#2e7d32] w-4' : 'bg-[#231815]/20'}`}></div>
+          <div class="voice-indicators" data-voice-anim>
+            {cat.items.map((_, i) => (
+              <button
+                class={`voice-indicator ${i === 0 ? 'is-active' : ''}`}
+                data-goto={i}
+                aria-label={`${i + 1}番目`}
+              ></button>
             ))}
           </div>
         </div>
@@ -120,126 +104,510 @@ const voiceGroups = [
 </section>
 
 <style>
-  .carousel-scene {
-    perspective: 800px;
-    height: 380px;
-    overflow: visible;
+  /* ===== Section ===== */
+  .voice-section {
     position: relative;
+    padding: 6rem 0 7rem;
+    overflow: hidden;
+    isolation: isolate;
   }
 
-  .carousel-rotor {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transform-style: preserve-3d;
-    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .carousel-card {
+  /* ===== Gradient Background ===== */
+  .voice-bg {
     position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    inset: 0;
+    z-index: 0;
   }
 
-  .carousel-card-inner {
-    width: 100%;
-    height: 100%;
-    background: white;
-    border-radius: 1rem;
-    border: 1px solid rgba(35, 24, 21, 0.1);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    overflow-y: auto;
+  .voice-bg__gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      #1a6b5a 0%,
+      #2a8a72 20%,
+      #3d9e82 40%,
+      #5bb89a 60%,
+      #7fcdb5 80%,
+      #a8e0cc 100%
+    );
+  }
+
+  .voice-bg__noise {
+    position: absolute;
+    inset: 0;
+    opacity: 0.3;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  /* Floating translucent circles */
+  .voice-bg__circle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    animation: circleFloat 18s ease-in-out infinite;
+  }
+
+  .voice-bg__circle--1 {
+    width: 500px;
+    height: 500px;
+    top: -10%;
+    right: -8%;
+    animation-duration: 20s;
+  }
+
+  .voice-bg__circle--2 {
+    width: 350px;
+    height: 350px;
+    bottom: -5%;
+    left: -5%;
+    animation-duration: 16s;
+    animation-delay: -6s;
+  }
+
+  .voice-bg__circle--3 {
+    width: 200px;
+    height: 200px;
+    top: 40%;
+    left: 30%;
+    animation-duration: 22s;
+    animation-delay: -10s;
+  }
+
+  @keyframes circleFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(25px, -20px) scale(1.05); }
+    50% { transform: translate(-15px, 15px) scale(0.97); }
+    75% { transform: translate(10px, 10px) scale(1.03); }
+  }
+
+  /* ===== Container ===== */
+  .voice-container {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* ===== Header ===== */
+  .voice-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .voice-eyebrow {
+    font-size: clamp(2.2rem, 6vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.95);
+    line-height: 1.1;
+  }
+
+  .voice-heading {
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 0.6rem;
+  }
+
+  /* ===== Tabs ===== */
+  .voice-tabs {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
   }
 
-  /* Active card */
-  .carousel-card[data-state="active"] {
-    transform: translateX(0) scale(1) rotateY(0deg);
+  .voice-tab {
+    position: relative;
+    padding: 0.6rem 1.8rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .voice-tab:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+  }
+
+  .voice-tab.is-active {
+    background: rgba(255, 255, 255, 0.95);
+    color: #1a6b5a;
+    border-color: transparent;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  /* ===== Panels ===== */
+  .voice-panels {
+    position: relative;
+    min-height: 360px;
+  }
+
+  .voice-panel {
+    display: none;
+  }
+
+  .voice-panel.is-active {
+    display: block;
+    animation: panelIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @keyframes panelIn {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ===== Carousel ===== */
+  .voice-carousel {
+    position: relative;
+    height: 340px;
+    perspective: 1200px;
+  }
+
+  /* ===== Card ===== */
+  .voice-card {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 92%;
+    max-width: 520px;
+    transform: translateX(-50%);
+    transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity;
+  }
+
+  /* States */
+  .voice-card.is-current {
+    transform: translateX(-50%) translateY(0) scale(1) rotateY(0);
     opacity: 1;
     z-index: 3;
+    animation: cardFloat 5s ease-in-out infinite;
   }
 
-  /* Card going left (previous) */
-  .carousel-card[data-state="left"] {
-    transform: translateX(-65%) scale(0.8) rotateY(35deg);
-    opacity: 0.4;
-    z-index: 1;
+  .voice-card.is-next {
+    transform: translateX(-20%) translateY(20px) scale(0.88) rotateY(-8deg);
+    opacity: 0.35;
+    z-index: 2;
     pointer-events: none;
+    filter: blur(2px);
   }
 
-  /* Card going right (next) */
-  .carousel-card[data-state="right"] {
-    transform: translateX(65%) scale(0.8) rotateY(-35deg);
-    opacity: 0.4;
-    z-index: 1;
+  .voice-card.is-prev {
+    transform: translateX(-80%) translateY(20px) scale(0.88) rotateY(8deg);
+    opacity: 0.35;
+    z-index: 2;
     pointer-events: none;
+    filter: blur(2px);
   }
 
-  /* Hidden cards */
-  .carousel-card[data-state="hidden"] {
-    transform: translateX(0) scale(0.6) rotateY(0deg);
+  .voice-card.is-hidden {
+    transform: translateX(-50%) translateY(40px) scale(0.8);
     opacity: 0;
     z-index: 0;
     pointer-events: none;
   }
+
+  /* Floating animation */
+  @keyframes cardFloat {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-8px); }
+  }
+
+  /* Card inner */
+  .voice-card__inner {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 1.2rem;
+    padding: 2rem 2rem 1.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow:
+      0 20px 60px rgba(0, 60, 40, 0.12),
+      0 8px 24px rgba(0, 60, 40, 0.08),
+      0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+    transition: box-shadow 0.3s ease, transform 0.15s ease-out;
+  }
+
+  .voice-card.is-current .voice-card__inner:hover {
+    box-shadow:
+      0 24px 70px rgba(0, 60, 40, 0.16),
+      0 10px 30px rgba(0, 60, 40, 0.1),
+      0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+  }
+
+  .voice-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .voice-card__age {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: #1a6b5a;
+    padding: 0.2rem 0.7rem;
+    background: rgba(26, 107, 90, 0.08);
+    border: 1px solid rgba(26, 107, 90, 0.15);
+    border-radius: 100px;
+  }
+
+  .voice-card__deco {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
+    color: rgba(26, 107, 90, 0.12);
+    font-family: Georgia, serif;
+    user-select: none;
+  }
+
+  .voice-card__quote {
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.7;
+    color: #1a3a30;
+    margin-bottom: 0.8rem;
+  }
+
+  .voice-card__body {
+    font-size: 0.82rem;
+    line-height: 1.9;
+    color: rgba(26, 58, 48, 0.6);
+  }
+
+  /* ===== Indicators ===== */
+  .voice-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 1.5rem;
+  }
+
+  .voice-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .voice-indicator.is-active {
+    width: 28px;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* ===== Scroll Reveal ===== */
+  [data-voice-anim] {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  [data-voice-anim].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 640px) {
+    .voice-section {
+      padding: 4rem 0 5rem;
+    }
+
+    .voice-carousel {
+      height: 360px;
+    }
+
+    .voice-card {
+      width: 96%;
+    }
+
+    .voice-card__inner {
+      padding: 1.5rem 1.3rem 1.3rem;
+    }
+
+    .voice-card__quote {
+      font-size: 1rem;
+    }
+
+    .voice-bg__circle--1 {
+      width: 300px;
+      height: 300px;
+    }
+
+    .voice-bg__circle--2 {
+      width: 200px;
+      height: 200px;
+    }
+
+    .voice-bg__circle--3 {
+      display: none;
+    }
+  }
 </style>
 
 <script>
-  function initVoiceCarousels() {
-    const carousels = document.querySelectorAll('.voice-carousel');
+  function initVoice() {
+    // Tab switching
+    const tabs = document.querySelectorAll('.voice-tab') as NodeListOf<HTMLElement>;
+    const panels = document.querySelectorAll('.voice-panel') as NodeListOf<HTMLElement>;
 
-    carousels.forEach(carousel => {
-      const cards = carousel.querySelectorAll('.carousel-card');
-      const prevBtn = carousel.querySelector('.carousel-prev') as HTMLButtonElement;
-      const nextBtn = carousel.querySelector('.carousel-next') as HTMLButtonElement;
-      const dots = carousel.querySelectorAll('.carousel-dot');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const id = tab.dataset.tab;
+        tabs.forEach(t => t.classList.remove('is-active'));
+        tab.classList.add('is-active');
 
-      let currentIndex = 0;
-      const totalCards = cards.length;
+        panels.forEach(p => {
+          p.classList.remove('is-active');
+          if (p.dataset.panel === id) {
+            p.classList.add('is-active');
+            // Reset carousel to first card
+            initCarousel(p);
+          }
+        });
+      });
+    });
 
-      function updateCarousel() {
-        cards.forEach((card, index) => {
-          const el = card as HTMLElement;
-          if (index === currentIndex) {
-            el.setAttribute('data-state', 'active');
-          } else if (index === (currentIndex - 1 + totalCards) % totalCards) {
-            el.setAttribute('data-state', 'left');
-          } else if (index === (currentIndex + 1) % totalCards) {
-            el.setAttribute('data-state', 'right');
+    // Init carousels
+    panels.forEach(p => {
+      if (p.classList.contains('is-active')) initCarousel(p);
+    });
+
+    function initCarousel(panel: HTMLElement) {
+      const cards = panel.querySelectorAll('.voice-card') as NodeListOf<HTMLElement>;
+      const dots = panel.querySelectorAll('.voice-indicator') as NodeListOf<HTMLElement>;
+      const total = cards.length;
+      let current = 0;
+      let timer: ReturnType<typeof setInterval> | null = null;
+
+      // Clear any existing timer stored on panel
+      if ((panel as any)._voiceTimer) {
+        clearInterval((panel as any)._voiceTimer);
+      }
+
+      function update() {
+        cards.forEach((card, i) => {
+          card.classList.remove('is-current', 'is-next', 'is-prev', 'is-hidden');
+          if (i === current) {
+            card.classList.add('is-current');
+          } else if (i === (current + 1) % total) {
+            card.classList.add('is-next');
+          } else if (i === (current - 1 + total) % total) {
+            card.classList.add('is-prev');
           } else {
-            el.setAttribute('data-state', 'hidden');
+            card.classList.add('is-hidden');
           }
         });
 
-        dots.forEach((dot, index) => {
-          if (index === currentIndex) {
-            dot.classList.add('bg-[#2e7d32]', 'w-4');
-            dot.classList.remove('bg-[#231815]/20');
-          } else {
-            dot.classList.remove('bg-[#2e7d32]', 'w-4');
-            dot.classList.add('bg-[#231815]/20');
-          }
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('is-active', i === current);
         });
       }
 
-      prevBtn?.addEventListener('click', () => {
-        currentIndex = (currentIndex - 1 + totalCards) % totalCards;
-        updateCarousel();
+      function next() {
+        current = (current + 1) % total;
+        update();
+      }
+
+      function startAuto() {
+        stopAuto();
+        timer = setInterval(next, 4500);
+        (panel as any)._voiceTimer = timer;
+      }
+
+      function stopAuto() {
+        if (timer) { clearInterval(timer); timer = null; }
+      }
+
+      // Dot click
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          current = i;
+          update();
+          startAuto();
+        });
       });
 
-      nextBtn?.addEventListener('click', () => {
-        currentIndex = (currentIndex + 1) % totalCards;
-        updateCarousel();
+      // Swipe support
+      let startX = 0;
+      const carousel = panel.querySelector('.voice-carousel');
+      carousel?.addEventListener('touchstart', (e) => {
+        startX = (e as TouchEvent).touches[0].clientX;
+        stopAuto();
+      }, { passive: true });
+
+      carousel?.addEventListener('touchend', (e) => {
+        const diff = startX - (e as TouchEvent).changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) {
+          if (diff > 0) { current = (current + 1) % total; }
+          else { current = (current - 1 + total) % total; }
+          update();
+        }
+        startAuto();
+      }, { passive: true });
+
+      // Mouse tilt on active card
+      carousel?.addEventListener('mousemove', (e) => {
+        const active = carousel.querySelector('.is-current .voice-card__inner') as HTMLElement;
+        if (!active) return;
+        const rect = active.getBoundingClientRect();
+        const x = ((e as MouseEvent).clientX - rect.left) / rect.width;
+        const y = ((e as MouseEvent).clientY - rect.top) / rect.height;
+        const rx = (y - 0.5) * -4;
+        const ry = (x - 0.5) * 4;
+        active.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg)`;
       });
 
-      // 初期状態
-      updateCarousel();
-    });
+      carousel?.addEventListener('mouseleave', () => {
+        const active = carousel.querySelector('.is-current .voice-card__inner') as HTMLElement;
+        if (active) active.style.transform = '';
+      });
+
+      // Pause on hover
+      carousel?.addEventListener('mouseenter', stopAuto);
+      carousel?.addEventListener('mouseleave', startAuto);
+
+      update();
+      startAuto();
+    }
+
+    // Scroll reveal
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('is-visible');
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('[data-voice-anim]').forEach(el => obs.observe(el));
   }
 
-  document.addEventListener('astro:page-load', initVoiceCarousels);
-  initVoiceCarousels();
+  document.addEventListener('astro:page-load', initVoice);
+  initVoice();
 </script>
