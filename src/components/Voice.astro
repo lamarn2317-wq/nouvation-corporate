@@ -1,5 +1,5 @@
 ---
-// Voice - 利用者の声 | Green Gradient + Portrait Card
+// Voice - 利用者の声 | Premium Green × Postcard
 
 const categories = [
   {
@@ -33,10 +33,18 @@ const categories = [
 ---
 
 <section data-section-theme="light" id="voice" class="voice-section">
+  <!-- 背景レイヤー -->
+  <div class="vbg" aria-hidden="true">
+    <div class="vbg__grad"></div>
+    <div class="vbg__shine"></div>
+    <div class="vbg__leaf vbg__leaf--1"></div>
+    <div class="vbg__leaf vbg__leaf--2"></div>
+  </div>
+
   <div class="voice-container">
     <div class="voice-header" data-voice-anim>
       <p class="voice-eyebrow">VOICE</p>
-      <h2 class="voice-heading">利用者の声</h2>
+      <h2 class="voice-heading">利 用 者 の 声</h2>
     </div>
 
     <div class="voice-tabs" data-voice-anim>
@@ -48,26 +56,45 @@ const categories = [
     <div class="voice-panels">
       {categories.map((cat, ci) => (
         <div class={`voice-panel ${ci === 0 ? 'is-active' : ''}`} data-panel={cat.id}>
-          <div class="voice-carousel" data-voice-anim>
-            {cat.items.map((item, i) => (
-              <article class={`voice-card ${i === 0 ? 'is-current' : ''}`} data-ci={i}>
-                <div class="voice-card__inner">
-                  <div class="voice-card__top">
-                    <span class="voice-card__age">{item.age}</span>
-                    <span class="voice-card__deco">"</span>
+          <div class="voice-stage" data-voice-anim>
+            <div class="voice-carousel">
+              {cat.items.map((item, i) => (
+                <article class={`voice-card ${i === 0 ? 'is-current' : ''}`} data-ci={i}>
+                  <!-- ハガキ本体 -->
+                  <div class="card-face">
+                    <!-- 上部：スタンプ風アクセント -->
+                    <div class="card-header">
+                      <div class="card-stamp">
+                        <span class="stamp-mark">✿</span>
+                        <span class="stamp-text">VOICE</span>
+                      </div>
+                      <span class="card-age">{item.age}</span>
+                    </div>
+                    <!-- 仕切り線 -->
+                    <div class="card-divider"></div>
+                    <!-- 本文エリア -->
+                    <div class="card-body-area">
+                      <p class="card-deco">"</p>
+                      <h3 class="card-quote">{item.quote}</h3>
+                      <p class="card-body">{item.text}</p>
+                    </div>
+                    <!-- 下部：消印風 -->
+                    <div class="card-footer">
+                      <div class="card-postmark">
+                        <span class="postmark-line"></span>
+                        <span class="postmark-name">NOUVATION</span>
+                        <span class="postmark-line"></span>
+                      </div>
+                    </div>
                   </div>
-                  <h3 class="voice-card__quote">「{item.quote}」</h3>
-                  <p class="voice-card__body">{item.text}</p>
-                  <div class="voice-card__footer">
-                    <span class="voice-card__tag">NOUVATION</span>
-                  </div>
-                </div>
-              </article>
-            ))}
+                </article>
+              ))}
+            </div>
           </div>
+
           <div class="voice-indicators" data-voice-anim>
             {cat.items.map((_, i) => (
-              <button class={`voice-indicator ${i === 0 ? 'is-active' : ''}`} data-goto={i} aria-label={`${i + 1}番目`}></button>
+              <button class={`voice-dot ${i === 0 ? 'is-active' : ''}`} data-goto={i} aria-label={`${i + 1}番目`}></button>
             ))}
           </div>
         </div>
@@ -77,19 +104,60 @@ const categories = [
 </section>
 
 <style>
+  /* ===== Section ===== */
   .voice-section {
     position: relative;
     padding: 7rem 0 8rem;
     overflow: hidden;
-    background: linear-gradient(145deg,
-      #1b5e3a 0%,
-      #267a4a 20%,
-      #2f8f55 40%,
-      #3da564 60%,
-      #4fba72 78%,
+    isolation: isolate;
+  }
+
+  /* ===== Background ===== */
+  .vbg { position: absolute; inset: 0; pointer-events: none; }
+
+  .vbg__grad {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg,
+      #0d3320 0%,
+      #1b5e3a 25%,
+      #267a4a 48%,
+      #3da564 72%,
       #6dce88 90%,
       #8ddfa0 100%
     );
+  }
+
+  /* 光沢シャイン */
+  .vbg__shine {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 30% 20%, rgba(255,255,255,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 30% at 80% 80%, rgba(255,255,255,0.04) 0%, transparent 50%);
+  }
+
+  /* 葉っぱシルエット */
+  .vbg__leaf {
+    position: absolute;
+    border-radius: 0 100% 0 100%;
+    background: rgba(255,255,255,0.03);
+    animation: leafSway 12s ease-in-out infinite;
+  }
+  .vbg__leaf--1 {
+    width: 260px; height: 260px;
+    top: -60px; left: -40px;
+    transform: rotate(20deg);
+  }
+  .vbg__leaf--2 {
+    width: 200px; height: 200px;
+    bottom: -40px; right: -20px;
+    transform: rotate(-30deg);
+    animation-delay: -6s;
+  }
+  @keyframes leafSway {
+    0%,100% { transform: rotate(20deg) scale(1); }
+    50% { transform: rotate(25deg) scale(1.05); }
   }
 
   /* ===== Container ===== */
@@ -102,26 +170,25 @@ const categories = [
   }
 
   /* ===== Header ===== */
-  .voice-header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-  }
+  .voice-header { text-align: center; margin-bottom: 2.5rem; }
 
   .voice-eyebrow {
-    font-size: clamp(2.2rem, 6vw, 3.5rem);
-    font-weight: 700;
-    letter-spacing: 0.15em;
+    font-size: clamp(2.4rem, 6vw, 3.8rem);
+    font-weight: 800;
+    letter-spacing: 0.18em;
     color: #fff;
-    line-height: 1.1;
-    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+    line-height: 1;
+    text-shadow:
+      0 2px 0 rgba(0,0,0,0.15),
+      0 4px 30px rgba(0,0,0,0.2);
   }
 
   .voice-heading {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 500;
-    letter-spacing: 0.3em;
-    color: rgba(255, 255, 255, 0.75);
-    margin-top: 0.6rem;
+    letter-spacing: 0.35em;
+    color: rgba(255,255,255,0.7);
+    margin-top: 0.7rem;
   }
 
   /* ===== Tabs ===== */
@@ -129,204 +196,270 @@ const categories = [
     display: flex;
     justify-content: center;
     gap: 0.5rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
     flex-wrap: wrap;
   }
 
   .voice-tab {
-    padding: 0.55rem 1.6rem;
-    font-size: 0.82rem;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.8rem;
     font-weight: 600;
     letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.75);
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255,255,255,0.75);
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
     border-radius: 100px;
     cursor: pointer;
-    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     backdrop-filter: blur(8px);
   }
-
   .voice-tab:hover {
     color: #fff;
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255,255,255,0.22);
   }
-
   .voice-tab.is-active {
     color: #1b5e3a;
-    background: rgba(255, 255, 255, 0.95);
-    border-color: rgba(255, 255, 255, 1);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    background: #fff;
+    border-color: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    font-weight: 700;
   }
 
   /* ===== Panels ===== */
-  .voice-panels {
-    position: relative;
-    min-height: 540px;
-  }
-
+  .voice-panels { position: relative; min-height: 500px; }
   .voice-panel { display: none; }
   .voice-panel.is-active {
     display: block;
-    animation: panelIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    animation: panelIn 0.4s cubic-bezier(0.22,1,0.36,1);
   }
-
   @keyframes panelIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ===== Carousel ===== */
+  /* ===== Stage + Carousel ===== */
+  .voice-stage {
+    position: relative;
+    height: 430px;
+    /* 3Dパースペクティブ */
+    perspective: 1600px;
+    perspective-origin: 50% 50%;
+  }
+
   .voice-carousel {
     position: relative;
-    height: 480px;
-    perspective: 1400px;
-    overflow: visible;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
     touch-action: pan-y;
     user-select: none;
+    cursor: grab;
   }
+  .voice-carousel:active { cursor: grabbing; }
 
-  /* ===== Card — ハガキ縦型 ===== */
+  /* ===== Card ===== */
   .voice-card {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 220px;
-    /* portrait ratio: ~A5/postcard ~1:1.5 */
-    transform-origin: center center;
-    transform: translate(-50%, -50%) scale(0.72) rotateY(0deg);
+    /* ハガキサイズ: 148mm × 100mm ≈ 1.48:1 縦型 */
+    width: 230px;
+    transform: translate(-50%, -50%) scale(0.5) rotateY(0deg) translateZ(-200px);
     opacity: 0;
-    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.55s ease;
+    transition:
+      transform 0.65s cubic-bezier(0.16,1,0.3,1),
+      opacity   0.65s cubic-bezier(0.16,1,0.3,1),
+      filter    0.65s ease;
     will-change: transform, opacity;
     pointer-events: none;
   }
 
-  /* ACTIVE */
+  /* 前面 — 大きく浮かび上がる */
   .voice-card.is-current {
-    transform: translate(-50%, -50%) scale(1) rotateY(0deg);
+    transform: translate(-50%, -50%) scale(1.05) rotateY(0deg) translateZ(0px);
     opacity: 1;
     z-index: 3;
     pointer-events: auto;
-    filter: none;
+    filter: drop-shadow(0 30px 50px rgba(0,0,0,0.35));
     animation: cardFloat 5s ease-in-out infinite;
   }
 
-  /* 右に小さく */
+  /* 右 — 遠ざかる */
   .voice-card.is-next {
-    transform: translate(20%, -50%) scale(0.72) rotateY(-15deg);
-    opacity: 0.55;
+    transform: translate(18%, -50%) scale(0.55) rotateY(-22deg) translateZ(-180px);
+    opacity: 0.5;
     z-index: 2;
-    filter: blur(1px);
+    filter: blur(1.5px) brightness(0.85);
     pointer-events: auto;
   }
 
-  /* 左に小さく */
+  /* 左 — 遠ざかる */
   .voice-card.is-prev {
-    transform: translate(-120%, -50%) scale(0.72) rotateY(15deg);
-    opacity: 0.55;
+    transform: translate(-118%, -50%) scale(0.55) rotateY(22deg) translateZ(-180px);
+    opacity: 0.5;
     z-index: 2;
-    filter: blur(1px);
+    filter: blur(1.5px) brightness(0.85);
     pointer-events: auto;
   }
 
   .voice-card.is-hidden {
-    transform: translate(-50%, -50%) scale(0.5);
+    transform: translate(-50%, -50%) scale(0.4) translateZ(-300px);
     opacity: 0;
     z-index: 0;
     pointer-events: none;
   }
 
-  @keyframes cardFloat {
-    0%, 100% { transform: translate(-50%, -50%) scale(1) translateY(0); }
-    50% { transform: translate(-50%, -50%) scale(1) translateY(-8px); }
-  }
-
-  /* drag中はfloat止める */
-  .voice-card.is-dragging {
+  .voice-card.no-anim {
+    transition: none !important;
     animation: none !important;
   }
 
-  /* ===== Card Inner — 白ハガキ ===== */
-  .voice-card__inner {
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 1rem;
-    padding: 2rem 1.6rem 1.6rem;
-    border: 1px solid rgba(255, 255, 255, 0.8);
+  @keyframes cardFloat {
+    0%,100% { transform: translate(-50%, -50%) scale(1.05) rotateY(0deg) translateZ(0px) translateY(0); }
+    50%      { transform: translate(-50%, -50%) scale(1.05) rotateY(0deg) translateZ(0px) translateY(-9px); }
+  }
+
+  /* ===== Card Face — ハガキデザイン ===== */
+  .card-face {
+    background: linear-gradient(170deg, #fffdf8 0%, #f8f4ee 100%);
+    border-radius: 0.6rem;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.07);
     box-shadow:
-      0 20px 60px rgba(0, 0, 0, 0.2),
-      0 4px 16px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 1);
-    transition: box-shadow 0.3s ease;
-    min-height: 340px;
+      0 1px 0 rgba(255,255,255,0.9) inset,
+      0 -1px 0 rgba(0,0,0,0.05) inset,
+      1px 0 0 rgba(255,255,255,0.6) inset;
     display: flex;
     flex-direction: column;
+    /* ハガキ縦型：少し短めに */
+    min-height: 310px;
+    position: relative;
   }
 
-  .voice-card.is-current .voice-card__inner {
-    box-shadow:
-      0 30px 80px rgba(0, 0, 0, 0.25),
-      0 8px 30px rgba(27, 94, 58, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 1);
+  /* 縦の赤線（はがき風） */
+  .card-face::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    right: 52px;
+    width: 1px;
+    background: rgba(200, 80, 80, 0.18);
   }
 
-  /* Card content */
-  .voice-card__top {
+  /* ===== Card Header ===== */
+  .card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1.2rem;
+    padding: 0.9rem 1.2rem 0.5rem;
   }
 
-  .voice-card__age {
-    font-size: 0.65rem;
+  /* スタンプ */
+  .card-stamp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid rgba(47,143,85,0.5);
+    border-radius: 4px;
+    background: rgba(47,143,85,0.05);
+    position: relative;
+  }
+  .card-stamp::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border: 1px solid rgba(47,143,85,0.25);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+  .stamp-mark {
+    font-size: 0.85rem;
+    line-height: 1;
+    color: #2f8f55;
+  }
+  .stamp-text {
+    font-size: 0.38rem;
     font-weight: 700;
     letter-spacing: 0.1em;
-    color: #fff;
-    padding: 0.25rem 0.75rem;
-    background: #2f8f55;
+    color: #2f8f55;
+    margin-top: 1px;
+  }
+
+  /* 年代バッジ */
+  .card-age {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #1b5e3a;
+    padding: 0.2rem 0.65rem;
+    background: rgba(47,143,85,0.1);
+    border: 1px solid rgba(47,143,85,0.25);
     border-radius: 100px;
   }
 
-  .voice-card__deco {
-    font-size: 3.5rem;
+  /* 仕切り */
+  .card-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08) 30%, rgba(0,0,0,0.08) 70%, transparent);
+    margin: 0 1.2rem;
+  }
+
+  /* 本文エリア */
+  .card-body-area {
+    padding: 0.9rem 1.2rem 0.7rem;
+    flex: 1;
+    position: relative;
+  }
+
+  .card-deco {
+    font-size: 2.8rem;
     font-weight: 700;
     line-height: 1;
-    color: rgba(47, 143, 85, 0.2);
+    color: rgba(47,143,85,0.15);
     font-family: Georgia, serif;
+    margin-bottom: -0.5rem;
     user-select: none;
   }
 
-  .voice-card__quote {
-    font-size: 1rem;
+  .card-quote {
+    font-size: 0.92rem;
     font-weight: 700;
-    line-height: 1.7;
-    color: #1b5e3a;
-    margin-bottom: 1rem;
+    line-height: 1.65;
+    color: #1a3d28;
+    margin-bottom: 0.7rem;
   }
 
-  .voice-card__body {
-    font-size: 0.75rem;
-    line-height: 1.9;
+  .card-body {
+    font-size: 0.7rem;
+    line-height: 1.85;
     color: #3a5a45;
+  }
+
+  /* 消印フッター */
+  .card-footer {
+    padding: 0.6rem 1.2rem 0.9rem;
+  }
+
+  .card-postmark {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .postmark-line {
     flex: 1;
+    height: 1px;
+    background: rgba(47,143,85,0.2);
   }
 
-  .voice-card__footer {
-    margin-top: 1.2rem;
-    border-top: 1px solid rgba(47, 143, 85, 0.15);
-    padding-top: 0.8rem;
-  }
-
-  .voice-card__tag {
-    font-size: 0.6rem;
+  .postmark-name {
+    font-size: 0.55rem;
     font-weight: 700;
-    letter-spacing: 0.15em;
-    color: rgba(47, 143, 85, 0.5);
+    letter-spacing: 0.2em;
+    color: rgba(47,143,85,0.5);
   }
 
   /* ===== Indicators ===== */
@@ -334,33 +467,30 @@ const categories = [
     display: flex;
     justify-content: center;
     gap: 8px;
-    margin-top: 1.5rem;
+    margin-top: 1.2rem;
   }
 
-  .voice-indicator {
-    width: 7px;
-    height: 7px;
+  .voice-dot {
+    width: 7px; height: 7px;
     border-radius: 50%;
-    border: none;
-    padding: 0;
-    background: rgba(255, 255, 255, 0.4);
+    border: none; padding: 0;
+    background: rgba(255,255,255,0.35);
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
   }
-
-  .voice-indicator.is-active {
-    width: 26px;
+  .voice-dot.is-active {
+    width: 28px;
     border-radius: 100px;
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 0 14px rgba(255,255,255,0.35);
   }
 
   /* ===== Scroll Reveal ===== */
   [data-voice-anim] {
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1),
+                transform 0.7s cubic-bezier(0.22,1,0.36,1);
   }
   [data-voice-anim].is-visible {
     opacity: 1;
@@ -370,16 +500,17 @@ const categories = [
   /* ===== Responsive ===== */
   @media (max-width: 640px) {
     .voice-section { padding: 4.5rem 0 5rem; }
-    .voice-carousel { height: 460px; }
-    .voice-card { width: 190px; }
-    .voice-card__inner { padding: 1.6rem 1.3rem 1.3rem; min-height: 300px; }
-    .voice-card__quote { font-size: 0.9rem; }
+    .voice-stage { height: 400px; }
+    .voice-card { width: 200px; }
+    .card-face { min-height: 280px; }
+    .card-quote { font-size: 0.85rem; }
+    .card-body { font-size: 0.65rem; }
   }
 </style>
 
 <script>
   function initVoice() {
-    const tabs = document.querySelectorAll('.voice-tab') as NodeListOf<HTMLElement>;
+    const tabs   = document.querySelectorAll('.voice-tab')   as NodeListOf<HTMLElement>;
     const panels = document.querySelectorAll('.voice-panel') as NodeListOf<HTMLElement>;
 
     tabs.forEach(tab => {
@@ -389,10 +520,7 @@ const categories = [
         tab.classList.add('is-active');
         panels.forEach(p => {
           p.classList.remove('is-active');
-          if (p.dataset.panel === id) {
-            p.classList.add('is-active');
-            initCarousel(p);
-          }
+          if (p.dataset.panel === id) { p.classList.add('is-active'); initCarousel(p); }
         });
       });
     });
@@ -401,109 +529,93 @@ const categories = [
 
     function initCarousel(panel: HTMLElement) {
       const cards = panel.querySelectorAll('.voice-card') as NodeListOf<HTMLElement>;
-      const dots = panel.querySelectorAll('.voice-indicator') as NodeListOf<HTMLElement>;
+      const dots  = panel.querySelectorAll('.voice-dot')  as NodeListOf<HTMLElement>;
+      const car   = panel.querySelector('.voice-carousel') as HTMLElement;
       const total = cards.length;
       let current = 0;
       let isDragging = false;
       let startX = 0;
-      let currentDX = 0;
+      let dx = 0;
 
-      function update(animate = true) {
+      // 古いイベントを消すためパネルごとに管理
+      if ((panel as any)._vc_cleanup) (panel as any)._vc_cleanup();
+
+      function update() {
         cards.forEach((card, i) => {
-          card.classList.remove('is-current', 'is-next', 'is-prev', 'is-hidden');
-          if (!animate) card.style.transition = 'none';
-          else card.style.transition = '';
-
-          if (i === current) card.classList.add('is-current');
-          else if (i === (current + 1) % total) card.classList.add('is-next');
+          card.classList.remove('is-current','is-next','is-prev','is-hidden','no-anim');
+          if      (i === current)                  card.classList.add('is-current');
+          else if (i === (current + 1) % total)    card.classList.add('is-next');
           else if (i === (current - 1 + total) % total) card.classList.add('is-prev');
-          else card.classList.add('is-hidden');
+          else                                     card.classList.add('is-hidden');
         });
         dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
-
-        // reflow trick to apply no-transition immediately
-        if (!animate) {
-          cards.forEach(c => c.getBoundingClientRect());
-          cards.forEach(c => c.style.transition = '');
-        }
       }
 
       dots.forEach((d, i) => d.addEventListener('click', () => { current = i; update(); }));
 
-      // prev/next card click
+      // prev/next クリック
       cards.forEach((card) => {
         card.addEventListener('click', () => {
-          if (Math.abs(currentDX) > 5) return; // ignore drag end
-          if (card.classList.contains('is-next')) { current = (current + 1) % total; update(); }
-          else if (card.classList.contains('is-prev')) { current = (current - 1 + total) % total; update(); }
+          if (Math.abs(dx) > 8) return;
+          if (card.classList.contains('is-next')) { current = (current+1)%total; update(); }
+          else if (card.classList.contains('is-prev')) { current = (current-1+total)%total; update(); }
         });
       });
 
-      // ===== Smooth Swipe =====
-      const car = panel.querySelector('.voice-carousel') as HTMLElement;
-
-      function onDragStart(x: number) {
-        isDragging = true;
-        startX = x;
-        currentDX = 0;
+      // ===== Drag / Swipe =====
+      function dragStart(x: number) {
+        isDragging = true; startX = x; dx = 0;
         const ac = car.querySelector('.is-current') as HTMLElement;
-        if (ac) {
-          ac.classList.add('is-dragging');
-          ac.style.transition = 'none';
-        }
+        if (ac) { ac.classList.add('no-anim'); ac.style.transition = 'none'; }
       }
 
-      function onDragMove(x: number) {
+      function dragMove(x: number) {
         if (!isDragging) return;
-        currentDX = x - startX;
+        dx = x - startX;
         const ac = car.querySelector('.is-current') as HTMLElement;
         if (!ac) return;
-        const rot = currentDX * -0.02;
-        const scale = 1 - Math.abs(currentDX) * 0.0003;
-        ac.style.transform = `translate(calc(-50% + ${currentDX}px), -50%) scale(${Math.max(scale, 0.9)}) rotateY(${rot}deg)`;
+        const rot   = dx * -0.025;
+        const scl   = Math.max(1.05 - Math.abs(dx) * 0.0004, 0.95);
+        const tY    = Math.abs(dx) * 0.03;
+        ac.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${tY}px)) scale(${scl}) rotateY(${rot}deg) translateZ(0)`;
       }
 
-      function onDragEnd() {
+      function dragEnd() {
         if (!isDragging) return;
         isDragging = false;
         const ac = car.querySelector('.is-current') as HTMLElement;
-        if (ac) {
-          ac.classList.remove('is-dragging');
-          ac.style.transition = '';
-          ac.style.transform = '';
+        if (ac) { ac.classList.remove('no-anim'); ac.style.transition = ''; ac.style.transform = ''; }
+        if (Math.abs(dx) > 55) {
+          if (dx < 0) current = (current+1)%total;
+          else        current = (current-1+total)%total;
         }
-        if (Math.abs(currentDX) > 60) {
-          if (currentDX < 0) current = (current + 1) % total;
-          else current = (current - 1 + total) % total;
-        }
-        update();
-        currentDX = 0;
+        update(); dx = 0;
       }
 
       // Touch
-      car?.addEventListener('touchstart', (e) => {
-        onDragStart((e as TouchEvent).touches[0].clientX);
-      }, { passive: true });
-
-      car?.addEventListener('touchmove', (e) => {
-        onDragMove((e as TouchEvent).touches[0].clientX);
-      }, { passive: true });
-
-      car?.addEventListener('touchend', onDragEnd, { passive: true });
+      const onTS = (e: Event) => dragStart((e as TouchEvent).touches[0].clientX);
+      const onTM = (e: Event) => dragMove((e as TouchEvent).touches[0].clientX);
+      const onTE = () => dragEnd();
+      car.addEventListener('touchstart', onTS, { passive: true });
+      car.addEventListener('touchmove',  onTM, { passive: true });
+      car.addEventListener('touchend',   onTE, { passive: true });
 
       // Mouse
-      car?.addEventListener('mousedown', (e) => {
-        onDragStart((e as MouseEvent).clientX);
-        e.preventDefault();
-      });
+      const onMD = (e: Event) => { dragStart((e as MouseEvent).clientX); (e as MouseEvent).preventDefault(); };
+      const onMM = (e: Event) => { if (isDragging) dragMove((e as MouseEvent).clientX); };
+      const onMU = () => { if (isDragging) dragEnd(); };
+      car.addEventListener('mousedown', onMD);
+      window.addEventListener('mousemove', onMM);
+      window.addEventListener('mouseup', onMU);
 
-      window.addEventListener('mousemove', (e) => {
-        if (isDragging) onDragMove((e as MouseEvent).clientX);
-      });
-
-      window.addEventListener('mouseup', () => {
-        if (isDragging) onDragEnd();
-      });
+      (panel as any)._vc_cleanup = () => {
+        car.removeEventListener('touchstart', onTS);
+        car.removeEventListener('touchmove',  onTM);
+        car.removeEventListener('touchend',   onTE);
+        car.removeEventListener('mousedown',  onMD);
+        window.removeEventListener('mousemove', onMM);
+        window.removeEventListener('mouseup',   onMU);
+      };
 
       update();
     }
