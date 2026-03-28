@@ -60,31 +60,14 @@ const categories = [
             <div class="voice-carousel">
               {cat.items.map((item, i) => (
                 <article class={`voice-card ${i === 0 ? 'is-current' : ''}`} data-ci={i}>
-                  <!-- ハガキ本体 -->
                   <div class="card-face">
-                    <!-- 上部：スタンプ風アクセント -->
                     <div class="card-header">
-                      <div class="card-stamp">
-                        <span class="stamp-mark">✿</span>
-                        <span class="stamp-text">VOICE</span>
-                      </div>
                       <span class="card-age">{item.age}</span>
                     </div>
-                    <!-- 仕切り線 -->
-                    <div class="card-divider"></div>
-                    <!-- 本文エリア -->
                     <div class="card-body-area">
                       <p class="card-deco">"</p>
                       <h3 class="card-quote">{item.quote}</h3>
                       <p class="card-body">{item.text}</p>
-                    </div>
-                    <!-- 下部：消印風 -->
-                    <div class="card-footer">
-                      <div class="card-postmark">
-                        <span class="postmark-line"></span>
-                        <span class="postmark-name">NOUVATION</span>
-                        <span class="postmark-line"></span>
-                      </div>
                     </div>
                   </div>
                 </article>
@@ -240,8 +223,7 @@ const categories = [
   /* ===== Stage + Carousel ===== */
   .voice-stage {
     position: relative;
-    height: 430px;
-    /* 3Dパースペクティブ */
+    height: 500px;
     perspective: 1600px;
     perspective-origin: 50% 50%;
   }
@@ -262,8 +244,7 @@ const categories = [
     position: absolute;
     top: 50%;
     left: 50%;
-    /* ハガキサイズ: 148mm × 100mm ≈ 1.48:1 縦型 */
-    width: 230px;
+    width: 300px;
     transform: translate(-50%, -50%) scale(0.5) rotateY(0deg) translateZ(-200px);
     opacity: 0;
     transition:
@@ -319,147 +300,65 @@ const categories = [
     50%      { transform: translate(-50%, -50%) scale(1.05) rotateY(0deg) translateZ(0px) translateY(-9px); }
   }
 
-  /* ===== Card Face — ハガキデザイン ===== */
+  /* ===== Card Face ===== */
   .card-face {
-    background: linear-gradient(170deg, #fffdf8 0%, #f8f4ee 100%);
-    border-radius: 0.6rem;
-    overflow: hidden;
-    border: 1px solid rgba(0,0,0,0.07);
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 1rem;
+    border: 1px solid rgba(255,255,255,0.8);
     box-shadow:
-      0 1px 0 rgba(255,255,255,0.9) inset,
-      0 -1px 0 rgba(0,0,0,0.05) inset,
-      1px 0 0 rgba(255,255,255,0.6) inset;
+      0 2px 0 rgba(255,255,255,1) inset,
+      0 20px 50px rgba(0,0,0,0.18);
     display: flex;
     flex-direction: column;
-    /* ハガキ縦型：少し短めに */
-    min-height: 310px;
-    position: relative;
-  }
-
-  /* 縦の赤線（はがき風） */
-  .card-face::after {
-    content: '';
-    position: absolute;
-    top: 0; bottom: 0;
-    right: 52px;
-    width: 1px;
-    background: rgba(200, 80, 80, 0.18);
+    min-height: 360px;
   }
 
   /* ===== Card Header ===== */
   .card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.9rem 1.2rem 0.5rem;
-  }
-
-  /* スタンプ */
-  .card-stamp {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border: 1.5px solid rgba(47,143,85,0.5);
-    border-radius: 4px;
-    background: rgba(47,143,85,0.05);
-    position: relative;
-  }
-  .card-stamp::before {
-    content: '';
-    position: absolute;
-    inset: 2px;
-    border: 1px solid rgba(47,143,85,0.25);
-    border-radius: 2px;
-    pointer-events: none;
-  }
-  .stamp-mark {
-    font-size: 0.85rem;
-    line-height: 1;
-    color: #2f8f55;
-  }
-  .stamp-text {
-    font-size: 0.38rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: #2f8f55;
-    margin-top: 1px;
+    padding: 1.4rem 1.6rem 0.6rem;
   }
 
   /* 年代バッジ */
   .card-age {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     color: #1b5e3a;
-    padding: 0.2rem 0.65rem;
+    padding: 0.25rem 0.8rem;
     background: rgba(47,143,85,0.1);
     border: 1px solid rgba(47,143,85,0.25);
     border-radius: 100px;
-  }
-
-  /* 仕切り */
-  .card-divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08) 30%, rgba(0,0,0,0.08) 70%, transparent);
-    margin: 0 1.2rem;
+    display: inline-block;
   }
 
   /* 本文エリア */
   .card-body-area {
-    padding: 0.9rem 1.2rem 0.7rem;
+    padding: 0.4rem 1.6rem 1.6rem;
     flex: 1;
-    position: relative;
   }
 
   .card-deco {
-    font-size: 2.8rem;
+    font-size: 3.2rem;
     font-weight: 700;
     line-height: 1;
     color: rgba(47,143,85,0.15);
     font-family: Georgia, serif;
-    margin-bottom: -0.5rem;
+    margin-bottom: -0.6rem;
     user-select: none;
   }
 
   .card-quote {
-    font-size: 0.92rem;
+    font-size: 1.05rem;
     font-weight: 700;
     line-height: 1.65;
     color: #1a3d28;
-    margin-bottom: 0.7rem;
+    margin-bottom: 0.9rem;
   }
 
   .card-body {
-    font-size: 0.7rem;
-    line-height: 1.85;
+    font-size: 0.78rem;
+    line-height: 1.9;
     color: #3a5a45;
-  }
-
-  /* 消印フッター */
-  .card-footer {
-    padding: 0.6rem 1.2rem 0.9rem;
-  }
-
-  .card-postmark {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .postmark-line {
-    flex: 1;
-    height: 1px;
-    background: rgba(47,143,85,0.2);
-  }
-
-  .postmark-name {
-    font-size: 0.55rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    color: rgba(47,143,85,0.5);
   }
 
   /* ===== Indicators ===== */
@@ -500,11 +399,11 @@ const categories = [
   /* ===== Responsive ===== */
   @media (max-width: 640px) {
     .voice-section { padding: 4.5rem 0 5rem; }
-    .voice-stage { height: 400px; }
-    .voice-card { width: 200px; }
-    .card-face { min-height: 280px; }
-    .card-quote { font-size: 0.85rem; }
-    .card-body { font-size: 0.65rem; }
+    .voice-stage { height: 460px; }
+    .voice-card { width: 260px; }
+    .card-face { min-height: 320px; }
+    .card-quote { font-size: 0.95rem; }
+    .card-body { font-size: 0.72rem; }
   }
 </style>
 
