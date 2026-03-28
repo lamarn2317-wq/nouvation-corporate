@@ -409,11 +409,17 @@ const categories = [
 
 <script>
   function initVoice() {
+    // 二重初期化を防ぐ（astro:page-load と直接呼び出しの両方で発火する場合に対応）
+    const section = document.getElementById('voice');
+    if (!section || (section as any)._vi) return;
+    (section as any)._vi = true;
+
     const tabs   = document.querySelectorAll('.voice-tab')   as NodeListOf<HTMLElement>;
     const panels = document.querySelectorAll('.voice-panel') as NodeListOf<HTMLElement>;
 
+    // タブクリックリスナー（一度だけ登録）
     tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
+      const onTabClick = () => {
         const id = tab.dataset.tab;
         tabs.forEach(t => t.classList.remove('is-active'));
         tab.classList.add('is-active');
@@ -421,12 +427,16 @@ const categories = [
           p.classList.remove('is-active');
           if (p.dataset.panel === id) { p.classList.add('is-active'); initCarousel(p); }
         });
-      });
+      };
+      tab.addEventListener('click', onTabClick);
     });
 
     panels.forEach(p => { if (p.classList.contains('is-active')) initCarousel(p); });
 
     function initCarousel(panel: HTMLElement) {
+      // 前回のクリーンアップを実行（累積イベント防止）
+      if ((panel as any)._vc_cleanup) (panel as any)._vc_cleanup();
+
       const cards = panel.querySelectorAll('.voice-card') as NodeListOf<HTMLElement>;
       const dots  = panel.querySelectorAll('.voice-dot')  as NodeListOf<HTMLElement>;
       const car   = panel.querySelector('.voice-carousel') as HTMLElement;
@@ -436,29 +446,35 @@ const categories = [
       let startX = 0;
       let dx = 0;
 
-      // 古いイベントを消すためパネルごとに管理
-      if ((panel as any)._vc_cleanup) (panel as any)._vc_cleanup();
-
       function update() {
         cards.forEach((card, i) => {
           card.classList.remove('is-current','is-next','is-prev','is-hidden','no-anim');
-          if      (i === current)                  card.classList.add('is-current');
-          else if (i === (current + 1) % total)    card.classList.add('is-next');
+          if      (i === current)                       card.classList.add('is-current');
+          else if (i === (current + 1) % total)         card.classList.add('is-next');
           else if (i === (current - 1 + total) % total) card.classList.add('is-prev');
-          else                                     card.classList.add('is-hidden');
+          else                                          card.classList.add('is-hidden');
         });
         dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
       }
 
-      dots.forEach((d, i) => d.addEventListener('click', () => { current = i; update(); }));
+      // ドットクリック（クリーンアップ対象）
+      const dotHandlers: Array<{el: HTMLElement, fn: () => void}> = [];
+      dots.forEach((d, i) => {
+        const fn = () => { current = i; update(); };
+        d.addEventListener('click', fn);
+        dotHandlers.push({ el: d, fn });
+      });
 
-      // prev/next クリック
+      // カードクリック（クリーンアップ対象）
+      const cardHandlers: Array<{el: HTMLElement, fn: () => void}> = [];
       cards.forEach((card) => {
-        card.addEventListener('click', () => {
+        const fn = () => {
           if (Math.abs(dx) > 8) return;
           if (card.classList.contains('is-next')) { current = (current+1)%total; update(); }
           else if (card.classList.contains('is-prev')) { current = (current-1+total)%total; update(); }
-        });
+        };
+        card.addEventListener('click', fn);
+        cardHandlers.push({ el: card, fn });
       });
 
       // ===== Drag / Swipe =====
@@ -473,9 +489,9 @@ const categories = [
         dx = x - startX;
         const ac = car.querySelector('.is-current') as HTMLElement;
         if (!ac) return;
-        const rot   = dx * -0.025;
-        const scl   = Math.max(1.05 - Math.abs(dx) * 0.0004, 0.95);
-        const tY    = Math.abs(dx) * 0.03;
+        const rot = dx * -0.025;
+        const scl = Math.max(1.05 - Math.abs(dx) * 0.0004, 0.95);
+        const tY  = Math.abs(dx) * 0.03;
         ac.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${tY}px)) scale(${scl}) rotateY(${rot}deg) translateZ(0)`;
       }
 
@@ -502,22 +518,24 @@ const categories = [
       // PC Mouse drag
       const onMD = (e: MouseEvent) => { e.preventDefault(); dragStart(e.clientX); };
       const onMM = (e: MouseEvent) => { if (isDragging) dragMove(e.clientX); };
-      const onMU = (e: MouseEvent) => { if (isDragging) dragEnd(); };
-      // dragstart を防いでテキスト選択・画像ドラッグを止める
-      const onDS = (e: Event) => { e.preventDefault(); };
-      car.addEventListener('mousedown',  onMD as EventListener);
-      car.addEventListener('dragstart',  onDS);
+      const onMU = () => { if (isDragging) dragEnd(); };
+      const onDS = (e: Event) => e.preventDefault();
+      car.addEventListener('mousedown', onMD as EventListener);
+      car.addEventListener('dragstart', onDS);
       document.addEventListener('mousemove', onMM as EventListener);
-      document.addEventListener('mouseup',   onMU as EventListener);
+      document.addEventListener('mouseup',   onMU);
 
+      // クリーンアップ登録（全リスナーを確実に解除）
       (panel as any)._vc_cleanup = () => {
+        dotHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn));
+        cardHandlers.forEach(({ el, fn }) => el.removeEventListener('click', fn));
         car.removeEventListener('touchstart', onTS as EventListener);
         car.removeEventListener('touchmove',  onTM as EventListener);
         car.removeEventListener('touchend',   onTE);
         car.removeEventListener('mousedown',  onMD as EventListener);
         car.removeEventListener('dragstart',  onDS);
         document.removeEventListener('mousemove', onMM as EventListener);
-        document.removeEventListener('mouseup',   onMU as EventListener);
+        document.removeEventListener('mouseup',   onMU);
       };
 
       update();
@@ -530,6 +548,12 @@ const categories = [
     document.querySelectorAll('[data-voice-anim]').forEach(el => obs.observe(el));
   }
 
-  document.addEventListener('astro:page-load', initVoice);
+  // astro:page-load は初回ロード・View Transitions 両方で発火
+  // _vi フラグで二重実行を防止しているため直接呼び出しも安全
+  document.addEventListener('astro:page-load', () => {
+    const s = document.getElementById('voice');
+    if (s) delete (s as any)._vi; // ページ遷移時はフラグリセット
+    initVoice();
+  });
   initVoice();
 </script>
