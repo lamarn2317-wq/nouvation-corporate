@@ -38,9 +38,7 @@ const categories = [
     <div class="voice-bg__gradient"></div>
     <div class="voice-bg__noise"></div>
     <!-- Floating circles -->
-    <div class="voice-bg__circle voice-bg__circle--1"></div>
-    <div class="voice-bg__circle voice-bg__circle--2"></div>
-    <div class="voice-bg__circle voice-bg__circle--3"></div>
+    <!-- circles removed -->
   </div>
 
   <div class="voice-container">
@@ -124,12 +122,13 @@ const categories = [
     inset: 0;
     background: linear-gradient(
       180deg,
-      #1a6b5a 0%,
-      #2a8a72 20%,
-      #3d9e82 40%,
-      #5bb89a 60%,
-      #7fcdb5 80%,
-      #a8e0cc 100%
+      #1b5e3a 0%,
+      #267a4a 15%,
+      #2f8f55 30%,
+      #3da564 50%,
+      #4fba72 70%,
+      #6dce88 85%,
+      #8ddfa0 100%
     );
   }
 
@@ -141,46 +140,7 @@ const categories = [
     mix-blend-mode: overlay;
   }
 
-  /* Floating translucent circles */
-  .voice-bg__circle {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.06);
-    animation: circleFloat 18s ease-in-out infinite;
-  }
-
-  .voice-bg__circle--1 {
-    width: 500px;
-    height: 500px;
-    top: -10%;
-    right: -8%;
-    animation-duration: 20s;
-  }
-
-  .voice-bg__circle--2 {
-    width: 350px;
-    height: 350px;
-    bottom: -5%;
-    left: -5%;
-    animation-duration: 16s;
-    animation-delay: -6s;
-  }
-
-  .voice-bg__circle--3 {
-    width: 200px;
-    height: 200px;
-    top: 40%;
-    left: 30%;
-    animation-duration: 22s;
-    animation-delay: -10s;
-  }
-
-  @keyframes circleFloat {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    25% { transform: translate(25px, -20px) scale(1.05); }
-    50% { transform: translate(-15px, 15px) scale(0.97); }
-    75% { transform: translate(10px, 10px) scale(1.03); }
-  }
+  /* circles removed */
 
   /* ===== Container ===== */
   .voice-container {
@@ -245,7 +205,7 @@ const categories = [
 
   .voice-tab.is-active {
     background: rgba(255, 255, 255, 0.95);
-    color: #1a6b5a;
+    color: #1b5e3a;
     border-color: transparent;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   }
@@ -279,7 +239,7 @@ const categories = [
   /* ===== Carousel ===== */
   .voice-carousel {
     position: relative;
-    height: 340px;
+    height: 440px;
     perspective: 1200px;
   }
 
@@ -288,10 +248,10 @@ const categories = [
     position: absolute;
     top: 0;
     left: 50%;
-    width: 92%;
-    max-width: 520px;
+    width: 88%;
+    max-width: 440px;
     transform: translateX(-50%);
-    transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform, opacity;
   }
 
@@ -365,7 +325,7 @@ const categories = [
     font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.06em;
-    color: #1a6b5a;
+    color: #1b5e3a;
     padding: 0.2rem 0.7rem;
     background: rgba(26, 107, 90, 0.08);
     border: 1px solid rgba(26, 107, 90, 0.15);
@@ -441,11 +401,11 @@ const categories = [
     }
 
     .voice-carousel {
-      height: 360px;
+      height: 420px;
     }
 
     .voice-card {
-      width: 96%;
+      width: 92%;
     }
 
     .voice-card__inner {
@@ -555,21 +515,45 @@ const categories = [
         });
       });
 
-      // Swipe support
+      // Swipe with drag tracking
       let startX = 0;
-      const carousel = panel.querySelector('.voice-carousel');
+      let isDragging = false;
+      let dragDelta = 0;
+      const carousel = panel.querySelector('.voice-carousel') as HTMLElement;
+
       carousel?.addEventListener('touchstart', (e) => {
         startX = (e as TouchEvent).touches[0].clientX;
+        isDragging = true;
+        dragDelta = 0;
         stopAuto();
+        // Disable transition during drag
+        const activeCard = carousel.querySelector('.is-current') as HTMLElement;
+        if (activeCard) activeCard.style.transition = 'none';
       }, { passive: true });
 
-      carousel?.addEventListener('touchend', (e) => {
-        const diff = startX - (e as TouchEvent).changedTouches[0].clientX;
-        if (Math.abs(diff) > 40) {
-          if (diff > 0) { current = (current + 1) % total; }
-          else { current = (current - 1 + total) % total; }
-          update();
+      carousel?.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        dragDelta = (e as TouchEvent).touches[0].clientX - startX;
+        const activeCard = carousel.querySelector('.is-current') as HTMLElement;
+        if (activeCard) {
+          const rotate = dragDelta * -0.02;
+          activeCard.style.transform = `translateX(calc(-50% + ${dragDelta}px)) translateY(0) scale(1) rotateY(${rotate}deg)`;
+          activeCard.style.opacity = `${1 - Math.abs(dragDelta) * 0.002}`;
         }
+      }, { passive: true });
+
+      carousel?.addEventListener('touchend', () => {
+        isDragging = false;
+        const activeCard = carousel.querySelector('.is-current') as HTMLElement;
+        if (activeCard) {
+          activeCard.style.transition = '';
+          activeCard.style.opacity = '';
+        }
+        if (Math.abs(dragDelta) > 50) {
+          if (dragDelta < 0) { current = (current + 1) % total; }
+          else { current = (current - 1 + total) % total; }
+        }
+        update();
         startAuto();
       }, { passive: true });
 
