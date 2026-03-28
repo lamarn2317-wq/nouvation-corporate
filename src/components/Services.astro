@@ -439,7 +439,7 @@ const marketPrices = await getMarketPrices();
     const target = document.getElementById('followerCount');
     if (!target) return;
 
-    const finalValue = 23000;
+    const finalValue = 25000;
     const duration = 2000;
     const frameRate = 1000 / 60;
     const totalFrames = Math.round(duration / frameRate);
@@ -461,9 +461,13 @@ const marketPrices = await getMarketPrices();
 
           if (currentFrame === totalFrames) {
             clearInterval(timer);
-            // 完了時にもう一度グリッチ
+            // 完了時にグリッチ→グロー
             target.classList.add('glitch');
-            setTimeout(() => target.classList.remove('glitch'), 200);
+            setTimeout(() => {
+              target.classList.remove('glitch');
+              target.classList.add('glow');
+              setTimeout(() => target.classList.remove('glow'), 1200);
+            }, 200);
           }
         }, frameRate);
 

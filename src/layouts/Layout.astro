@@ -232,6 +232,7 @@ const {
   .digital-counter {
     font-variant-numeric: tabular-nums;
     position: relative;
+    transition: text-shadow 0.3s ease;
   }
   .digital-counter.glitch {
     animation: glitch-text 0.3s ease forwards;
@@ -243,6 +244,16 @@ const {
     60% { transform: translate(-1px, 2px); filter: hue-rotate(270deg); }
     80% { transform: translate(1px, -2px); filter: hue-rotate(360deg); }
     100% { transform: translate(0); filter: hue-rotate(0deg); }
+  }
+  /* カウント完了時のグロー */
+  .digital-counter.glow {
+    animation: counterGlow 1.2s ease-out forwards;
+  }
+  @keyframes counterGlow {
+    0%   { text-shadow: none; }
+    30%  { text-shadow: 0 0 8px rgba(46,125,50,0.6), 0 0 20px rgba(46,125,50,0.4), 0 0 40px rgba(46,125,50,0.2); }
+    60%  { text-shadow: 0 0 12px rgba(46,125,50,0.8), 0 0 30px rgba(46,125,50,0.5), 0 0 60px rgba(46,125,50,0.3); }
+    100% { text-shadow: 0 0 4px rgba(46,125,50,0.3), 0 0 10px rgba(46,125,50,0.15); }
   }
 
   .line-clamp-1 {
