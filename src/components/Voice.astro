@@ -295,6 +295,21 @@ const categories = [
     animation: none !important;
   }
 
+  /* ===== スピン着地アニメ ===== */
+  @keyframes spinIn {
+    0%   { transform: translate(-50%, -50%) scale(0.3) rotateY(-220deg) translateZ(-160px); opacity: 0; }
+    55%  { transform: translate(-50%, -50%) scale(1.12) rotateY(14deg)  translateZ(30px);  opacity: 1; }
+    78%  { transform: translate(-50%, -50%) scale(1.02) rotateY(-5deg); }
+    100% { transform: translate(-50%, -50%) scale(1.05) rotateY(0deg)   translateZ(0);    opacity: 1; }
+  }
+  @keyframes spinOut {
+    0%   { transform: translate(-50%, -50%) scale(1.05) rotateY(0deg); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(0.3)  rotateY(160deg) translateZ(-160px); opacity: 0; }
+  }
+
+  .voice-card.is-spin-in  { animation: spinIn  0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important; }
+  .voice-card.is-spin-out { animation: spinOut 0.3s cubic-bezier(0.4, 0, 1, 1) forwards !important; pointer-events: none; }
+
   @keyframes cardFloat {
     0%,100% { transform: translate(-50%, -50%) scale(1.05) rotateY(0deg) translateZ(0px) translateY(0); }
     50%      { transform: translate(-50%, -50%) scale(1.05) rotateY(0deg) translateZ(0px) translateY(-9px); }
@@ -446,21 +461,40 @@ const categories = [
       let startX = 0;
       let dx = 0;
 
-      function update() {
+      function update(withSpin = false) {
+        // スピンアウト（現在のカードを先に飛ばす）
+        const outgoing = withSpin
+          ? (car.querySelector('.is-current:not(.is-spin-in)') as HTMLElement | null)
+          : null;
+        if (outgoing) {
+          outgoing.classList.add('is-spin-out');
+          outgoing.addEventListener('animationend', () => outgoing.classList.remove('is-spin-out'), { once: true });
+        }
+
         cards.forEach((card, i) => {
-          card.classList.remove('is-current','is-next','is-prev','is-hidden','no-anim');
+          card.classList.remove('is-current','is-next','is-prev','is-hidden','no-anim','is-spin-in');
           if      (i === current)                       card.classList.add('is-current');
           else if (i === (current + 1) % total)         card.classList.add('is-next');
           else if (i === (current - 1 + total) % total) card.classList.add('is-prev');
           else                                          card.classList.add('is-hidden');
         });
+
+        // スピンイン（新しいカードが回転して前面に着地）
+        if (withSpin) {
+          const incoming = car.querySelector('.is-current') as HTMLElement | null;
+          if (incoming) {
+            incoming.classList.add('is-spin-in');
+            incoming.addEventListener('animationend', () => incoming.classList.remove('is-spin-in'), { once: true });
+          }
+        }
+
         dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
       }
 
       // ドットクリック（クリーンアップ対象）
       const dotHandlers: Array<{el: HTMLElement, fn: () => void}> = [];
       dots.forEach((d, i) => {
-        const fn = () => { current = i; update(); };
+        const fn = () => { current = i; update(true); };
         d.addEventListener('click', fn);
         dotHandlers.push({ el: d, fn });
       });
@@ -470,8 +504,8 @@ const categories = [
       cards.forEach((card) => {
         const fn = () => {
           if (Math.abs(dx) > 8) return;
-          if (card.classList.contains('is-next')) { current = (current+1)%total; update(); }
-          else if (card.classList.contains('is-prev')) { current = (current-1+total)%total; update(); }
+          if (card.classList.contains('is-next')) { current = (current+1)%total; update(true); }
+          else if (card.classList.contains('is-prev')) { current = (current-1+total)%total; update(true); }
         };
         card.addEventListener('click', fn);
         cardHandlers.push({ el: card, fn });
@@ -500,11 +534,12 @@ const categories = [
         isDragging = false;
         const ac = car.querySelector('.is-current') as HTMLElement;
         if (ac) { ac.classList.remove('no-anim'); ac.style.transition = ''; ac.style.transform = ''; }
-        if (Math.abs(dx) > 55) {
+        const changed = Math.abs(dx) > 55;
+        if (changed) {
           if (dx < 0) current = (current+1)%total;
           else        current = (current-1+total)%total;
         }
-        update(); dx = 0;
+        update(changed); dx = 0;
       }
 
       // Touch
