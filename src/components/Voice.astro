@@ -1,5 +1,5 @@
 ---
-// Voice - 利用者の声 | Floating Card Design with Green Gradient
+// Voice - 利用者の声 | Dark Futuristic + Green Glow
 
 const categories = [
   {
@@ -32,47 +32,32 @@ const categories = [
 ];
 ---
 
-<section id="voice" class="voice-section">
-  <!-- Gradient Background -->
+<section data-section-theme="dark" id="voice" class="voice-section">
   <div class="voice-bg" aria-hidden="true">
-    <div class="voice-bg__gradient"></div>
-    <div class="voice-bg__noise"></div>
-    <!-- Floating circles -->
-    <!-- circles removed -->
+    <div class="voice-bg__base"></div>
+    <div class="voice-bg__grid"></div>
+    <div class="voice-bg__glow voice-bg__glow--1"></div>
+    <div class="voice-bg__glow voice-bg__glow--2"></div>
   </div>
 
   <div class="voice-container">
-    <!-- Header -->
     <div class="voice-header" data-voice-anim>
       <p class="voice-eyebrow">VOICE</p>
       <h2 class="voice-heading">利用者の声</h2>
     </div>
 
-    <!-- Category Tabs -->
     <div class="voice-tabs" data-voice-anim>
       {categories.map((cat, i) => (
-        <button
-          class={`voice-tab ${i === 0 ? 'is-active' : ''}`}
-          data-tab={cat.id}
-        >
-          {cat.label}
-        </button>
+        <button class={`voice-tab ${i === 0 ? 'is-active' : ''}`} data-tab={cat.id}>{cat.label}</button>
       ))}
     </div>
 
-    <!-- Card Panels -->
     <div class="voice-panels">
       {categories.map((cat, ci) => (
-        <div
-          class={`voice-panel ${ci === 0 ? 'is-active' : ''}`}
-          data-panel={cat.id}
-        >
+        <div class={`voice-panel ${ci === 0 ? 'is-active' : ''}`} data-panel={cat.id}>
           <div class="voice-carousel" data-voice-anim>
             {cat.items.map((item, i) => (
-              <article
-                class={`voice-card ${i === 0 ? 'is-current' : ''}`}
-                data-ci={i}
-              >
+              <article class={`voice-card ${i === 0 ? 'is-current' : ''}`} data-ci={i}>
                 <div class="voice-card__inner">
                   <div class="voice-card__top">
                     <span class="voice-card__age">{item.age}</span>
@@ -84,15 +69,9 @@ const categories = [
               </article>
             ))}
           </div>
-
-          <!-- Dots -->
           <div class="voice-indicators" data-voice-anim>
             {cat.items.map((_, i) => (
-              <button
-                class={`voice-indicator ${i === 0 ? 'is-active' : ''}`}
-                data-goto={i}
-                aria-label={`${i + 1}番目`}
-              ></button>
+              <button class={`voice-indicator ${i === 0 ? 'is-active' : ''}`} data-goto={i} aria-label={`${i + 1}番目`}></button>
             ))}
           </div>
         </div>
@@ -102,45 +81,66 @@ const categories = [
 </section>
 
 <style>
-  /* ===== Section ===== */
   .voice-section {
     position: relative;
-    padding: 6rem 0 7rem;
+    padding: 7rem 0 8rem;
     overflow: hidden;
     isolation: isolate;
+    background: #080f0b;
   }
 
-  /* ===== Gradient Background ===== */
+  /* ===== Background ===== */
   .voice-bg {
     position: absolute;
     inset: 0;
-    z-index: 0;
+    pointer-events: none;
   }
 
-  .voice-bg__gradient {
+  .voice-bg__base {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      180deg,
-      #1b5e3a 0%,
-      #267a4a 15%,
-      #2f8f55 30%,
-      #3da564 50%,
-      #4fba72 70%,
-      #6dce88 85%,
-      #8ddfa0 100%
-    );
+    background: radial-gradient(ellipse 100% 80% at 50% 20%, rgba(30, 90, 50, 0.15), transparent 60%),
+                radial-gradient(ellipse 80% 60% at 70% 80%, rgba(20, 80, 45, 0.1), transparent 50%);
   }
 
-  .voice-bg__noise {
+  .voice-bg__grid {
     position: absolute;
     inset: 0;
-    opacity: 0.3;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-    mix-blend-mode: overlay;
+    background-image:
+      linear-gradient(rgba(40, 160, 80, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(40, 160, 80, 0.04) 1px, transparent 1px);
+    background-size: 70px 70px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 0%, transparent 70%);
   }
 
-  /* circles removed */
+  .voice-bg__glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    animation: glowPulse 15s ease-in-out infinite;
+  }
+
+  .voice-bg__glow--1 {
+    width: 500px;
+    height: 500px;
+    background: rgba(30, 120, 60, 0.15);
+    top: -10%;
+    left: 5%;
+  }
+
+  .voice-bg__glow--2 {
+    width: 400px;
+    height: 400px;
+    background: rgba(20, 100, 50, 0.1);
+    bottom: -5%;
+    right: 5%;
+    animation-delay: -7s;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.15); opacity: 0.7; }
+  }
 
   /* ===== Container ===== */
   .voice-container {
@@ -161,15 +161,16 @@ const categories = [
     font-size: clamp(2.2rem, 6vw, 3.5rem);
     font-weight: 700;
     letter-spacing: 0.15em;
-    color: rgba(255, 255, 255, 0.95);
+    color: #fff;
     line-height: 1.1;
+    text-shadow: 0 0 40px rgba(40, 180, 80, 0.2);
   }
 
   .voice-heading {
     font-size: 0.85rem;
     font-weight: 500;
     letter-spacing: 0.3em;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.5);
     margin-top: 0.6rem;
   }
 
@@ -183,57 +184,47 @@ const categories = [
   }
 
   .voice-tab {
-    position: relative;
-    padding: 0.6rem 1.8rem;
-    font-size: 0.85rem;
+    padding: 0.55rem 1.6rem;
+    font-size: 0.82rem;
     font-weight: 600;
     letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.7);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 100px;
     cursor: pointer;
     transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
   }
 
   .voice-tab:hover {
-    background: rgba(255, 255, 255, 0.18);
-    color: #fff;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(40, 160, 80, 0.2);
   }
 
   .voice-tab.is-active {
-    background: rgba(255, 255, 255, 0.95);
-    color: #1b5e3a;
-    border-color: transparent;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    color: #fff;
+    background: rgba(40, 160, 80, 0.2);
+    border-color: rgba(40, 160, 80, 0.4);
+    box-shadow: 0 0 20px rgba(40, 160, 80, 0.1), inset 0 1px 0 rgba(255,255,255,0.05);
   }
 
   /* ===== Panels ===== */
   .voice-panels {
     position: relative;
-    min-height: 360px;
+    min-height: 480px;
   }
 
-  .voice-panel {
-    display: none;
-  }
-
+  .voice-panel { display: none; }
   .voice-panel.is-active {
     display: block;
     animation: panelIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   @keyframes panelIn {
-    from {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   /* ===== Carousel ===== */
@@ -246,97 +237,111 @@ const categories = [
   /* ===== Card ===== */
   .voice-card {
     position: absolute;
-    top: 0;
+    top: 50%;
     left: 50%;
-    width: 88%;
-    max-width: 440px;
-    transform: translateX(-50%);
+    width: 75%;
+    max-width: 360px;
+    transform: translate(-50%, -50%) scale(0.7);
+    opacity: 0;
     transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform, opacity;
+    pointer-events: none;
   }
 
-  /* States */
+  /* ACTIVE — 大きく前に出る */
   .voice-card.is-current {
-    transform: translateX(-50%) translateY(0) scale(1) rotateY(0);
+    transform: translate(-50%, -50%) scale(1);
     opacity: 1;
     z-index: 3;
+    pointer-events: auto;
     animation: cardFloat 5s ease-in-out infinite;
   }
 
+  /* 右に小さく */
   .voice-card.is-next {
-    transform: translateX(-20%) translateY(20px) scale(0.88) rotateY(-8deg);
-    opacity: 0.35;
+    transform: translate(-10%, -50%) scale(0.72) rotateY(-12deg);
+    opacity: 0.3;
     z-index: 2;
-    pointer-events: none;
     filter: blur(2px);
   }
 
+  /* 左に小さく */
   .voice-card.is-prev {
-    transform: translateX(-80%) translateY(20px) scale(0.88) rotateY(8deg);
-    opacity: 0.35;
+    transform: translate(-90%, -50%) scale(0.72) rotateY(12deg);
+    opacity: 0.3;
     z-index: 2;
-    pointer-events: none;
     filter: blur(2px);
   }
 
   .voice-card.is-hidden {
-    transform: translateX(-50%) translateY(40px) scale(0.8);
+    transform: translate(-50%, -50%) scale(0.6);
     opacity: 0;
     z-index: 0;
-    pointer-events: none;
   }
 
-  /* Floating animation */
   @keyframes cardFloat {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(-8px); }
+    0%, 100% { transform: translate(-50%, -50%) scale(1) translateY(0); }
+    50% { transform: translate(-50%, -50%) scale(1) translateY(-6px); }
   }
 
-  /* Card inner */
+  /* ===== Card Inner — Glass Dark ===== */
   .voice-card__inner {
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 1.2rem;
-    padding: 2rem 2rem 1.8rem;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 1.1rem;
+    padding: 2.2rem 2rem 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow:
-      0 20px 60px rgba(0, 60, 40, 0.12),
-      0 8px 24px rgba(0, 60, 40, 0.08),
-      0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+      0 20px 60px rgba(0, 0, 0, 0.4),
+      0 0 40px rgba(30, 120, 60, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
     transition: box-shadow 0.3s ease, transform 0.15s ease-out;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .voice-card.is-current .voice-card__inner {
+    border-color: rgba(40, 160, 80, 0.15);
+    box-shadow:
+      0 24px 70px rgba(0, 0, 0, 0.5),
+      0 0 60px rgba(30, 120, 60, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
   .voice-card.is-current .voice-card__inner:hover {
+    border-color: rgba(40, 160, 80, 0.25);
     box-shadow:
-      0 24px 70px rgba(0, 60, 40, 0.16),
-      0 10px 30px rgba(0, 60, 40, 0.1),
-      0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+      0 28px 80px rgba(0, 0, 0, 0.5),
+      0 0 80px rgba(30, 120, 60, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
+  /* Card content */
   .voice-card__top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
   }
 
   .voice-card__age {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 600;
-    letter-spacing: 0.06em;
-    color: #1b5e3a;
+    letter-spacing: 0.08em;
+    color: rgba(80, 220, 120, 0.9);
     padding: 0.2rem 0.7rem;
-    background: rgba(26, 107, 90, 0.08);
-    border: 1px solid rgba(26, 107, 90, 0.15);
+    background: rgba(40, 160, 80, 0.1);
+    border: 1px solid rgba(40, 160, 80, 0.2);
     border-radius: 100px;
   }
 
   .voice-card__deco {
-    font-size: 3rem;
+    font-size: 3.5rem;
     font-weight: 700;
     line-height: 1;
-    color: rgba(26, 107, 90, 0.12);
+    color: rgba(40, 160, 80, 0.15);
     font-family: Georgia, serif;
     user-select: none;
   }
@@ -344,15 +349,16 @@ const categories = [
   .voice-card__quote {
     font-size: 1.1rem;
     font-weight: 700;
-    line-height: 1.7;
-    color: #1a3a30;
-    margin-bottom: 0.8rem;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 1rem;
   }
 
   .voice-card__body {
-    font-size: 0.82rem;
-    line-height: 1.9;
-    color: rgba(26, 58, 48, 0.6);
+    font-size: 0.8rem;
+    line-height: 1.95;
+    color: rgba(255, 255, 255, 0.45);
+    margin-top: auto;
   }
 
   /* ===== Indicators ===== */
@@ -364,21 +370,21 @@ const categories = [
   }
 
   .voice-indicator {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     border: none;
     padding: 0;
-    background: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.15);
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .voice-indicator.is-active {
-    width: 28px;
+    width: 26px;
     border-radius: 100px;
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(90deg, rgba(40, 160, 80, 0.8), rgba(80, 220, 120, 0.6));
+    box-shadow: 0 0 12px rgba(40, 160, 80, 0.4);
   }
 
   /* ===== Scroll Reveal ===== */
@@ -388,7 +394,6 @@ const categories = [
     transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
                 transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   }
-
   [data-voice-anim].is-visible {
     opacity: 1;
     transform: translateY(0);
@@ -396,45 +401,18 @@ const categories = [
 
   /* ===== Responsive ===== */
   @media (max-width: 640px) {
-    .voice-section {
-      padding: 4rem 0 5rem;
-    }
-
-    .voice-carousel {
-      height: 420px;
-    }
-
-    .voice-card {
-      width: 92%;
-    }
-
-    .voice-card__inner {
-      padding: 1.5rem 1.3rem 1.3rem;
-    }
-
-    .voice-card__quote {
-      font-size: 1rem;
-    }
-
-    .voice-bg__circle--1 {
-      width: 300px;
-      height: 300px;
-    }
-
-    .voice-bg__circle--2 {
-      width: 200px;
-      height: 200px;
-    }
-
-    .voice-bg__circle--3 {
-      display: none;
-    }
+    .voice-section { padding: 4.5rem 0 5rem; }
+    .voice-carousel { height: 420px; }
+    .voice-card { width: 88%; }
+    .voice-card__inner { padding: 1.8rem 1.5rem 1.5rem; min-height: 300px; }
+    .voice-card__quote { font-size: 1rem; }
+    .voice-bg__glow--1 { width: 300px; height: 300px; }
+    .voice-bg__glow--2 { width: 250px; height: 250px; }
   }
 </style>
 
 <script>
   function initVoice() {
-    // Tab switching
     const tabs = document.querySelectorAll('.voice-tab') as NodeListOf<HTMLElement>;
     const panels = document.querySelectorAll('.voice-panel') as NodeListOf<HTMLElement>;
 
@@ -443,22 +421,14 @@ const categories = [
         const id = tab.dataset.tab;
         tabs.forEach(t => t.classList.remove('is-active'));
         tab.classList.add('is-active');
-
         panels.forEach(p => {
           p.classList.remove('is-active');
-          if (p.dataset.panel === id) {
-            p.classList.add('is-active');
-            // Reset carousel to first card
-            initCarousel(p);
-          }
+          if (p.dataset.panel === id) { p.classList.add('is-active'); initCarousel(p); }
         });
       });
     });
 
-    // Init carousels
-    panels.forEach(p => {
-      if (p.classList.contains('is-active')) initCarousel(p);
-    });
+    panels.forEach(p => { if (p.classList.contains('is-active')) initCarousel(p); });
 
     function initCarousel(panel: HTMLElement) {
       const cards = panel.querySelectorAll('.voice-card') as NodeListOf<HTMLElement>;
@@ -466,129 +436,79 @@ const categories = [
       const total = cards.length;
       let current = 0;
       let timer: ReturnType<typeof setInterval> | null = null;
-
-      // Clear any existing timer stored on panel
-      if ((panel as any)._voiceTimer) {
-        clearInterval((panel as any)._voiceTimer);
-      }
+      if ((panel as any)._vt) clearInterval((panel as any)._vt);
 
       function update() {
         cards.forEach((card, i) => {
           card.classList.remove('is-current', 'is-next', 'is-prev', 'is-hidden');
-          if (i === current) {
-            card.classList.add('is-current');
-          } else if (i === (current + 1) % total) {
-            card.classList.add('is-next');
-          } else if (i === (current - 1 + total) % total) {
-            card.classList.add('is-prev');
-          } else {
-            card.classList.add('is-hidden');
-          }
+          if (i === current) card.classList.add('is-current');
+          else if (i === (current + 1) % total) card.classList.add('is-next');
+          else if (i === (current - 1 + total) % total) card.classList.add('is-prev');
+          else card.classList.add('is-hidden');
         });
-
-        dots.forEach((dot, i) => {
-          dot.classList.toggle('is-active', i === current);
-        });
+        dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
       }
 
-      function next() {
-        current = (current + 1) % total;
-        update();
-      }
+      function next() { current = (current + 1) % total; update(); }
+      function startAuto() { stopAuto(); timer = setInterval(next, 4500); (panel as any)._vt = timer; }
+      function stopAuto() { if (timer) { clearInterval(timer); timer = null; } }
 
-      function startAuto() {
-        stopAuto();
-        timer = setInterval(next, 4500);
-        (panel as any)._voiceTimer = timer;
-      }
+      dots.forEach((d, i) => d.addEventListener('click', () => { current = i; update(); startAuto(); }));
 
-      function stopAuto() {
-        if (timer) { clearInterval(timer); timer = null; }
-      }
+      // Swipe
+      let sx = 0, dragging = false, dx = 0;
+      const car = panel.querySelector('.voice-carousel') as HTMLElement;
 
-      // Dot click
-      dots.forEach((dot, i) => {
-        dot.addEventListener('click', () => {
-          current = i;
-          update();
-          startAuto();
-        });
-      });
-
-      // Swipe with drag tracking
-      let startX = 0;
-      let isDragging = false;
-      let dragDelta = 0;
-      const carousel = panel.querySelector('.voice-carousel') as HTMLElement;
-
-      carousel?.addEventListener('touchstart', (e) => {
-        startX = (e as TouchEvent).touches[0].clientX;
-        isDragging = true;
-        dragDelta = 0;
-        stopAuto();
-        // Disable transition during drag
-        const activeCard = carousel.querySelector('.is-current') as HTMLElement;
-        if (activeCard) activeCard.style.transition = 'none';
+      car?.addEventListener('touchstart', (e) => {
+        sx = (e as TouchEvent).touches[0].clientX; dragging = true; dx = 0; stopAuto();
+        const ac = car.querySelector('.is-current') as HTMLElement;
+        if (ac) ac.style.transition = 'none';
       }, { passive: true });
 
-      carousel?.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        dragDelta = (e as TouchEvent).touches[0].clientX - startX;
-        const activeCard = carousel.querySelector('.is-current') as HTMLElement;
-        if (activeCard) {
-          const rotate = dragDelta * -0.02;
-          activeCard.style.transform = `translateX(calc(-50% + ${dragDelta}px)) translateY(0) scale(1) rotateY(${rotate}deg)`;
-          activeCard.style.opacity = `${1 - Math.abs(dragDelta) * 0.002}`;
+      car?.addEventListener('touchmove', (e) => {
+        if (!dragging) return;
+        dx = (e as TouchEvent).touches[0].clientX - sx;
+        const ac = car.querySelector('.is-current') as HTMLElement;
+        if (ac) {
+          const r = dx * -0.015;
+          ac.style.transform = `translate(calc(-50% + ${dx}px), -50%) scale(1) rotateY(${r}deg)`;
         }
       }, { passive: true });
 
-      carousel?.addEventListener('touchend', () => {
-        isDragging = false;
-        const activeCard = carousel.querySelector('.is-current') as HTMLElement;
-        if (activeCard) {
-          activeCard.style.transition = '';
-          activeCard.style.opacity = '';
+      car?.addEventListener('touchend', () => {
+        dragging = false;
+        const ac = car.querySelector('.is-current') as HTMLElement;
+        if (ac) ac.style.transition = '';
+        if (Math.abs(dx) > 50) {
+          if (dx < 0) current = (current + 1) % total;
+          else current = (current - 1 + total) % total;
         }
-        if (Math.abs(dragDelta) > 50) {
-          if (dragDelta < 0) { current = (current + 1) % total; }
-          else { current = (current - 1 + total) % total; }
-        }
-        update();
-        startAuto();
+        update(); startAuto();
       }, { passive: true });
 
-      // Mouse tilt on active card
-      carousel?.addEventListener('mousemove', (e) => {
-        const active = carousel.querySelector('.is-current .voice-card__inner') as HTMLElement;
-        if (!active) return;
-        const rect = active.getBoundingClientRect();
+      // Mouse tilt
+      car?.addEventListener('mousemove', (e) => {
+        const ac = car.querySelector('.is-current .voice-card__inner') as HTMLElement;
+        if (!ac) return;
+        const rect = ac.getBoundingClientRect();
         const x = ((e as MouseEvent).clientX - rect.left) / rect.width;
         const y = ((e as MouseEvent).clientY - rect.top) / rect.height;
-        const rx = (y - 0.5) * -4;
-        const ry = (x - 0.5) * 4;
-        active.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+        ac.style.transform = `perspective(800px) rotateX(${(y-0.5)*-5}deg) rotateY(${(x-0.5)*5}deg)`;
+      });
+      car?.addEventListener('mouseleave', () => {
+        const ac = car.querySelector('.is-current .voice-card__inner') as HTMLElement;
+        if (ac) ac.style.transform = '';
       });
 
-      carousel?.addEventListener('mouseleave', () => {
-        const active = carousel.querySelector('.is-current .voice-card__inner') as HTMLElement;
-        if (active) active.style.transform = '';
-      });
+      car?.addEventListener('mouseenter', stopAuto);
+      car?.addEventListener('mouseleave', startAuto);
 
-      // Pause on hover
-      carousel?.addEventListener('mouseenter', stopAuto);
-      carousel?.addEventListener('mouseleave', startAuto);
-
-      update();
-      startAuto();
+      update(); startAuto();
     }
 
-    // Scroll reveal
     const obs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) e.target.classList.add('is-visible');
-      });
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-visible'); });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
     document.querySelectorAll('[data-voice-anim]').forEach(el => obs.observe(el));
   }
 
