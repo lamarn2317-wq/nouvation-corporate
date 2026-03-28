@@ -223,7 +223,7 @@ const categories = [
   /* ===== Stage + Carousel ===== */
   .voice-stage {
     position: relative;
-    height: 500px;
+    height: 540px;
     perspective: 1600px;
     perspective-origin: 50% 50%;
   }
@@ -244,7 +244,7 @@ const categories = [
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 300px;
+    width: 330px;
     transform: translate(-50%, -50%) scale(0.5) rotateY(0deg) translateZ(-200px);
     opacity: 0;
     transition:
@@ -268,18 +268,18 @@ const categories = [
   /* 右 — 遠ざかる */
   .voice-card.is-next {
     transform: translate(18%, -50%) scale(0.55) rotateY(-22deg) translateZ(-180px);
-    opacity: 0.5;
+    opacity: 0.45;
     z-index: 2;
-    filter: blur(1.5px) brightness(0.85);
+    filter: brightness(0.85);
     pointer-events: auto;
   }
 
   /* 左 — 遠ざかる */
   .voice-card.is-prev {
     transform: translate(-118%, -50%) scale(0.55) rotateY(22deg) translateZ(-180px);
-    opacity: 0.5;
+    opacity: 0.45;
     z-index: 2;
-    filter: blur(1.5px) brightness(0.85);
+    filter: brightness(0.85);
     pointer-events: auto;
   }
 
@@ -310,7 +310,7 @@ const categories = [
       0 20px 50px rgba(0,0,0,0.18);
     display: flex;
     flex-direction: column;
-    min-height: 360px;
+    min-height: 400px;
   }
 
   /* ===== Card Header ===== */
@@ -492,28 +492,32 @@ const categories = [
       }
 
       // Touch
-      const onTS = (e: Event) => dragStart((e as TouchEvent).touches[0].clientX);
-      const onTM = (e: Event) => dragMove((e as TouchEvent).touches[0].clientX);
+      const onTS = (e: TouchEvent) => dragStart(e.touches[0].clientX);
+      const onTM = (e: TouchEvent) => dragMove(e.touches[0].clientX);
       const onTE = () => dragEnd();
-      car.addEventListener('touchstart', onTS, { passive: true });
-      car.addEventListener('touchmove',  onTM, { passive: true });
+      car.addEventListener('touchstart', onTS as EventListener, { passive: true });
+      car.addEventListener('touchmove',  onTM as EventListener, { passive: true });
       car.addEventListener('touchend',   onTE, { passive: true });
 
-      // Mouse
-      const onMD = (e: Event) => { dragStart((e as MouseEvent).clientX); (e as MouseEvent).preventDefault(); };
-      const onMM = (e: Event) => { if (isDragging) dragMove((e as MouseEvent).clientX); };
-      const onMU = () => { if (isDragging) dragEnd(); };
-      car.addEventListener('mousedown', onMD);
-      window.addEventListener('mousemove', onMM);
-      window.addEventListener('mouseup', onMU);
+      // PC Mouse drag
+      const onMD = (e: MouseEvent) => { e.preventDefault(); dragStart(e.clientX); };
+      const onMM = (e: MouseEvent) => { if (isDragging) dragMove(e.clientX); };
+      const onMU = (e: MouseEvent) => { if (isDragging) dragEnd(); };
+      // dragstart を防いでテキスト選択・画像ドラッグを止める
+      const onDS = (e: Event) => { e.preventDefault(); };
+      car.addEventListener('mousedown',  onMD as EventListener);
+      car.addEventListener('dragstart',  onDS);
+      document.addEventListener('mousemove', onMM as EventListener);
+      document.addEventListener('mouseup',   onMU as EventListener);
 
       (panel as any)._vc_cleanup = () => {
-        car.removeEventListener('touchstart', onTS);
-        car.removeEventListener('touchmove',  onTM);
+        car.removeEventListener('touchstart', onTS as EventListener);
+        car.removeEventListener('touchmove',  onTM as EventListener);
         car.removeEventListener('touchend',   onTE);
-        car.removeEventListener('mousedown',  onMD);
-        window.removeEventListener('mousemove', onMM);
-        window.removeEventListener('mouseup',   onMU);
+        car.removeEventListener('mousedown',  onMD as EventListener);
+        car.removeEventListener('dragstart',  onDS);
+        document.removeEventListener('mousemove', onMM as EventListener);
+        document.removeEventListener('mouseup',   onMU as EventListener);
       };
 
       update();
