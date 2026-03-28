@@ -295,20 +295,33 @@ const categories = [
     animation: none !important;
   }
 
-  /* ===== スピン着地アニメ ===== */
-  @keyframes spinIn {
-    0%   { transform: translate(-50%, -50%) scale(0.3) rotateY(-220deg) translateZ(-160px); opacity: 0; }
-    55%  { transform: translate(-50%, -50%) scale(1.12) rotateY(14deg)  translateZ(30px);  opacity: 1; }
-    78%  { transform: translate(-50%, -50%) scale(1.02) rotateY(-5deg); }
-    100% { transform: translate(-50%, -50%) scale(1.05) rotateY(0deg)   translateZ(0);    opacity: 1; }
+  /* ===== ドラム回転（3枚一体でぐるっと回転） ===== */
+  @keyframes drumFwd {
+    0%   { transform: rotateY(0deg); }
+    20%  { transform: rotateY(-200deg); }
+    55%  { transform: rotateY(-580deg); }
+    80%  { transform: rotateY(-700deg); }
+    100% { transform: rotateY(-720deg); }
   }
-  @keyframes spinOut {
-    0%   { transform: translate(-50%, -50%) scale(1.05) rotateY(0deg); opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(0.3)  rotateY(160deg) translateZ(-160px); opacity: 0; }
+  @keyframes drumBwd {
+    0%   { transform: rotateY(0deg); }
+    20%  { transform: rotateY(200deg); }
+    55%  { transform: rotateY(580deg); }
+    80%  { transform: rotateY(700deg); }
+    100% { transform: rotateY(720deg); }
   }
 
-  .voice-card.is-spin-in  { animation: spinIn  0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important; }
-  .voice-card.is-spin-out { animation: spinOut 0.3s cubic-bezier(0.4, 0, 1, 1) forwards !important; pointer-events: none; }
+  .voice-carousel.drum-fwd {
+    animation: drumFwd 0.85s cubic-bezier(0.1, 0.6, 0.3, 1) forwards;
+  }
+  .voice-carousel.drum-bwd {
+    animation: drumBwd 0.85s cubic-bezier(0.1, 0.6, 0.3, 1) forwards;
+  }
+  /* 回転中はカードのfloatを止める */
+  .voice-carousel.drum-fwd .voice-card,
+  .voice-carousel.drum-bwd .voice-card {
+    animation: none !important;
+  }
 
   @keyframes cardFloat {
     0%,100% { transform: translate(-50%, -50%) scale(1.05) rotateY(0deg) translateZ(0px) translateY(0); }
@@ -461,40 +474,43 @@ const categories = [
       let startX = 0;
       let dx = 0;
 
-      function update(withSpin = false) {
-        // スピンアウト（現在のカードを先に飛ばす）
-        const outgoing = withSpin
-          ? (car.querySelector('.is-current:not(.is-spin-in)') as HTMLElement | null)
-          : null;
-        if (outgoing) {
-          outgoing.classList.add('is-spin-out');
-          outgoing.addEventListener('animationend', () => outgoing.classList.remove('is-spin-out'), { once: true });
-        }
-
+      function update() {
         cards.forEach((card, i) => {
-          card.classList.remove('is-current','is-next','is-prev','is-hidden','no-anim','is-spin-in');
+          card.classList.remove('is-current','is-next','is-prev','is-hidden','no-anim');
           if      (i === current)                       card.classList.add('is-current');
           else if (i === (current + 1) % total)         card.classList.add('is-next');
           else if (i === (current - 1 + total) % total) card.classList.add('is-prev');
           else                                          card.classList.add('is-hidden');
         });
-
-        // スピンイン（新しいカードが回転して前面に着地）
-        if (withSpin) {
-          const incoming = car.querySelector('.is-current') as HTMLElement | null;
-          if (incoming) {
-            incoming.classList.add('is-spin-in');
-            incoming.addEventListener('animationend', () => incoming.classList.remove('is-spin-in'), { once: true });
-          }
-        }
-
         dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
+      }
+
+      // ドラム回転して次のカードへ
+      let isSpinning = false;
+      function drumTo(newIndex: number, dir: number) {
+        if (isSpinning) return;
+        isSpinning = true;
+        current = newIndex;
+
+        const cls = dir >= 0 ? 'drum-fwd' : 'drum-bwd';
+        car.classList.add(cls);
+
+        // 回転中間点でカード位置を更新（回転の裏で入れ替え）
+        setTimeout(() => update(), 380);
+
+        car.addEventListener('animationend', () => {
+          car.classList.remove(cls);
+          isSpinning = false;
+        }, { once: true });
       }
 
       // ドットクリック（クリーンアップ対象）
       const dotHandlers: Array<{el: HTMLElement, fn: () => void}> = [];
       dots.forEach((d, i) => {
-        const fn = () => { current = i; update(true); };
+        const fn = () => {
+          const dir = i > current ? 1 : -1;
+          drumTo(i, dir);
+        };
         d.addEventListener('click', fn);
         dotHandlers.push({ el: d, fn });
       });
@@ -504,8 +520,8 @@ const categories = [
       cards.forEach((card) => {
         const fn = () => {
           if (Math.abs(dx) > 8) return;
-          if (card.classList.contains('is-next')) { current = (current+1)%total; update(true); }
-          else if (card.classList.contains('is-prev')) { current = (current-1+total)%total; update(true); }
+          if (card.classList.contains('is-next')) drumTo((current+1)%total, 1);
+          else if (card.classList.contains('is-prev')) drumTo((current-1+total)%total, -1);
         };
         card.addEventListener('click', fn);
         cardHandlers.push({ el: card, fn });
@@ -534,12 +550,13 @@ const categories = [
         isDragging = false;
         const ac = car.querySelector('.is-current') as HTMLElement;
         if (ac) { ac.classList.remove('no-anim'); ac.style.transition = ''; ac.style.transform = ''; }
-        const changed = Math.abs(dx) > 55;
-        if (changed) {
-          if (dx < 0) current = (current+1)%total;
-          else        current = (current-1+total)%total;
+        if (Math.abs(dx) > 55) {
+          if (dx < 0) drumTo((current+1)%total, 1);
+          else        drumTo((current-1+total)%total, -1);
+        } else {
+          update(); // キャンセル時は位置リセット
         }
-        update(changed); dx = 0;
+        dx = 0;
       }
 
       // Touch
@@ -555,10 +572,12 @@ const categories = [
       const onMM = (e: MouseEvent) => { if (isDragging) dragMove(e.clientX); };
       const onMU = () => { if (isDragging) dragEnd(); };
       const onDS = (e: Event) => e.preventDefault();
+      const onSS = (e: Event) => { if (isDragging) e.preventDefault(); };
       car.addEventListener('mousedown', onMD as EventListener);
       car.addEventListener('dragstart', onDS);
-      document.addEventListener('mousemove', onMM as EventListener);
-      document.addEventListener('mouseup',   onMU);
+      document.addEventListener('mousemove',   onMM as EventListener);
+      document.addEventListener('mouseup',     onMU);
+      document.addEventListener('selectstart', onSS);
 
       // クリーンアップ登録（全リスナーを確実に解除）
       (panel as any)._vc_cleanup = () => {
@@ -569,8 +588,9 @@ const categories = [
         car.removeEventListener('touchend',   onTE);
         car.removeEventListener('mousedown',  onMD as EventListener);
         car.removeEventListener('dragstart',  onDS);
-        document.removeEventListener('mousemove', onMM as EventListener);
-        document.removeEventListener('mouseup',   onMU);
+        document.removeEventListener('mousemove',   onMM as EventListener);
+        document.removeEventListener('mouseup',     onMU);
+        document.removeEventListener('selectstart', onSS);
       };
 
       update();
