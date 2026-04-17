@@ -2,358 +2,81 @@
 // farmatch Section - 耕作放棄地マッチングプラットフォーム
 ---
 
-<section data-section-theme="dark" id="farmatch" class="farmatch-section">
-  <!-- 背景レイヤー -->
-  <div class="fm-bg" aria-hidden="true">
-    <div class="fm-bg__grad"></div>
-    <div class="fm-bg__shine"></div>
-    <div class="fm-bg__grid"></div>
-  </div>
-
-  <div class="fm-container">
-    <!-- ヘッダー -->
-    <div class="fm-header" data-fm-anim>
-      <div class="fm-badge">
-        <span class="fm-badge__dot"></span>
-        <span class="fm-badge__label">NEW SERVICE</span>
-      </div>
-      <h2 class="fm-title">
-        <span class="fm-title__logo"><span class="fm-fa">farm</span><span class="fm-match">atch</span></span>
-      </h2>
-      <p class="fm-subtitle">耕作放棄地マッチングプラットフォーム</p>
-    </div>
-
-    <!-- メインコピー -->
-    <div class="fm-hero" data-fm-anim>
-      <h3 class="fm-hero__title">
-        眠っている農地を、<br />
-        次の挑戦の場所へ。
-      </h3>
-      <p class="fm-hero__desc">
-        農地を持て余す地主と、農地を探す就農希望者を<br class="pc" />
-        直接つなぐ、新しい仕組み。
-      </p>
-    </div>
-
-    <!-- 数字 -->
-    <div class="fm-stat" data-fm-anim>
-      <p class="fm-stat__label">日本の耕作放棄地</p>
-      <div class="fm-stat__value">
-        <span class="fm-stat__num">42.3</span>
-        <span class="fm-stat__unit">万ha</span>
-      </div>
-      <p class="fm-stat__note">このミスマッチを放置すれば、地域の農業は静かに消えていきます。</p>
-    </div>
-
-    <!-- 2つの課題 -->
-    <div class="fm-cards">
-      <div class="fm-card fm-card--owner" data-fm-anim>
-        <div class="fm-card__icon">🌾</div>
-        <p class="fm-card__label">地主の方へ</p>
-        <h4 class="fm-card__title">農地があるのに、<br />農業ができない。</h4>
-        <ul class="fm-card__list">
-          <li>固定資産税だけ払い続けている</li>
-          <li>草刈りだけで精一杯</li>
-          <li>後継者がいなくて手放せない</li>
-        </ul>
+<section data-section-theme="light" id="farmatch" class="pt-16 md:pt-24 pb-24 md:pb-32 bg-[#F0ECDE]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="fade-up">
+      <!-- Header -->
+      <div class="flex items-center gap-2 mb-6">
+        <span class="text-[#2e7d32] text-2xl">⚫︎</span>
+        <span class="font-display text-2xl font-bold text-[#231815]">04</span>
+        <span class="bg-[#2e7d32] text-white text-xs font-bold px-4 py-1.5 rounded-full ml-2">
+          NEW SERVICE
+        </span>
       </div>
 
-      <div class="fm-card fm-card--farmer" data-fm-anim>
-        <div class="fm-card__icon">🌱</div>
-        <p class="fm-card__label">就農希望者の方へ</p>
-        <h4 class="fm-card__title">農業したいのに、<br />農地がない。</h4>
-        <ul class="fm-card__list">
-          <li>農地の探し方がわからない</li>
-          <li>行政の手続きが複雑すぎる</li>
-          <li>地域に知り合いがいない</li>
-        </ul>
-      </div>
-    </div>
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <!-- Left: Text -->
+        <div>
+          <h3 class="text-2xl md:text-[2.8rem] font-bold mb-6 leading-relaxed text-[#231815]">
+            眠っている農地を、<br />
+            次の挑戦の場所へ。
+          </h3>
 
-    <!-- CTA -->
-    <div class="fm-cta" data-fm-anim>
-      <a href="https://farmatch.jp" target="_blank" rel="noopener noreferrer" class="fm-cta__btn">
-        <span class="fm-cta__label">farmatchを見る</span>
-        <span class="fm-cta__arrow">→</span>
-      </a>
-      <p class="fm-cta__sub">地主・就農希望者、どちらも無料でご利用いただけます</p>
+          <p class="text-[#231815] font-bold text-xl md:text-2xl mb-6 flex items-center">
+            <span class="logo-fa text-[#231815]">farm</span><span class="logo-match text-[#2e7d32]">atch</span>
+            <span class="text-sm font-normal text-[#231815]/60 ml-3">耕作放棄地マッチングプラットフォーム</span>
+          </p>
+
+          <p class="text-[#231815] leading-loose mb-8 text-sm md:text-base">
+            農地を持て余す地主と、農業を始めたい就農希望者を<br />
+            直接つなぐ、新しい仕組みです。<br /><br />
+            固定資産税だけ払い続けている農地も、<br />
+            探しても見つからなかった農地も、<br />
+            farmatchが地域の農業を動かします。
+          </p>
+
+          <!-- Stat Card -->
+          <div class="p-6 bg-white border border-[#231815]/20 rounded-2xl inline-block mb-8">
+            <p class="text-xs text-[#231815]/60 mb-1 tracking-widest">日本の耕作放棄地</p>
+            <div class="font-display text-4xl md:text-5xl font-bold text-[#2e7d32]">
+              42.3<span class="text-lg font-normal text-[#231815]/60 ml-1">万ha</span>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div>
+            <a
+              href="https://farmatch.jp"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 bg-[#2e7d32] text-white px-8 py-4 rounded-full font-bold text-sm md:text-base hover:-translate-y-0.5 transition-all shadow-md hover:shadow-lg"
+            >
+              farmatchを詳しく見る
+              <span class="text-lg">→</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Instagram Reel -->
+        <div class="flex justify-center">
+          <div class="w-full max-w-[380px] shadow-lg rounded-2xl overflow-hidden instagram-clip-box bg-white border border-[#231815]/10">
+            <blockquote
+              class="instagram-media"
+              data-instgrm-permalink="https://www.instagram.com/reel/DWyLXf6ih7t/"
+              data-instgrm-version="14"
+              style="background:#FFF; border:0; border-radius:0; margin:0; width:100%; min-width:100%;"
+            ></blockquote>
+          </div>
+          <script is:inline src="//www.instagram.com/embed.js"></script>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  .farmatch-section {
-    position: relative;
-    padding: 7rem 0 8rem;
-    overflow: hidden;
-    isolation: isolate;
-  }
-
-  /* ===== Background ===== */
-  .fm-bg { position: absolute; inset: 0; pointer-events: none; }
-
-  .fm-bg__grad {
-    position: absolute; inset: 0;
-    background: linear-gradient(160deg, #0a1a06 0%, #0e1a09 30%, #1b3f14 60%, #2d5a1c 100%);
-  }
-
-  .fm-bg__shine {
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 60% 50% at 30% 20%, rgba(200, 255, 120, 0.08) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 40% at 80% 80%, rgba(80, 200, 40, 0.05) 0%, transparent 50%);
-  }
-
-  .fm-bg__grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(200, 255, 120, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(200, 255, 120, 0.03) 1px, transparent 1px);
-    background-size: 70px 70px;
-    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 0%, transparent 70%);
-  }
-
-  /* ===== Container ===== */
-  .fm-container {
-    position: relative;
-    z-index: 1;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-  }
-
-  /* ===== Header ===== */
-  .fm-header {
-    text-align: center;
-    margin-bottom: 3.5rem;
-  }
-
-  .fm-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.35rem 1rem;
-    background: rgba(212, 255, 0, 0.12);
-    border: 1px solid rgba(212, 255, 0, 0.3);
-    border-radius: 100px;
-    margin-bottom: 1.5rem;
-  }
-  .fm-badge__dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: #D4FF00;
-    box-shadow: 0 0 8px rgba(212, 255, 0, 0.6);
-    animation: fmPulse 2s ease-in-out infinite;
-  }
-  .fm-badge__label {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    color: #D4FF00;
-  }
-  @keyframes fmPulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.2); }
-  }
-
-  .fm-title {
-    font-size: clamp(2.8rem, 7vw, 4.5rem);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1;
-    margin-bottom: 0.8rem;
-  }
-  .fm-title__logo { display: inline-block; }
-  .fm-fa { color: #f5f0e5; }
-  .fm-match { color: #D4FF00; }
-
-  .fm-subtitle {
-    font-size: clamp(0.8rem, 2vw, 0.95rem);
-    letter-spacing: 0.15em;
-    color: rgba(245, 240, 229, 0.6);
-    font-weight: 500;
-  }
-
-  /* ===== Hero ===== */
-  .fm-hero {
-    text-align: center;
-    margin-bottom: 4rem;
-  }
-  .fm-hero__title {
-    font-family: 'Shippori Mincho', 'YuMincho', serif;
-    font-size: clamp(1.8rem, 5vw, 3rem);
-    font-weight: 800;
-    line-height: 1.6;
-    color: #f5f0e5;
-    margin-bottom: 1.5rem;
-    text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
-  }
-  .fm-hero__desc {
-    font-size: clamp(0.9rem, 2vw, 1.05rem);
-    line-height: 2;
-    color: rgba(245, 240, 229, 0.7);
-  }
-
-  /* ===== Stat ===== */
-  .fm-stat {
-    text-align: center;
-    padding: 3rem 2rem;
-    background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-    border: 1px solid rgba(212, 255, 0, 0.15);
-    border-radius: 1.2rem;
-    margin-bottom: 4rem;
-  }
-  .fm-stat__label {
-    font-size: 0.7rem;
-    letter-spacing: 0.25em;
-    color: rgba(245, 240, 229, 0.5);
-    margin-bottom: 1rem;
-  }
-  .fm-stat__value {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 0.4rem;
-    margin-bottom: 1.5rem;
-  }
-  .fm-stat__num {
-    font-family: 'Shippori Mincho', serif;
-    font-size: clamp(3.5rem, 12vw, 7rem);
-    font-weight: 800;
-    line-height: 1;
-    color: #D4FF00;
-    text-shadow: 0 0 60px rgba(212, 255, 0, 0.3), 0 0 120px rgba(212, 255, 0, 0.1);
-  }
-  .fm-stat__unit {
-    font-size: clamp(1.2rem, 3vw, 1.8rem);
-    font-weight: 700;
-    color: rgba(245, 240, 229, 0.6);
-    padding-bottom: 0.6rem;
-  }
-  .fm-stat__note {
-    font-size: 0.88rem;
-    line-height: 1.9;
-    color: rgba(245, 240, 229, 0.7);
-  }
-
-  /* ===== Problem Cards ===== */
-  .fm-cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 4rem;
-  }
-
-  .fm-card {
-    padding: 2.5rem 2rem;
-    background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 1.2rem;
-    transition: all 0.4s ease;
-  }
-  .fm-card:hover {
-    border-color: rgba(212, 255, 0, 0.25);
-    transform: translateY(-4px);
-  }
-  .fm-card__icon { font-size: 2rem; margin-bottom: 0.8rem; }
-  .fm-card__label {
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    color: #D4FF00;
-    font-weight: 700;
-    margin-bottom: 0.7rem;
-  }
-  .fm-card__title {
-    font-family: 'Shippori Mincho', serif;
-    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-    font-weight: 700;
-    line-height: 1.65;
-    color: #f5f0e5;
-    margin-bottom: 1.3rem;
-  }
-  .fm-card__list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-  .fm-card__list li {
-    font-size: 0.82rem;
-    line-height: 1.7;
-    color: rgba(245, 240, 229, 0.6);
-    padding-left: 1.1rem;
-    position: relative;
-  }
-  .fm-card__list li::before {
-    content: '–';
-    position: absolute;
-    left: 0;
-    color: rgba(212, 255, 0, 0.45);
-  }
-
-  /* ===== CTA ===== */
-  .fm-cta {
-    text-align: center;
-  }
-
-  .fm-cta__btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.7rem;
-    padding: 1.1rem 2.5rem;
-    background: #D4FF00;
-    color: #0a1a06;
-    border-radius: 100px;
-    font-size: 1rem;
-    font-weight: 800;
-    text-decoration: none;
-    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-    box-shadow: 0 6px 30px rgba(212, 255, 0, 0.25);
-    margin-bottom: 1.2rem;
-  }
-  .fm-cta__btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 40px rgba(212, 255, 0, 0.4);
-  }
-  .fm-cta__arrow {
-    font-size: 1.2rem;
-    transition: transform 0.3s ease;
-  }
-  .fm-cta__btn:hover .fm-cta__arrow {
-    transform: translateX(4px);
-  }
-  .fm-cta__sub {
-    font-size: 0.78rem;
-    color: rgba(245, 240, 229, 0.5);
-    line-height: 1.8;
-  }
-
-  /* ===== Scroll Reveal ===== */
-  [data-fm-anim] {
-    opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  [data-fm-anim].is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* ===== Responsive ===== */
-  @media (max-width: 768px) {
-    .farmatch-section { padding: 4.5rem 0 5rem; }
-    .fm-cards { grid-template-columns: 1fr; }
-    .fm-stat { padding: 2.5rem 1.5rem; }
-    .pc { display: none; }
+  .logo-fa,
+  .logo-match {
+    display: inline-block;
   }
 </style>
-
-<script>
-  const fmObs = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-visible'); });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('[data-fm-anim]').forEach(el => fmObs.observe(el));
-</script>
