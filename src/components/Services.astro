@@ -367,7 +367,7 @@ const marketPrices = await getMarketPrices();
             backgroundColor: 'rgba(46, 125, 50, 0.05)',
             borderWidth: 3,
             fill: true,
-            tension: 0.4,
+            tension: 0.25,
             pointRadius: 4,
             pointHoverRadius: 6,
             pointBackgroundColor: '#2e7d32',
@@ -412,6 +412,8 @@ const marketPrices = await getMarketPrices();
             },
             y: {
               beginAtZero: false,
+              // データの最小値と最大値から余裕を持たせてグラフの急峻さを緩和
+              grace: '50%',
               grid: { color: 'rgba(35, 24, 21, 0.05)' },
               ticks: { font: { size: 10, family: 'monospace' }, color: '#231815', callback: (v: any) => `¥${v}` }
             }
