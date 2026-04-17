@@ -35,10 +35,34 @@
           </p>
 
           <!-- Stat Card -->
-          <div class="p-6 bg-white border border-[#231815]/20 rounded-2xl inline-block mb-8">
+          <div class="p-6 bg-white border border-[#231815]/20 rounded-2xl inline-block mb-6 fm-stat-card">
             <p class="text-xs text-[#231815]/60 mb-1 tracking-widest">日本の耕作放棄地</p>
             <div class="font-display text-4xl md:text-5xl font-bold text-[#2e7d32]">
-              42.3<span class="text-lg font-normal text-[#231815]/60 ml-1">万ha</span>
+              <span id="farmatch-stat-num" class="fm-stat-num">0</span><span class="text-lg font-normal text-[#231815]/60 ml-1">万ha</span>
+            </div>
+            <div class="fm-stat-bar">
+              <div class="fm-stat-bar-fill"></div>
+            </div>
+          </div>
+
+          <!-- Result Card -->
+          <div class="fm-result-card mb-8">
+            <div class="fm-result-badge">LAUNCH RESULT</div>
+            <p class="text-xs text-[#231815]/60 mb-3 tracking-widest">ローンチから10日の実績</p>
+            <div class="flex items-end gap-6 flex-wrap">
+              <div>
+                <div class="font-display text-3xl md:text-4xl font-bold text-[#231815]">
+                  <span id="farmatch-reg-num" class="fm-stat-num">0</span><span class="text-sm font-normal text-[#231815]/60 ml-1">件</span>
+                </div>
+                <p class="text-xs text-[#231815]/60 mt-1">登録数</p>
+              </div>
+              <div class="fm-result-divider"></div>
+              <div>
+                <div class="font-display text-3xl md:text-4xl font-bold text-[#2e7d32]">
+                  <span id="farmatch-match-num" class="fm-stat-num">0</span><span class="text-sm font-normal text-[#231815]/60 ml-1">件</span>
+                </div>
+                <p class="text-xs text-[#231815]/60 mt-1">マッチング成立</p>
+              </div>
             </div>
           </div>
 
@@ -48,10 +72,9 @@
               href="https://farmatch.jp"
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 bg-[#2e7d32] text-white px-8 py-4 rounded-full font-bold text-sm md:text-base hover:-translate-y-0.5 transition-all shadow-md hover:shadow-lg"
+              class="fm-btn inline-flex items-center justify-center gap-2 px-10 py-4 text-white text-base font-bold rounded-full transition-all hover:-translate-y-1 focus:outline-none shadow-lg min-w-[280px]"
             >
-              farmatchを詳しく見る
-              <span class="text-lg">→</span>
+              🌾 farmatchを詳しく見る
             </a>
             <p class="text-xs text-[#231815]/50 mt-3">地主・就農希望者、どちらも無料でご利用いただけます</p>
           </div>
@@ -105,4 +128,149 @@
     min-width: auto !important;
     margin: 0 !important;
   }
+
+  /* Stat Card — 近未来エフェクト */
+  .fm-stat-card {
+    position: relative;
+    min-width: 280px;
+  }
+  .fm-stat-num {
+    background: linear-gradient(180deg, #2e7d32 0%, #5ba83f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+  }
+  .fm-stat-num.glow {
+    animation: fmStatGlow 1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes fmStatGlow {
+    0% { filter: drop-shadow(0 0 0 rgba(46, 125, 50, 0)); }
+    40% { filter: drop-shadow(0 0 20px rgba(46, 125, 50, 0.8)); }
+    100% { filter: drop-shadow(0 0 0 rgba(46, 125, 50, 0)); }
+  }
+
+  .fm-stat-bar {
+    margin-top: 0.8rem;
+    width: 100%;
+    height: 3px;
+    background: rgba(46, 125, 50, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .fm-stat-bar-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #2e7d32, #5ba83f);
+    box-shadow: 0 0 8px rgba(46, 125, 50, 0.4);
+    border-radius: 10px;
+    transition: width 2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .fm-stat-bar-fill.active {
+    width: 85%;
+  }
+
+  /* 実績カード */
+  .fm-result-card {
+    position: relative;
+    padding: 1.5rem 1.8rem;
+    background: linear-gradient(135deg, #fff 0%, #f5f0e5 100%);
+    border: 1.5px solid #2e7d32;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(46, 125, 50, 0.15);
+    max-width: 100%;
+  }
+  .fm-result-badge {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    padding: 4px 12px;
+    background: #2e7d32;
+    color: white;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    border-radius: 100px;
+  }
+  .fm-result-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(46, 125, 50, 0.2);
+  }
+
+  /* 近未来ボタン（他セクションと同じ緑グラデ） */
+  .fm-btn {
+    background: linear-gradient(180deg, #2ea854 0%, #45d468 50%, #7aedaa 100%) !important;
+    border: 1.5px solid rgba(130, 240, 160, 0.55) !important;
+    box-shadow: 0 0 14px rgba(80, 220, 120, 0.45),
+                0 0 30px rgba(80, 220, 120, 0.18) !important;
+    transition: all 0.3s ease !important;
+    color: white !important;
+    text-decoration: none !important;
+  }
+  .fm-btn:hover {
+    box-shadow: 0 0 20px rgba(80, 220, 120, 0.65),
+                0 0 45px rgba(80, 220, 120, 0.28) !important;
+    transform: translateY(-2px) !important;
+  }
 </style>
+
+<script>
+  function countUp(el: HTMLElement, target: number, duration: number, decimals: number) {
+    const start = performance.now();
+    const update = (now: number) => {
+      const t = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 4);
+      const val = ease * target;
+      el.textContent = decimals > 0 ? val.toFixed(decimals) : Math.floor(val).toString();
+      if (t < 1) {
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = decimals > 0 ? target.toFixed(decimals) : target.toString();
+        el.classList.add('glow');
+      }
+    };
+    requestAnimationFrame(update);
+  }
+
+  function initFarmatchCounters() {
+    const stat = document.getElementById('farmatch-stat-num');
+    const reg = document.getElementById('farmatch-reg-num');
+    const match = document.getElementById('farmatch-match-num');
+    const bar = document.querySelector('.fm-stat-bar-fill');
+
+    const done = { stat: false, reg: false, match: false };
+
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const t = entry.target as HTMLElement;
+
+        if (t === stat && !done.stat) {
+          done.stat = true;
+          if (bar) bar.classList.add('active');
+          countUp(stat, 42.3, 2000, 1);
+          obs.unobserve(stat);
+        }
+        if (t === reg && !done.reg) {
+          done.reg = true;
+          countUp(reg, 20, 1500, 0);
+          obs.unobserve(reg);
+        }
+        if (t === match && !done.match) {
+          done.match = true;
+          setTimeout(() => countUp(match, 1, 1200, 0), 500);
+          obs.unobserve(match);
+        }
+      });
+    }, { threshold: 0.4 });
+
+    if (stat) obs.observe(stat);
+    if (reg) obs.observe(reg);
+    if (match) obs.observe(match);
+  }
+
+  document.addEventListener('astro:page-load', initFarmatchCounters);
+  initFarmatchCounters();
+</script>
