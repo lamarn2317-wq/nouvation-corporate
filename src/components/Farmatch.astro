@@ -35,13 +35,17 @@
           </p>
 
           <!-- Stat Card -->
-          <div class="p-6 bg-white border border-[#231815]/20 rounded-2xl inline-block mb-6 fm-stat-card">
-            <p class="text-xs text-[#231815]/60 mb-1 tracking-widest">日本の耕作放棄地</p>
-            <div class="font-display text-4xl md:text-5xl font-bold text-[#2e7d32]">
-              <span id="farmatch-stat-num" class="fm-stat-num">0</span><span class="text-lg font-normal text-[#231815]/60 ml-1">万ha</span>
-            </div>
-            <div class="fm-stat-bar">
-              <div class="fm-stat-bar-fill"></div>
+          <div class="fm-stat-card p-6 rounded-2xl inline-block mb-6">
+            <div class="fm-stat-card__bg"></div>
+            <div class="fm-stat-card__overlay"></div>
+            <div class="fm-stat-card__content">
+              <p class="text-xs mb-1 tracking-widest fm-stat-card__label">日本の耕作放棄地</p>
+              <div class="font-display text-4xl md:text-5xl font-bold">
+                <span id="farmatch-stat-num" class="fm-stat-num">0</span><span class="text-lg font-normal ml-1 fm-stat-card__unit">万ha</span>
+              </div>
+              <div class="fm-stat-bar">
+                <div class="fm-stat-bar-fill"></div>
+              </div>
             </div>
           </div>
 
@@ -128,10 +132,42 @@
     margin: 0 !important;
   }
 
-  /* Stat Card — 近未来エフェクト */
+  /* Stat Card — 耕作放棄地の背景写真 */
   .fm-stat-card {
     position: relative;
     min-width: 280px;
+    overflow: hidden;
+    border: 1px solid rgba(35, 24, 21, 0.15);
+    isolation: isolate;
+  }
+  .fm-stat-card__bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800&q=80');
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(30%) brightness(0.85);
+    z-index: -2;
+  }
+  .fm-stat-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(245, 240, 225, 0.88) 50%,
+      rgba(255, 255, 255, 0.85) 100%
+    );
+    backdrop-filter: blur(1px);
+    z-index: -1;
+  }
+  .fm-stat-card__content { position: relative; }
+  .fm-stat-card__label {
+    color: #231815;
+    opacity: 0.75;
+    font-weight: 700;
+  }
+  .fm-stat-card__unit {
+    color: rgba(35, 24, 21, 0.7);
   }
   .fm-stat-num {
     background: linear-gradient(180deg, #2e7d32 0%, #5ba83f 100%);
