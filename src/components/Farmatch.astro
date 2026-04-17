@@ -489,12 +489,20 @@
     border-radius: 0.7rem;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.2);
+    /* 下部のいいね数・コメントを隠すため、アスペクト比を動画部分だけに制限 */
+    height: 440px;
   }
 
   .fm-reel-inner :global(.instagram-media) {
     max-width: 100% !important;
     min-width: auto !important;
     border-radius: 0.7rem !important;
+    margin: 0 !important;
+  }
+
+  .fm-reel-inner :global(iframe.instagram-media-rendered) {
+    min-width: 100% !important;
+    width: 100% !important;
   }
 
   .fm-reel-corner {
