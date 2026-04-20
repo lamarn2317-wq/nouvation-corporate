@@ -54,6 +54,13 @@ const {
 </html>
 
 <style is:global>
+  /* 日本語の禁則処理（行頭・行末の約物／単語分断防止） */
+  .ja-keep {
+    word-break: keep-all;
+    line-break: strict;
+    overflow-wrap: normal;
+  }
+
   /* ============================================
      CSS Variables - Dynamic Theme System
      ============================================ */
