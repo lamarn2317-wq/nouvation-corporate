@@ -8,26 +8,20 @@
     <div id="opening-line" class="opening-line w-full h-[1px] bg-[#2ea854] scale-x-0 origin-left"></div>
   </div>
 
-  <!-- Background Video -->
-  <video 
+  <!-- Background Video (PC & SP 共通 — MP4で統一) -->
+  <video
     id="fv-video"
     autoplay
-    muted 
-    loop 
+    muted
+    loop
     playsinline
+    preload="auto"
     poster="/images/fv_poster.jpg"
-    class="absolute inset-0 w-full h-full object-cover hidden md:block"
+    class="absolute inset-0 w-full h-full object-cover"
     aria-label="農業の風景"
   >
     <source src="https://sjgocvdpigcimpvuaxoe.supabase.co/storage/v1/object/public/nouvation-official-corporatesite/fv_v4.mp4" type="video/mp4" />
   </video>
-
-  <!-- Background GIF (SP only) -->
-<img
-src="https://sjgocvdpigcimpvuaxoe.supabase.co/storage/v1/object/public/nouvation-official-corporatesite/fv_sp.gif"
-alt="農業の風景"
-class="absolute inset-0 w-full h-full object-cover block md:hidden"
-/>
   
   <!-- Background Layers -->
   <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#111111]"></div>
@@ -128,11 +122,12 @@ class="absolute inset-0 w-full h-full object-cover block md:hidden"
         setTimeout(() => {
           overlay.classList.add('fade-out');
 
-          if (video && window.innerWidth >= 768) {
+          if (video) {
+            video.muted = true;
             const playPromise = video.play();
             if (playPromise !== undefined) {
               playPromise.catch(e => {
-                console.warn("Autoplay was prevented, retrying with muted...", e);
+                console.warn("Autoplay was prevented, retrying...", e);
                 video.muted = true;
                 video.play().catch(err => console.error("Final play error:", err));
               });
