@@ -2,7 +2,7 @@
 // First View Component
 ---
 
-<section data-section-theme="dark" class="relative h-screen flex items-center justify-center overflow-hidden">
+<section data-section-theme="dark" class="fv-stable relative flex items-center justify-center overflow-hidden">
   <!-- Opening Animation Overlay -->
   <div id="opening-overlay" class="absolute inset-0 z-[100] bg-[#111111] flex items-center justify-center pointer-events-none">
     <div id="opening-line" class="opening-line w-full h-[1px] bg-[#2ea854] scale-x-0 origin-left"></div>
@@ -47,6 +47,14 @@
 </section>
 
 <style>
+  /* FVの高さを安定化（URLバーの表示/非表示で動かない） */
+  .fv-stable {
+    height: 100vh;
+    /* スクロール時のURLバー変化で高さが変わらないよう svh を使用（対応ブラウザ） */
+    height: 100svh;
+    min-height: 600px;
+  }
+
   .opening-line {
     animation: line-shuin 1.0s cubic-bezier(0.65, 0, 0.35, 1) forwards;
   }

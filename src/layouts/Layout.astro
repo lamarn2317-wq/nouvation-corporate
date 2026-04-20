@@ -14,7 +14,7 @@ const {
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content={description} />
     <title>{title}</title>
     
@@ -68,11 +68,21 @@ const {
     --theme-transition: 0.7s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
+  html {
+    /* iOS Safariでスクロール時の横揺れ・縦サイズ変動を抑止 */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   body {
     font-family: 'Noto Sans JP', sans-serif;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     transition: background-color var(--theme-transition), color var(--theme-transition);
+    /* 横スクロール防止（レイアウトシフト防止） */
+    overflow-x: hidden;
+    /* 常にスクロールバー分の幅を確保してレイアウト安定 */
+    scrollbar-gutter: stable;
   }
   
   /* Dark Theme (Default) */
