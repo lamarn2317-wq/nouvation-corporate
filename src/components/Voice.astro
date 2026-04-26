@@ -245,19 +245,24 @@ const categories = [
     top: 50%;
     left: 50%;
     width: 330px;
-    transform: translate(-50%, -50%) scale(0.5) rotateY(0deg) translateZ(-200px);
+    transform: translate3d(-50%, -50%, -200px) scale(0.5) rotateY(0deg);
     opacity: 0;
+    /* Apple級スプリング感のイージング（cubic-bezier調整） */
     transition:
-      transform 0.65s cubic-bezier(0.16,1,0.3,1),
-      opacity   0.65s cubic-bezier(0.16,1,0.3,1),
-      filter    0.65s ease;
-    will-change: transform, opacity;
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
+      filter    0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity, filter;
     pointer-events: none;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
   }
 
   /* 前面 — 大きく浮かび上がる */
   .voice-card.is-current {
-    transform: translate(-50%, -50%) scale(1.05) rotateY(0deg) translateZ(0px);
+    transform: translate3d(-50%, -50%, 0px) scale(1.05) rotateY(0deg);
     opacity: 1;
     z-index: 3;
     pointer-events: auto;
@@ -267,7 +272,7 @@ const categories = [
 
   /* 右 — 遠ざかる */
   .voice-card.is-next {
-    transform: translate(18%, -50%) scale(0.55) rotateY(-22deg) translateZ(-180px);
+    transform: translate3d(18%, -50%, -180px) scale(0.55) rotateY(-22deg);
     opacity: 0.45;
     z-index: 2;
     filter: brightness(0.85);
@@ -276,7 +281,7 @@ const categories = [
 
   /* 左 — 遠ざかる */
   .voice-card.is-prev {
-    transform: translate(-118%, -50%) scale(0.55) rotateY(22deg) translateZ(-180px);
+    transform: translate3d(-118%, -50%, -180px) scale(0.55) rotateY(22deg);
     opacity: 0.45;
     z-index: 2;
     filter: brightness(0.85);
@@ -284,10 +289,21 @@ const categories = [
   }
 
   .voice-card.is-hidden {
-    transform: translate(-50%, -50%) scale(0.4) translateZ(-300px);
+    transform: translate3d(-50%, -50%, -300px) scale(0.4) rotateY(0deg);
     opacity: 0;
     z-index: 0;
     pointer-events: none;
+  }
+
+  /* ドラッグ中（一切のtransition/animationを切ってフレーム単位制御） */
+  .voice-card.is-dragging {
+    transition: none !important;
+    animation: none !important;
+  }
+  /* 慣性復帰時のスプリングカーブ */
+  .voice-card.is-springing {
+    transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    animation: none !important;
   }
 
   .voice-card.no-anim {
@@ -324,8 +340,8 @@ const categories = [
   }
 
   @keyframes cardFloat {
-    0%,100% { transform: translate(-50%, -50%) scale(1.05) rotateY(0deg) translateZ(0px) translateY(0); }
-    50%      { transform: translate(-50%, -50%) scale(1.05) rotateY(0deg) translateZ(0px) translateY(-9px); }
+    0%,100% { transform: translate3d(-50%, -50%, 0px) scale(1.05) rotateY(0deg); }
+    50%      { transform: translate3d(-50%, calc(-50% - 9px), 0px) scale(1.05) rotateY(0deg); }
   }
 
   /* ===== Card Face ===== */
@@ -534,36 +550,123 @@ const categories = [
         cardHandlers.push({ el: card, fn });
       });
 
-      // ===== Drag / Swipe =====
+      // ===== Drag / Swipe（速度追跡＋慣性付き） =====
+      let lastX = 0;
+      let lastT = 0;
+      let velocity = 0; // px/ms
+      let rafId: number | null = null;
+      let pendingX: number | null = null;
+
       function dragStart(x: number) {
-        isDragging = true; startX = x; dx = 0;
+        isDragging = true;
+        startX = x;
+        dx = 0;
+        lastX = x;
+        lastT = performance.now();
+        velocity = 0;
+        // 関連するすべてのカードに dragging を適用（スムーズな部分追従用）
+        cards.forEach(c => {
+          c.classList.add('is-dragging');
+          c.classList.remove('is-springing');
+        });
         const ac = car.querySelector('.is-current') as HTMLElement;
-        if (ac) { ac.classList.add('no-anim'); ac.style.transition = 'none'; }
+        if (ac) ac.style.willChange = 'transform';
+      }
+
+      function applyDragFrame() {
+        rafId = null;
+        if (!isDragging || pendingX === null) return;
+        const x = pendingX;
+        pendingX = null;
+
+        const now = performance.now();
+        const elapsed = Math.max(1, now - lastT);
+        velocity = (x - lastX) / elapsed; // px/ms
+        lastX = x;
+        lastT = now;
+        dx = x - startX;
+
+        const absDx = Math.abs(dx);
+
+        // 抵抗（drag-resistance）— 大きく動くほど鈍くする
+        const resistDx = dx * (1 - Math.min(absDx / 800, 0.3));
+
+        const ac = car.querySelector('.is-current') as HTMLElement;
+        if (ac) {
+          const rot = resistDx * -0.022;
+          const scl = Math.max(1.05 - absDx * 0.00035, 0.95);
+          const tY = absDx * 0.025;
+          ac.style.transform = `translate3d(calc(-50% + ${resistDx}px), calc(-50% + ${tY}px), 0) scale(${scl}) rotateY(${rot}deg)`;
+        }
+
+        // ドラッグ中、隣のカードもわずかに反応させる（プレビュー感）
+        const next = car.querySelector('.is-next') as HTMLElement;
+        const prev = car.querySelector('.is-prev') as HTMLElement;
+        const peekShift = Math.max(-1, Math.min(1, dx / 200)); // -1..1
+        if (next) {
+          // dxが負（左にドラッグ） → next が前に出る
+          const peek = -peekShift; // 0..1 に
+          const opa = 0.45 + Math.max(0, peek) * 0.45;
+          next.style.transform = `translate3d(calc(18% - ${peek * 80}px), -50%, ${-180 + peek * 100}px) scale(${0.55 + peek * 0.15}) rotateY(${-22 + peek * 12}deg)`;
+          next.style.opacity = String(opa);
+        }
+        if (prev) {
+          const peek = peekShift; // -1..1
+          const opa = 0.45 + Math.max(0, peek) * 0.45;
+          prev.style.transform = `translate3d(calc(-118% + ${peek * 80}px), -50%, ${-180 + peek * 100}px) scale(${0.55 + peek * 0.15}) rotateY(${22 - peek * 12}deg)`;
+          prev.style.opacity = String(opa);
+        }
       }
 
       function dragMove(x: number) {
         if (!isDragging) return;
-        dx = x - startX;
-        const ac = car.querySelector('.is-current') as HTMLElement;
-        if (!ac) return;
-        const rot = dx * -0.025;
-        const scl = Math.max(1.05 - Math.abs(dx) * 0.0004, 0.95);
-        const tY  = Math.abs(dx) * 0.03;
-        ac.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${tY}px)) scale(${scl}) rotateY(${rot}deg) translateZ(0)`;
+        pendingX = x;
+        if (rafId === null) rafId = requestAnimationFrame(applyDragFrame);
+      }
+
+      function clearInlineStyles() {
+        cards.forEach(c => {
+          c.classList.remove('is-dragging', 'is-springing');
+          c.style.transform = '';
+          c.style.opacity = '';
+          c.style.willChange = '';
+        });
       }
 
       function dragEnd() {
         if (!isDragging) return;
         isDragging = false;
-        const ac = car.querySelector('.is-current') as HTMLElement;
-        if (ac) { ac.classList.remove('no-anim'); ac.style.transition = ''; ac.style.transform = ''; }
-        if (Math.abs(dx) > 55) {
-          if (dx < 0) drumTo((current+1)%total, 1);
-          else        drumTo((current-1+total)%total, -1);
+        if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+        pendingX = null;
+
+        const absDx = Math.abs(dx);
+        const absV = Math.abs(velocity); // px/ms
+
+        // 慣性しきい値: 距離 > 55px か 速度 > 0.5 px/ms（≒ flick）
+        const shouldAdvance = absDx > 55 || absV > 0.5;
+
+        if (shouldAdvance) {
+          // スプリングで現在カードを画面外まで送る感じにしてからdrumTo
+          const dir = dx < 0 ? 1 : -1;
+          // 即座に位置リセットしてdrumTo（drum-fwd/bwdのCSSアニメーションが滑らかに繋がる）
+          clearInlineStyles();
+          drumTo((current + dir + total) % total, dir);
         } else {
-          update(); // キャンセル時は位置リセット
+          // キャンセル: スプリングで元位置に戻す
+          cards.forEach(c => {
+            c.classList.remove('is-dragging');
+            c.classList.add('is-springing');
+            c.style.transform = '';
+            c.style.opacity = '';
+          });
+          // springing クラスを 600ms 後に外す
+          setTimeout(() => {
+            cards.forEach(c => c.classList.remove('is-springing'));
+          }, 600);
         }
+
         dx = 0;
+        velocity = 0;
       }
 
       // Touch
