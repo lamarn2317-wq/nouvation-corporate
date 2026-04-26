@@ -434,30 +434,40 @@ const categories = [
     animation: none !important;
   }
 
-  /* ===== ドラム回転（8周高速→なめらか着地：単一カーブで連続的） ===== */
+  /* ===== ドラム回転（5周高速＋モーションブラー＋ピタッと着地） ===== */
   @keyframes drumFwd {
     from { transform: rotateY(0deg); }
-    to   { transform: rotateY(-2880deg); }
+    to   { transform: rotateY(-1800deg); }
   }
   @keyframes drumBwd {
     from { transform: rotateY(0deg); }
-    to   { transform: rotateY(2880deg); }
+    to   { transform: rotateY(1800deg); }
   }
 
   /* カウンターローテーション：カードを常に正面向きに保つ（フェリスホイール効果） */
   @keyframes cardCounterFwd {
     from { rotate: y 0deg; }
-    to   { rotate: y 2880deg; }
+    to   { rotate: y 1800deg; }
   }
   @keyframes cardCounterBwd {
     from { rotate: y 0deg; }
-    to   { rotate: y -2880deg; }
+    to   { rotate: y -1800deg; }
+  }
+
+  /* モーションブラー：高速回転中はブラー、着地で鮮明化 */
+  @keyframes drumBlur {
+    0%   { filter: blur(0px); }
+    15%  { filter: blur(8px); }
+    35%  { filter: blur(10px); }
+    65%  { filter: blur(6px); }
+    85%  { filter: blur(2px); }
+    100% { filter: blur(0px); }
   }
 
   .voice-carousel.drum-fwd,
   .voice-carousel.drum-bwd {
     /* GPU合成・サブピクセル補正でカクつきを解消 */
-    will-change: transform;
+    will-change: transform, filter;
     transform: translateZ(0);
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
@@ -465,11 +475,15 @@ const categories = [
     -webkit-transform-style: preserve-3d;
   }
   .voice-carousel.drum-fwd {
-    /* 究極のスムーズカーブ — Apple Human Interface 級 */
-    animation: drumFwd 1.8s cubic-bezier(0.16, 0.92, 0.18, 1) forwards;
+    /* マッハ加速→ピタッと着地（cubic-bezier 終盤を強引に減速） */
+    animation:
+      drumFwd 1.2s cubic-bezier(0.16, 1, 0.18, 1) forwards,
+      drumBlur 1.2s ease-out forwards;
   }
   .voice-carousel.drum-bwd {
-    animation: drumBwd 1.8s cubic-bezier(0.16, 0.92, 0.18, 1) forwards;
+    animation:
+      drumBwd 1.2s cubic-bezier(0.16, 1, 0.18, 1) forwards,
+      drumBlur 1.2s ease-out forwards;
   }
   /* 回転中はすべてのカードのfloat/transitionを完全停止（競合排除） */
   .voice-carousel.drum-fwd .voice-card,
@@ -479,10 +493,10 @@ const categories = [
   }
   /* カードの正面向きキープ（カウンターローテーション） */
   .voice-carousel.drum-fwd .voice-card {
-    animation: cardCounterFwd 1.8s cubic-bezier(0.16, 0.92, 0.18, 1) forwards !important;
+    animation: cardCounterFwd 1.2s cubic-bezier(0.16, 1, 0.18, 1) forwards !important;
   }
   .voice-carousel.drum-bwd .voice-card {
-    animation: cardCounterBwd 1.8s cubic-bezier(0.16, 0.92, 0.18, 1) forwards !important;
+    animation: cardCounterBwd 1.2s cubic-bezier(0.16, 1, 0.18, 1) forwards !important;
   }
   /* 各カード自身もGPUレイヤを強制 */
   .voice-carousel.drum-fwd .voice-card,
@@ -679,8 +693,8 @@ const categories = [
         car.classList.add(cls);
         voiceSection?.classList.add('is-spinning');
 
-        // 回転中間点でカード位置を更新（1.8s × 0.5 = 900ms）
-        setTimeout(() => update(), 900);
+        // 回転中間点でカード位置を更新（1.2s × 0.5 = 600ms）
+        setTimeout(() => update(), 600);
 
         car.addEventListener('animationend', () => {
           car.classList.remove(cls);
