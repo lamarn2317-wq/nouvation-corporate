@@ -434,69 +434,24 @@ const categories = [
     animation: none !important;
   }
 
-  /* ===== ドラム回転（5周高速＋モーションブラー＋ピタッと着地） ===== */
-  @keyframes drumFwd {
-    from { transform: rotateY(0deg); }
-    to   { transform: rotateY(-1800deg); }
-  }
-  @keyframes drumBwd {
-    from { transform: rotateY(0deg); }
-    to   { transform: rotateY(1800deg); }
-  }
-
-  /* カウンターローテーション：カードを常に正面向きに保つ（フェリスホイール効果） */
-  @keyframes cardCounterFwd {
-    from { rotate: y 0deg; }
-    to   { rotate: y 1800deg; }
-  }
-  @keyframes cardCounterBwd {
-    from { rotate: y 0deg; }
-    to   { rotate: y -1800deg; }
-  }
-
-  /* モーションブラー：高速回転中はブラー、着地で鮮明化 */
-  @keyframes drumBlur {
-    0%   { filter: blur(0px); }
-    15%  { filter: blur(8px); }
-    35%  { filter: blur(10px); }
-    65%  { filter: blur(6px); }
-    85%  { filter: blur(2px); }
-    100% { filter: blur(0px); }
-  }
-
+  /* ===== カード巡回モーション（3D回転なし・カードは常に正面向き固定） ===== */
   .voice-carousel.drum-fwd,
   .voice-carousel.drum-bwd {
-    /* GPU合成・サブピクセル補正でカクつきを解消 */
-    will-change: transform, filter;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
   }
-  .voice-carousel.drum-fwd {
-    /* マッハ加速→ピタッと着地（cubic-bezier 終盤を強引に減速） */
-    animation:
-      drumFwd 1.2s cubic-bezier(0.16, 1, 0.18, 1) forwards,
-      drumBlur 1.2s ease-out forwards;
-  }
-  .voice-carousel.drum-bwd {
-    animation:
-      drumBwd 1.2s cubic-bezier(0.16, 1, 0.18, 1) forwards,
-      drumBlur 1.2s ease-out forwards;
-  }
-  /* 回転中はすべてのカードのfloat/transitionを完全停止（競合排除） */
+  /* 巡回中：カードは超高速で position 間を流れるように移動（連続感重視） */
   .voice-carousel.drum-fwd .voice-card,
   .voice-carousel.drum-bwd .voice-card {
-    transition: none !important;
-    will-change: transform, rotate;
-  }
-  /* カードの正面向きキープ（カウンターローテーション） */
-  .voice-carousel.drum-fwd .voice-card {
-    animation: cardCounterFwd 1.2s cubic-bezier(0.16, 1, 0.18, 1) forwards !important;
-  }
-  .voice-carousel.drum-bwd .voice-card {
-    animation: cardCounterBwd 1.2s cubic-bezier(0.16, 1, 0.18, 1) forwards !important;
+    transition:
+      transform 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity   0.14s linear,
+      filter    0.14s linear !important;
+    animation: none !important;
+    will-change: transform, opacity;
+    /* ピタッとした動きを防ぐためサブピクセル滑らかさ */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
   /* 各カード自身もGPUレイヤを強制 */
   .voice-carousel.drum-fwd .voice-card,
@@ -681,26 +636,53 @@ const categories = [
         dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
       }
 
-      // ドラム回転して次のカードへ
+      // カード巡回：9周高速サイクル → 静かに着地（3D回転は使わない）
       let isSpinning = false;
       const voiceSection = document.getElementById('voice');
       function drumTo(newIndex: number, dir: number) {
         if (isSpinning) return;
         isSpinning = true;
-        current = newIndex;
 
         const cls = dir >= 0 ? 'drum-fwd' : 'drum-bwd';
         car.classList.add(cls);
         voiceSection?.classList.add('is-spinning');
 
-        // 回転中間点でカード位置を更新（1.2s × 0.5 = 600ms）
-        setTimeout(() => update(), 600);
+        // 9周（= total × 9）+ 最終調整1回
+        const CYCLES = 9;
+        const finalIndex = newIndex;
+        const TOTAL_STEPS = CYCLES * total + 1;
+        const STEP_MIN = 22;   // 序盤マッハ
+        const STEP_MAX = 95;   // 終盤フワッと
 
-        car.addEventListener('animationend', () => {
-          car.classList.remove(cls);
-          voiceSection?.classList.remove('is-spinning');
-          isSpinning = false;
-        }, { once: true });
+        let step = 0;
+        const startedAt = performance.now();
+
+        function nextStep() {
+          if (step >= TOTAL_STEPS - 1) {
+            // 最終ステップ：ターゲットに静かに着地
+            current = finalIndex;
+            update();
+            // CSS transition (0.18s) 完了後に通常状態へ復帰
+            setTimeout(() => {
+              car.classList.remove('drum-fwd', 'drum-bwd');
+              voiceSection?.classList.remove('is-spinning');
+              isSpinning = false;
+            }, 320);
+            return;
+          }
+
+          current = (current + dir + total) % total;
+          update();
+          step++;
+
+          // 可変ステップ時間（ease-out カーブ）— 序盤マッハ→終盤ふんわり
+          const t = step / (TOTAL_STEPS - 1);
+          const eased = Math.pow(t, 1.6); // 後半に向かって急減速
+          const dur = STEP_MIN + eased * (STEP_MAX - STEP_MIN);
+          setTimeout(nextStep, dur);
+        }
+
+        nextStep();
       }
 
       // ドットクリック（クリーンアップ対象）
