@@ -249,6 +249,9 @@ const categories = [
     height: 540px;
     perspective: 1600px;
     perspective-origin: 50% 50%;
+    /* GPU合成 */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
   }
 
   .voice-carousel {
@@ -256,9 +259,13 @@ const categories = [
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
     touch-action: pan-y;
     user-select: none;
     cursor: grab;
+    /* GPU合成・カクつき防止 */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
   .voice-carousel:active { cursor: grabbing; }
 
@@ -427,33 +434,51 @@ const categories = [
     animation: none !important;
   }
 
-  /* ===== ドラム回転（ぐるっと3周） ===== */
+  /* ===== ドラム回転（一気に高速→なめらか着地：単一カーブで連続的） ===== */
   @keyframes drumFwd {
-    0%   { transform: rotateY(0deg); }
-    15%  { transform: rotateY(-300deg); }
-    40%  { transform: rotateY(-720deg); }
-    70%  { transform: rotateY(-980deg); }
-    88%  { transform: rotateY(-1060deg); }
-    100% { transform: rotateY(-1080deg); }
+    from { transform: rotateY(0deg); }
+    to   { transform: rotateY(-1440deg); }
   }
   @keyframes drumBwd {
-    0%   { transform: rotateY(0deg); }
-    15%  { transform: rotateY(300deg); }
-    40%  { transform: rotateY(720deg); }
-    70%  { transform: rotateY(980deg); }
-    88%  { transform: rotateY(1060deg); }
-    100% { transform: rotateY(1080deg); }
+    from { transform: rotateY(0deg); }
+    to   { transform: rotateY(1440deg); }
   }
 
+  .voice-carousel.drum-fwd,
+  .voice-carousel.drum-bwd {
+    /* GPU合成・サブピクセル補正でカクつきを解消 */
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+  }
   .voice-carousel.drum-fwd {
-    animation: drumFwd 1.15s cubic-bezier(0.16, 0.8, 0.24, 1) forwards;
+    /* 序盤マッハ加速→終盤フワッと（出力直線を1関数で連続にする） */
+    animation: drumFwd 1.4s cubic-bezier(0.05, 0.92, 0.2, 1) forwards;
   }
   .voice-carousel.drum-bwd {
-    animation: drumBwd 1.15s cubic-bezier(0.16, 0.8, 0.24, 1) forwards;
+    animation: drumBwd 1.4s cubic-bezier(0.05, 0.92, 0.2, 1) forwards;
   }
-  /* 回転中はカードのfloatを止める */
+  /* 回転中はすべてのカードのfloat/transitionを完全停止（競合排除） */
   .voice-carousel.drum-fwd .voice-card,
   .voice-carousel.drum-bwd .voice-card {
+    animation: none !important;
+    transition: none !important;
+    will-change: transform;
+  }
+  /* 各カード自身もGPUレイヤを強制 */
+  .voice-carousel.drum-fwd .voice-card,
+  .voice-carousel.drum-bwd .voice-card,
+  .voice-carousel.drum-fwd .card-face,
+  .voice-carousel.drum-bwd .card-face {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  /* 回転中は背景アニメも止めて GPU を回転に集中させる */
+  .voice-section.is-spinning .vbg__leaf,
+  .voice-section.is-spinning .voice-arrow {
     animation: none !important;
   }
 
@@ -628,6 +653,7 @@ const categories = [
 
       // ドラム回転して次のカードへ
       let isSpinning = false;
+      const voiceSection = document.getElementById('voice');
       function drumTo(newIndex: number, dir: number) {
         if (isSpinning) return;
         isSpinning = true;
@@ -635,12 +661,14 @@ const categories = [
 
         const cls = dir >= 0 ? 'drum-fwd' : 'drum-bwd';
         car.classList.add(cls);
+        voiceSection?.classList.add('is-spinning');
 
-        // 回転中間点でカード位置を更新（1.15s × 0.45 ≈ 520ms）
-        setTimeout(() => update(), 520);
+        // 回転中間点でカード位置を更新（1.4s × 0.5 = 700ms）
+        setTimeout(() => update(), 700);
 
         car.addEventListener('animationend', () => {
           car.classList.remove(cls);
+          voiceSection?.classList.remove('is-spinning');
           isSpinning = false;
         }, { once: true });
       }
