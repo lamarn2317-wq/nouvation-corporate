@@ -434,14 +434,14 @@ const categories = [
     animation: none !important;
   }
 
-  /* ===== ドラム回転（一気に高速→なめらか着地：単一カーブで連続的） ===== */
+  /* ===== ドラム回転（8周高速→なめらか着地：単一カーブで連続的） ===== */
   @keyframes drumFwd {
     from { transform: rotateY(0deg); }
-    to   { transform: rotateY(-1440deg); }
+    to   { transform: rotateY(-2880deg); }
   }
   @keyframes drumBwd {
     from { transform: rotateY(0deg); }
-    to   { transform: rotateY(1440deg); }
+    to   { transform: rotateY(2880deg); }
   }
 
   .voice-carousel.drum-fwd,
@@ -456,10 +456,10 @@ const categories = [
   }
   .voice-carousel.drum-fwd {
     /* 序盤マッハ加速→終盤フワッと（出力直線を1関数で連続にする） */
-    animation: drumFwd 1.4s cubic-bezier(0.05, 0.92, 0.2, 1) forwards;
+    animation: drumFwd 1.7s cubic-bezier(0.04, 0.94, 0.18, 1) forwards;
   }
   .voice-carousel.drum-bwd {
-    animation: drumBwd 1.4s cubic-bezier(0.05, 0.92, 0.2, 1) forwards;
+    animation: drumBwd 1.7s cubic-bezier(0.04, 0.94, 0.18, 1) forwards;
   }
   /* 回転中はすべてのカードのfloat/transitionを完全停止（競合排除） */
   .voice-carousel.drum-fwd .voice-card,
@@ -663,8 +663,8 @@ const categories = [
         car.classList.add(cls);
         voiceSection?.classList.add('is-spinning');
 
-        // 回転中間点でカード位置を更新（1.4s × 0.5 = 700ms）
-        setTimeout(() => update(), 700);
+        // 回転中間点でカード位置を更新（1.7s × 0.5 = 850ms）
+        setTimeout(() => update(), 850);
 
         car.addEventListener('animationend', () => {
           car.classList.remove(cls);
