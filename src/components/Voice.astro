@@ -57,6 +57,18 @@ const categories = [
       {categories.map((cat, ci) => (
         <div class={`voice-panel ${ci === 0 ? 'is-active' : ''}`} data-panel={cat.id}>
           <div class="voice-stage" data-voice-anim>
+            <!-- Swipe Indicator Arrows -->
+            <button class="voice-arrow voice-arrow--prev" data-arrow="prev" aria-label="前のカードへ">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button class="voice-arrow voice-arrow--next" data-arrow="next" aria-label="次のカードへ">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 6 15 12 9 18"></polyline>
+              </svg>
+            </button>
+
             <div class="voice-carousel">
               {cat.items.map((item, i) => (
                 <article class={`voice-card ${i === 0 ? 'is-current' : ''}`} data-ci={i}>
@@ -72,6 +84,17 @@ const categories = [
                   </div>
                 </article>
               ))}
+            </div>
+
+            <!-- Swipe hint (SP only, fades after first interaction) -->
+            <div class="voice-swipe-hint" aria-hidden="true">
+              <span class="vsh-icon">
+                <svg viewBox="0 0 32 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 26 12 20 18"></polyline>
+                  <polyline points="12 6 6 12 12 18" opacity="0.6"></polyline>
+                </svg>
+              </span>
+              <span class="vsh-text">SWIPE</span>
             </div>
           </div>
 
@@ -238,6 +261,99 @@ const categories = [
     cursor: grab;
   }
   .voice-carousel:active { cursor: grabbing; }
+
+  /* ===== Swipe Arrows ===== */
+  .voice-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition:
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .voice-arrow svg {
+    width: 22px;
+    height: 22px;
+  }
+  .voice-arrow:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.25), 0 0 16px rgba(255, 255, 255, 0.15);
+    color: #fff;
+  }
+  .voice-arrow:active {
+    transform: translateY(-50%) scale(0.92);
+  }
+  .voice-arrow--prev {
+    left: 0.5rem;
+    animation: arrowPulseLeft 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  .voice-arrow--next {
+    right: 0.5rem;
+    animation: arrowPulseRight 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    animation-delay: 1.3s;
+  }
+  @keyframes arrowPulseLeft {
+    0%, 100% { transform: translateY(-50%) translateX(0); }
+    50%      { transform: translateY(-50%) translateX(-4px); }
+  }
+  @keyframes arrowPulseRight {
+    0%, 100% { transform: translateY(-50%) translateX(0); }
+    50%      { transform: translateY(-50%) translateX(4px); }
+  }
+  /* スワイプヒント — 数秒で消える */
+  .voice-swipe-hint {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.85rem;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    pointer-events: none;
+    z-index: 10;
+    animation: swipeHint 3s ease-in-out 0.8s infinite;
+  }
+  .voice-swipe-hint.is-hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    animation: none;
+  }
+  .vsh-icon { display: inline-flex; }
+  .vsh-icon svg { width: 22px; height: 16px; }
+  @keyframes swipeHint {
+    0%, 100% { transform: translateX(-50%); opacity: 0.85; }
+    50%      { transform: translateX(-44%); opacity: 1; }
+  }
 
   /* ===== Card ===== */
   .voice-card {
