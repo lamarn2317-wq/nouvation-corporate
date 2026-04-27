@@ -440,7 +440,17 @@ const categories = [
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
   }
-  /* 切り替え中はカードの transition を最適化（アニメーションは無し） */
+  /* サイクル中（高速）：カードは流れるように位置遷移 */
+  .voice-carousel.is-rapid .voice-card {
+    transition:
+      transform 0.13s cubic-bezier(0.4, 0, 0.6, 1),
+      opacity   0.1s linear !important;
+    animation: none !important;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  /* 着地（最終ステップ）：ゆっくり滑らかに */
   .voice-carousel.drum-fwd .voice-card,
   .voice-carousel.drum-bwd .voice-card {
     transition:
@@ -450,6 +460,13 @@ const categories = [
     will-change: transform, opacity;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+  }
+  /* is-rapid が drum-* より優先（最後だけ着地transition） */
+  .voice-carousel.is-rapid.drum-fwd .voice-card,
+  .voice-carousel.is-rapid.drum-bwd .voice-card {
+    transition:
+      transform 0.13s cubic-bezier(0.4, 0, 0.6, 1),
+      opacity   0.1s linear !important;
   }
   /* 各カード自身もGPUレイヤを強制 */
   .voice-carousel.drum-fwd .voice-card,
@@ -634,27 +651,51 @@ const categories = [
         dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
       }
 
-      // カード位置遷移のみ（3D回転なし）：class入替→CSS transition
+      // 高速サイクル（9周）→ スムーズ着地：カード位置遷移のみ、3D回転なし
       let isSpinning = false;
       const voiceSection = document.getElementById('voice');
       function drumTo(newIndex: number, dir: number) {
         if (isSpinning) return;
         isSpinning = true;
-        current = newIndex;
 
         const cls = dir >= 0 ? 'drum-fwd' : 'drum-bwd';
         car.classList.add(cls);
+        car.classList.add('is-rapid');           // 高速トランジション ON
         voiceSection?.classList.add('is-spinning');
 
-        // 即座にカード位置を新状態に（transitionでスムーズに移動）
-        update();
+        // 9周分の class 入替（CYCLES * total = 27ステップ）→ +1で着地 = 28ステップ
+        const CYCLES = 9;
+        const finalIndex = newIndex;
+        const TOTAL_STEPS = CYCLES * total + 1;
+        let step = 0;
 
-        // CSS transition (0.6s) 完了後に通常状態へ
-        setTimeout(() => {
-          car.classList.remove('drum-fwd', 'drum-bwd');
-          voiceSection?.classList.remove('is-spinning');
-          isSpinning = false;
-        }, 650);
+        function nextStep() {
+          if (step >= TOTAL_STEPS - 1) {
+            // 最終ステップ: is-rapid を外して滑らかな 0.6s transition で着地
+            car.classList.remove('is-rapid');
+            current = finalIndex;
+            update();
+            setTimeout(() => {
+              car.classList.remove('drum-fwd', 'drum-bwd');
+              voiceSection?.classList.remove('is-spinning');
+              isSpinning = false;
+            }, 650);
+            return;
+          }
+
+          // 高速サイクル中 — 1ステップずつ位置を進める
+          current = (current + dir + total) % total;
+          update();
+          step++;
+
+          // 序盤マッハ→終盤少しゆっくり（着地手前で減速）
+          const t = step / (TOTAL_STEPS - 1);
+          // 70ms から始まり 140ms へ ease-in
+          const dur = 70 + Math.pow(t, 2) * 70;
+          setTimeout(nextStep, dur);
+        }
+
+        nextStep();
       }
 
       // ドットクリック（クリーンアップ対象）
