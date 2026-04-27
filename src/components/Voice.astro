@@ -440,47 +440,49 @@ const categories = [
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
   }
-  /* サイクル中（高速）：カードは流れるように位置遷移 */
+  /* サイクル中（高速）：カードは流れるように位置遷移
+     transitionをstepより少し長くして「常に動き続ける」連続感を演出 */
   .voice-carousel.is-rapid .voice-card {
     transition:
-      transform 0.1s cubic-bezier(0.4, 0, 0.6, 1),
-      opacity   0.08s linear !important;
+      transform 0.16s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      opacity   0.12s linear !important;
     animation: none !important;
     will-change: transform, opacity;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+    transform-origin: center center;
   }
 
   /* 🌟 サイクル中は3枚とも【背面サイズ・背面深度】で完全統一
      → 中央カードも縮小されるのでブレなし
-     → X位置の間隔を広げて、カード同士の距離感をしっかり保つ */
+     → X位置の間隔を大きく広げて、カードが「流れていく」感を強調 */
   .voice-carousel.is-rapid .voice-card.is-current {
     transform: translate3d(-50%, -50%, -180px) scale(0.55) rotateY(0deg) !important;
-    opacity: 0.75 !important;
-    filter: brightness(0.88) !important;
+    opacity: 0.78 !important;
+    filter: brightness(0.9) !important;
   }
   .voice-carousel.is-rapid .voice-card.is-prev {
-    transform: translate3d(-160%, -50%, -180px) scale(0.55) rotateY(0deg) !important;
-    opacity: 0.75 !important;
-    filter: brightness(0.88) !important;
+    transform: translate3d(-200%, -50%, -180px) scale(0.55) rotateY(0deg) !important;
+    opacity: 0.78 !important;
+    filter: brightness(0.9) !important;
   }
   .voice-carousel.is-rapid .voice-card.is-next {
-    transform: translate3d(60%, -50%, -180px) scale(0.55) rotateY(0deg) !important;
-    opacity: 0.75 !important;
-    filter: brightness(0.88) !important;
+    transform: translate3d(100%, -50%, -180px) scale(0.55) rotateY(0deg) !important;
+    opacity: 0.78 !important;
+    filter: brightness(0.9) !important;
   }
   .voice-carousel.is-rapid .voice-card.is-hidden {
     transform: translate3d(-50%, -50%, -180px) scale(0.55) rotateY(0deg) !important;
     opacity: 0 !important;
   }
 
-  /* 着地（最終ステップ）：滑らかに前面カードが大きくなる */
+  /* 着地（最終ステップ）：滑らかに前面カードが大きくなる（spring風カーブ） */
   .voice-carousel.drum-fwd .voice-card,
   .voice-carousel.drum-bwd .voice-card {
     transition:
-      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity   0.4s cubic-bezier(0.22, 1, 0.36, 1),
-      filter    0.4s cubic-bezier(0.22, 1, 0.36, 1) !important;
+      transform 0.45s cubic-bezier(0.34, 1.16, 0.5, 1),
+      opacity   0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      filter    0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
     animation: none !important;
     will-change: transform, opacity;
     backface-visibility: hidden;
@@ -689,7 +691,7 @@ const categories = [
 
         function nextStep() {
           if (step >= TOTAL_STEPS - 1) {
-            // 最終ステップ: is-rapid を外して 0.5s で「フワッ」と前面大きく
+            // 最終ステップ: is-rapid を外して 0.45s で「フワッ」と前面大きく
             car.classList.remove('is-rapid');
             current = finalIndex;
             update();
@@ -697,7 +699,7 @@ const categories = [
               car.classList.remove('drum-fwd', 'drum-bwd');
               voiceSection?.classList.remove('is-spinning');
               isSpinning = false;
-            }, 500);
+            }, 450);
             return;
           }
 
@@ -706,10 +708,10 @@ const categories = [
           update();
           step++;
 
-          // 序盤マッハ→終盤少しゆっくり（合計約1.0s）
+          // 序盤マッハ→終盤少しゆっくり（合計約0.95s）
           const t = step / (TOTAL_STEPS - 1);
-          // 25ms から始まり 55ms へ ease-in
-          const dur = 25 + Math.pow(t, 2) * 30;
+          // 22ms から始まり 50ms へ ease-in
+          const dur = 22 + Math.pow(t, 1.8) * 28;
           setTimeout(nextStep, dur);
         }
 
