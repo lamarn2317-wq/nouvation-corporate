@@ -662,11 +662,14 @@ const categories = [
         return { x, z, scale, opacity, brightness };
       }
 
-      function drumTo(newIndex: number, dir: number) {
+      // ドラッグ状態を引き継ぐためのオフセット型
+      type DragOffset = { dx: number; tY: number; sclDelta: number; rot: number };
+
+      function drumTo(newIndex: number, dir: number, dragOffset?: DragOffset) {
         if (isSpinning) return;
         isSpinning = true;
 
-        // ドラッグ状態のクラスを除去（inline-styleはRAFが上書きするのでそのままでOK）
+        // ドラッグ状態のクラスを除去（inline-styleはRAFが上書き）
         cards.forEach(c => {
           c.classList.remove('is-dragging', 'is-springing');
         });
@@ -685,47 +688,47 @@ const categories = [
         const totalDelta = -dir * (360 * 9 + 120 * advance);
 
         const startTime = performance.now();
-        const DURATION = 1500; // 短縮（ピーク後高速化）
-
-        // 詰まり対策：1フレーム目だけ80msのスムーズ補間でドラッグ位置→RAF位置へなじませる
-        let firstFrame = true;
+        const DURATION = 1300;
+        const DRAG_DECAY_MS = 120; // ドラッグオフセットを高速に解消
 
         function frame() {
           const elapsed = performance.now() - startTime;
           const t = Math.min(elapsed / DURATION, 1);
 
-          // ピーク後を高速化する非対称イージング
-          // 前30%時間で20%回転（じっくり加速）、後70%時間で80%回転（FAST）
-          let eased: number;
-          if (t < 0.3) {
-            const u = t / 0.3;
-            eased = Math.pow(u, 2.5) * 0.2;
-          } else {
-            const u = (t - 0.3) / 0.7;
-            // pow 1.7 で「ピーク高め＋緩やか減速」
-            eased = 0.2 + (1 - Math.pow(1 - u, 1.7)) * 0.8;
-          }
+          // シンプルな ease-out：開始直後から動き始め、徐々に減速して着地
+          // 「止まってから回る」感を完全排除
+          const eased = 1 - Math.pow(1 - t, 2.4);
 
           const sysAngle = eased * totalDelta;
+
+          // ドラッグオフセットの減衰係数（1→0、最初の120msで素早く解消）
+          const decay = dragOffset
+            ? Math.max(0, 1 - elapsed / DRAG_DECAY_MS)
+            : 0;
+          // ease-out カーブで自然に減衰
+          const easeDecay = decay > 0 ? 1 - Math.pow(1 - decay, 2) : 0;
 
           cards.forEach((card, i) => {
             const a = startAngles[i] + sysAngle;
             const { x, z, scale, opacity, brightness } = styleAt(a);
             const el = card as HTMLElement;
 
-            if (firstFrame) {
-              // 1フレーム目だけ80msのスムーズ補間でドラッグ位置から滑らかに繋ぐ
-              el.style.transition =
-                'transform 80ms cubic-bezier(0.4, 0, 0.2, 1), opacity 80ms linear, filter 80ms linear';
-            } else {
-              el.style.transition = 'none';
+            // ドラッグされていたカード（startAngle=0）にだけドラッグオフセットを適用
+            let extraX = 0, extraY = 0, extraScl = 0, extraRot = 0;
+            if (dragOffset && startAngles[i] === 0) {
+              extraX = dragOffset.dx * easeDecay;
+              extraY = dragOffset.tY * easeDecay;
+              extraScl = dragOffset.sclDelta * easeDecay;
+              extraRot = dragOffset.rot * easeDecay;
             }
-            el.style.transform = `translate3d(calc(-50% + ${x}px), -50%, ${z}px) scale(${scale}) rotateY(0deg)`;
+
+            const finalScale = scale + extraScl;
+            el.style.transition = 'none';
+            el.style.transform = `translate3d(calc(-50% + ${x + extraX}px), calc(-50% + ${extraY}px), ${z}px) scale(${finalScale}) rotateY(${extraRot}deg)`;
             el.style.opacity = String(opacity);
             el.style.filter = `brightness(${brightness})`;
             el.style.willChange = 'transform, opacity, filter';
           });
-          firstFrame = false;
 
           if (t < 1) {
             requestAnimationFrame(frame);
@@ -899,9 +902,16 @@ const categories = [
 
         if (shouldAdvance) {
           const dir = dx < 0 ? 1 : -1;
-          // clearInlineStylesは呼ばない（drumToが1フレーム目で滑らかに繋ぐ）
-          // → スワイプ位置から直接、回転の最初のフレームへスムーズに補間
-          drumTo((current + dir + total) % total, dir);
+          // ドラッグの現在位置を捕捉してdrumToへ引き継ぐ
+          // → 回転中に滑らかに減衰して0に近づき、スワイプから自然に回転へ移行
+          const absDx = Math.abs(dx);
+          const dragOffset = {
+            dx: dx,
+            tY: absDx * 0.025,
+            sclDelta: Math.max(1.05 - absDx * 0.00035, 0.95) - 1.05, // 現在のscale - 1.05
+            rot: dx * -0.022,
+          };
+          drumTo((current + dir + total) % total, dir, dragOffset);
         } else {
           // キャンセル: スプリングで元位置に戻す
           cards.forEach(c => {
