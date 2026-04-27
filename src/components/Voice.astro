@@ -639,22 +639,25 @@ const categories = [
       }
 
       // 真円軌道アニメ：requestAnimationFrame で各カードの位置を毎フレーム計算
-      // → カード同士が物理的に重ならない、密集しない、滑らかな円運動
+      // → 等間隔・ブレなし・スワイプ後の詰まりなし
       let isSpinning = false;
       const voiceSection = document.getElementById('voice');
 
-      // 角度→位置スタイルへの変換（0°=正面、±120°=背面左右）
+      // 角度→位置スタイルへの変換
+      // 静的CSS（is-current/is-prev/is-next）と完全一致するよう係数を逆算
+      // → 0°/±120° のとき静的位置とピッタリ重なる → スタート時の「スナップ」を排除
       function styleAt(angle: number) {
         const rad = (angle * Math.PI) / 180;
         const sin = Math.sin(rad);
         const cos = Math.cos(rad);
+        const depth = (cos + 1) / 2; // 1(前) → 0.25(±120°) → 0(背面)
 
-        const x = sin * 280;                    // -280px → +280px の横位置
-        const z = (cos - 1) * 90;               // 0px (前) → -180px (横/後)
-        const depth = (cos + 1) / 2;            // 1 (前) → 0 (後)
-        const scale = 0.55 + depth * 0.5;       // 0.55 → 1.05
-        const opacity = 0.55 + depth * 0.45;    // 0.55 → 1.0
-        const brightness = 0.85 + depth * 0.15; // 0.85 → 1.0
+        // 静的値: 角度0°でscale 1.05/op 1.0、角度±120°でscale 0.55/op 0.45 をぴったり実現
+        const x = sin * 260;                      // angle ±120° で ±225px ≈ 静的translate(±68%)
+        const z = (cos - 1) * 120;                // angle ±120° で -180px (静的と一致)
+        const scale = 0.383 + depth * 0.667;       // 0° → 1.05、±120° → 0.55
+        const opacity = 0.267 + depth * 0.733;     // 0° → 1.0、±120° → 0.45
+        const brightness = 0.85 + depth * 0.15;    // 0° → 1.0、±120° → 0.85
 
         return { x, z, scale, opacity, brightness };
       }
@@ -663,8 +666,11 @@ const categories = [
         if (isSpinning) return;
         isSpinning = true;
 
-        // is-rapidは付与しない（!importantがインライン上書きを邪魔するため）
-        // drum-fwd/bwdのみで is-spinning マーカーとして使用
+        // ドラッグ状態のクラスを除去（inline-styleはRAFが上書きするのでそのままでOK）
+        cards.forEach(c => {
+          c.classList.remove('is-dragging', 'is-springing');
+        });
+
         car.classList.add(dir >= 0 ? 'drum-fwd' : 'drum-bwd');
         voiceSection?.classList.add('is-spinning');
 
@@ -679,20 +685,25 @@ const categories = [
         const totalDelta = -dir * (360 * 9 + 120 * advance);
 
         const startTime = performance.now();
-        const DURATION = 2000;
+        const DURATION = 1500; // 短縮（ピーク後高速化）
+
+        // 詰まり対策：1フレーム目だけ80msのスムーズ補間でドラッグ位置→RAF位置へなじませる
+        let firstFrame = true;
 
         function frame() {
           const elapsed = performance.now() - startTime;
           const t = Math.min(elapsed / DURATION, 1);
 
-          // 非対称イージング：序盤じっくり→ピーク→減速
+          // ピーク後を高速化する非対称イージング
+          // 前30%時間で20%回転（じっくり加速）、後70%時間で80%回転（FAST）
           let eased: number;
-          if (t < 0.5) {
-            const u = t * 2;
-            eased = Math.pow(u, 2.6) / 2;
+          if (t < 0.3) {
+            const u = t / 0.3;
+            eased = Math.pow(u, 2.5) * 0.2;
           } else {
-            const u = (t - 0.5) * 2;
-            eased = 0.5 + (1 - Math.pow(1 - u, 1.5)) / 2;
+            const u = (t - 0.3) / 0.7;
+            // pow 1.7 で「ピーク高め＋緩やか減速」
+            eased = 0.2 + (1 - Math.pow(1 - u, 1.7)) * 0.8;
           }
 
           const sysAngle = eased * totalDelta;
@@ -701,11 +712,20 @@ const categories = [
             const a = startAngles[i] + sysAngle;
             const { x, z, scale, opacity, brightness } = styleAt(a);
             const el = card as HTMLElement;
-            el.style.transition = 'none';
+
+            if (firstFrame) {
+              // 1フレーム目だけ80msのスムーズ補間でドラッグ位置から滑らかに繋ぐ
+              el.style.transition =
+                'transform 80ms cubic-bezier(0.4, 0, 0.2, 1), opacity 80ms linear, filter 80ms linear';
+            } else {
+              el.style.transition = 'none';
+            }
             el.style.transform = `translate3d(calc(-50% + ${x}px), -50%, ${z}px) scale(${scale}) rotateY(0deg)`;
             el.style.opacity = String(opacity);
             el.style.filter = `brightness(${brightness})`;
+            el.style.willChange = 'transform, opacity, filter';
           });
+          firstFrame = false;
 
           if (t < 1) {
             requestAnimationFrame(frame);
@@ -717,6 +737,7 @@ const categories = [
               el.style.transform = '';
               el.style.opacity = '';
               el.style.filter = '';
+              el.style.willChange = '';
             });
             current = newIndex;
             update();
@@ -877,10 +898,9 @@ const categories = [
         const shouldAdvance = absDx > 55 || absV > 0.5;
 
         if (shouldAdvance) {
-          // スプリングで現在カードを画面外まで送る感じにしてからdrumTo
           const dir = dx < 0 ? 1 : -1;
-          // 即座に位置リセットしてdrumTo（drum-fwd/bwdのCSSアニメーションが滑らかに繋がる）
-          clearInlineStyles();
+          // clearInlineStylesは呼ばない（drumToが1フレーム目で滑らかに繋ぐ）
+          // → スワイプ位置から直接、回転の最初のフレームへスムーズに補間
           drumTo((current + dir + total) % total, dir);
         } else {
           // キャンセル: スプリングで元位置に戻す
