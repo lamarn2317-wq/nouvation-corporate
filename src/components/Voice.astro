@@ -440,41 +440,8 @@ const categories = [
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
   }
-  /* サイクル中（高速）：カードは流れるように位置遷移
-     transitionをstepより少し長くして「常に動き続ける」連続感を演出 */
-  .voice-carousel.is-rapid .voice-card {
-    transition:
-      transform 0.16s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-      opacity   0.12s linear !important;
-    animation: none !important;
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    transform-origin: center center;
-  }
-
-  /* 🌟 サイクル中は3枚とも【背面サイズ・背面深度】で完全統一
-     → 中央カードも縮小されるのでブレなし
-     → X位置の間隔を大きく広げて、カードが「流れていく」感を強調 */
-  .voice-carousel.is-rapid .voice-card.is-current {
-    transform: translate3d(-50%, -50%, -180px) scale(0.55) rotateY(0deg) !important;
-    opacity: 0.78 !important;
-    filter: brightness(0.9) !important;
-  }
-  .voice-carousel.is-rapid .voice-card.is-prev {
-    transform: translate3d(-200%, -50%, -180px) scale(0.55) rotateY(0deg) !important;
-    opacity: 0.78 !important;
-    filter: brightness(0.9) !important;
-  }
-  .voice-carousel.is-rapid .voice-card.is-next {
-    transform: translate3d(100%, -50%, -180px) scale(0.55) rotateY(0deg) !important;
-    opacity: 0.78 !important;
-    filter: brightness(0.9) !important;
-  }
-  .voice-carousel.is-rapid .voice-card.is-hidden {
-    transform: translate3d(-50%, -50%, -180px) scale(0.55) rotateY(0deg) !important;
-    opacity: 0 !important;
-  }
+  /* RAFアニメ中はinline-styleで完全制御するので、is-rapidルールは不要
+     （以前のis-rapid CSSは削除済み） */
 
   /* 着地（最終ステップ）：ゆっくり前面カードが大きくなる（spring風カーブ） */
   .voice-carousel.drum-fwd .voice-card,
@@ -682,38 +649,35 @@ const categories = [
         const sin = Math.sin(rad);
         const cos = Math.cos(rad);
 
-        const x = sin * 280;                       // -280px → +280px の横位置
-        const z = (cos - 1) * 90;                  // 0px (前) → -180px (横/後)
-        const depth = (cos + 1) / 2;               // 1 (前) → 0 (後)
-        const scale = 0.55 + depth * 0.5;          // 0.55 → 1.05
-        const opacity = 0.55 + depth * 0.45;       // 0.55 → 1.0
-        const brightness = 0.85 + depth * 0.15;    // 0.85 → 1.0
-        const z3d = z;                             // 3D Z
+        const x = sin * 280;                    // -280px → +280px の横位置
+        const z = (cos - 1) * 90;               // 0px (前) → -180px (横/後)
+        const depth = (cos + 1) / 2;            // 1 (前) → 0 (後)
+        const scale = 0.55 + depth * 0.5;       // 0.55 → 1.05
+        const opacity = 0.55 + depth * 0.45;    // 0.55 → 1.0
+        const brightness = 0.85 + depth * 0.15; // 0.85 → 1.0
 
-        return { x, z3d, scale, opacity, brightness };
+        return { x, z, scale, opacity, brightness };
       }
 
       function drumTo(newIndex: number, dir: number) {
         if (isSpinning) return;
         isSpinning = true;
 
+        // is-rapidは付与しない（!importantがインライン上書きを邪魔するため）
+        // drum-fwd/bwdのみで is-spinning マーカーとして使用
         car.classList.add(dir >= 0 ? 'drum-fwd' : 'drum-bwd');
-        car.classList.add('is-rapid');
         voiceSection?.classList.add('is-spinning');
 
         // 開始時の各カードの角度（current=0°, next=+120°, prev=-120°）
         const startAngles = Array.from(cards).map((_, i) => {
           const offset = ((i - current + total) % total);
-          // offset 0 = current (0°), offset 1 = next (+120°), offset 2 = prev (-120° = 240°)
           return offset === 0 ? 0 : offset === 1 ? 120 : -120;
         });
 
-        // 終了時にcurrent位置にする「着地ターゲット角」
-        // 9周（= -dir*360*9）+ 必要な advance（= -dir*120*advance）
-        const advance = ((newIndex - current) * dir + total) % total; // 通常 1
-        const totalDelta = -dir * (360 * 9 + 120 * advance); // システム全体の角度変化
+        // 9周分の回転 + advance調整
+        const advance = ((newIndex - current) * dir + total) % total;
+        const totalDelta = -dir * (360 * 9 + 120 * advance);
 
-        const inlineCleanup: HTMLElement[] = [];
         const startTime = performance.now();
         const DURATION = 2000;
 
@@ -724,10 +688,10 @@ const categories = [
           // 非対称イージング：序盤じっくり→ピーク→減速
           let eased: number;
           if (t < 0.5) {
-            const u = t * 2;       // 0→1
-            eased = Math.pow(u, 2.6) / 2;       // 0→0.5
+            const u = t * 2;
+            eased = Math.pow(u, 2.6) / 2;
           } else {
-            const u = (t - 0.5) * 2; // 0→1
+            const u = (t - 0.5) * 2;
             eased = 0.5 + (1 - Math.pow(1 - u, 1.5)) / 2;
           }
 
@@ -735,28 +699,28 @@ const categories = [
 
           cards.forEach((card, i) => {
             const a = startAngles[i] + sysAngle;
-            const { x, z3d, scale, opacity, brightness } = styleAt(a);
-            (card as HTMLElement).style.transition = 'none';
-            (card as HTMLElement).style.transform =
-              `translate3d(calc(-50% + ${x}px), -50%, ${z3d}px) scale(${scale}) rotateY(0deg)`;
-            (card as HTMLElement).style.opacity = String(opacity);
-            (card as HTMLElement).style.filter = `brightness(${brightness})`;
-            inlineCleanup.push(card as HTMLElement);
+            const { x, z, scale, opacity, brightness } = styleAt(a);
+            const el = card as HTMLElement;
+            el.style.transition = 'none';
+            el.style.transform = `translate3d(calc(-50% + ${x}px), -50%, ${z}px) scale(${scale}) rotateY(0deg)`;
+            el.style.opacity = String(opacity);
+            el.style.filter = `brightness(${brightness})`;
           });
 
           if (t < 1) {
             requestAnimationFrame(frame);
           } else {
             // クリーンアップ：inline-styleを外して通常のクラスベース表示に戻す
-            inlineCleanup.forEach(c => {
-              c.style.transition = '';
-              c.style.transform = '';
-              c.style.opacity = '';
-              c.style.filter = '';
+            cards.forEach(c => {
+              const el = c as HTMLElement;
+              el.style.transition = '';
+              el.style.transform = '';
+              el.style.opacity = '';
+              el.style.filter = '';
             });
             current = newIndex;
             update();
-            car.classList.remove('drum-fwd', 'drum-bwd', 'is-rapid');
+            car.classList.remove('drum-fwd', 'drum-bwd');
             voiceSection?.classList.remove('is-spinning');
             isSpinning = false;
           }
