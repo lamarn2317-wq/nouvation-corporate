@@ -443,19 +443,19 @@ const categories = [
   /* サイクル中（高速）：カードは流れるように位置遷移 */
   .voice-carousel.is-rapid .voice-card {
     transition:
-      transform 0.13s cubic-bezier(0.4, 0, 0.6, 1),
-      opacity   0.1s linear !important;
+      transform 0.08s cubic-bezier(0.4, 0, 0.6, 1),
+      opacity   0.06s linear !important;
     animation: none !important;
     will-change: transform, opacity;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
   }
-  /* 着地（最終ステップ）：ゆっくり滑らかに */
+  /* 着地（最終ステップ）：滑らかに */
   .voice-carousel.drum-fwd .voice-card,
   .voice-carousel.drum-bwd .voice-card {
     transition:
-      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity   0.5s cubic-bezier(0.22, 1, 0.36, 1) !important;
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity   0.4s cubic-bezier(0.22, 1, 0.36, 1) !important;
     animation: none !important;
     will-change: transform, opacity;
     backface-visibility: hidden;
@@ -465,8 +465,8 @@ const categories = [
   .voice-carousel.is-rapid.drum-fwd .voice-card,
   .voice-carousel.is-rapid.drum-bwd .voice-card {
     transition:
-      transform 0.13s cubic-bezier(0.4, 0, 0.6, 1),
-      opacity   0.1s linear !important;
+      transform 0.08s cubic-bezier(0.4, 0, 0.6, 1),
+      opacity   0.06s linear !important;
   }
   /* 各カード自身もGPUレイヤを強制 */
   .voice-carousel.drum-fwd .voice-card,
@@ -671,7 +671,7 @@ const categories = [
 
         function nextStep() {
           if (step >= TOTAL_STEPS - 1) {
-            // 最終ステップ: is-rapid を外して滑らかな 0.6s transition で着地
+            // 最終ステップ: is-rapid を外して 0.5s transition で着地
             car.classList.remove('is-rapid');
             current = finalIndex;
             update();
@@ -679,7 +679,7 @@ const categories = [
               car.classList.remove('drum-fwd', 'drum-bwd');
               voiceSection?.classList.remove('is-spinning');
               isSpinning = false;
-            }, 650);
+            }, 500);
             return;
           }
 
@@ -690,8 +690,8 @@ const categories = [
 
           // 序盤マッハ→終盤少しゆっくり（着地手前で減速）
           const t = step / (TOTAL_STEPS - 1);
-          // 70ms から始まり 140ms へ ease-in
-          const dur = 70 + Math.pow(t, 2) * 70;
+          // 35ms から始まり 80ms へ ease-in（合計約1.5s）
+          const dur = 35 + Math.pow(t, 2) * 45;
           setTimeout(nextStep, dur);
         }
 
