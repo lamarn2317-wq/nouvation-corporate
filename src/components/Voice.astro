@@ -451,24 +451,25 @@ const categories = [
     -webkit-backface-visibility: hidden;
   }
 
-  /* 🌟 サイクル中は3枚とも同じサイズ・同じ向き → スケール変化のブレを排除 */
+  /* 🌟 サイクル中は3枚とも【背面サイズ・背面深度】で完全統一
+     → 中央カードも縮小されるのでブレなし、隣との距離感も維持 */
   .voice-carousel.is-rapid .voice-card.is-current {
-    transform: translate3d(-50%, -50%, -80px) scale(0.7) rotateY(0deg) !important;
-    opacity: 0.85 !important;
-    filter: brightness(0.92) !important;
+    transform: translate3d(-50%, -50%, -180px) scale(0.55) rotateY(0deg) !important;
+    opacity: 0.7 !important;
+    filter: brightness(0.85) !important;
   }
   .voice-carousel.is-rapid .voice-card.is-prev {
-    transform: translate3d(-118%, -50%, -80px) scale(0.7) rotateY(0deg) !important;
-    opacity: 0.85 !important;
-    filter: brightness(0.92) !important;
+    transform: translate3d(-118%, -50%, -180px) scale(0.55) rotateY(0deg) !important;
+    opacity: 0.7 !important;
+    filter: brightness(0.85) !important;
   }
   .voice-carousel.is-rapid .voice-card.is-next {
-    transform: translate3d(18%, -50%, -80px) scale(0.7) rotateY(0deg) !important;
-    opacity: 0.85 !important;
-    filter: brightness(0.92) !important;
+    transform: translate3d(18%, -50%, -180px) scale(0.55) rotateY(0deg) !important;
+    opacity: 0.7 !important;
+    filter: brightness(0.85) !important;
   }
   .voice-carousel.is-rapid .voice-card.is-hidden {
-    transform: translate3d(-50%, -50%, -80px) scale(0.7) rotateY(0deg) !important;
+    transform: translate3d(-50%, -50%, -180px) scale(0.55) rotateY(0deg) !important;
     opacity: 0 !important;
   }
 
