@@ -671,59 +671,98 @@ const categories = [
         dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
       }
 
-      // 高速サイクル（9周）→ スムーズ着地：カード位置遷移のみ、3D回転なし
+      // 真円軌道アニメ：requestAnimationFrame で各カードの位置を毎フレーム計算
+      // → カード同士が物理的に重ならない、密集しない、滑らかな円運動
       let isSpinning = false;
       const voiceSection = document.getElementById('voice');
+
+      // 角度→位置スタイルへの変換（0°=正面、±120°=背面左右）
+      function styleAt(angle: number) {
+        const rad = (angle * Math.PI) / 180;
+        const sin = Math.sin(rad);
+        const cos = Math.cos(rad);
+
+        const x = sin * 280;                       // -280px → +280px の横位置
+        const z = (cos - 1) * 90;                  // 0px (前) → -180px (横/後)
+        const depth = (cos + 1) / 2;               // 1 (前) → 0 (後)
+        const scale = 0.55 + depth * 0.5;          // 0.55 → 1.05
+        const opacity = 0.55 + depth * 0.45;       // 0.55 → 1.0
+        const brightness = 0.85 + depth * 0.15;    // 0.85 → 1.0
+        const z3d = z;                             // 3D Z
+
+        return { x, z3d, scale, opacity, brightness };
+      }
+
       function drumTo(newIndex: number, dir: number) {
         if (isSpinning) return;
         isSpinning = true;
 
-        const cls = dir >= 0 ? 'drum-fwd' : 'drum-bwd';
-        car.classList.add(cls);
-        car.classList.add('is-rapid');           // 高速トランジション ON
+        car.classList.add(dir >= 0 ? 'drum-fwd' : 'drum-bwd');
+        car.classList.add('is-rapid');
         voiceSection?.classList.add('is-spinning');
 
-        // 9周分の class 入替（CYCLES * total = 27ステップ）→ +1で着地 = 28ステップ
-        const CYCLES = 9;
-        const finalIndex = newIndex;
-        const TOTAL_STEPS = CYCLES * total + 1;
-        let step = 0;
+        // 開始時の各カードの角度（current=0°, next=+120°, prev=-120°）
+        const startAngles = Array.from(cards).map((_, i) => {
+          const offset = ((i - current + total) % total);
+          // offset 0 = current (0°), offset 1 = next (+120°), offset 2 = prev (-120° = 240°)
+          return offset === 0 ? 0 : offset === 1 ? 120 : -120;
+        });
 
-        function nextStep() {
-          if (step >= TOTAL_STEPS - 1) {
-            // 最終ステップ: is-rapid を外して 0.75s でゆっくりフワッと前面大きく
-            car.classList.remove('is-rapid');
-            current = finalIndex;
-            update();
-            setTimeout(() => {
-              car.classList.remove('drum-fwd', 'drum-bwd');
-              voiceSection?.classList.remove('is-spinning');
-              isSpinning = false;
-            }, 750);
-            return;
-          }
+        // 終了時にcurrent位置にする「着地ターゲット角」
+        // 9周（= -dir*360*9）+ 必要な advance（= -dir*120*advance）
+        const advance = ((newIndex - current) * dir + total) % total; // 通常 1
+        const totalDelta = -dir * (360 * 9 + 120 * advance); // システム全体の角度変化
 
-          // 高速サイクル中 — 1ステップずつ位置を進める
-          current = (current + dir + total) % total;
-          update();
-          step++;
+        const inlineCleanup: HTMLElement[] = [];
+        const startTime = performance.now();
+        const DURATION = 2000;
 
-          // 非対称カーブ：序盤じっくり加速 → ピーク → なめらか減速
-          const t = step / (TOTAL_STEPS - 1); // 0 → 1
-          let dur: number;
+        function frame() {
+          const elapsed = performance.now() - startTime;
+          const t = Math.min(elapsed / DURATION, 1);
+
+          // 非対称イージング：序盤じっくり→ピーク→減速
+          let eased: number;
           if (t < 0.5) {
-            // 前半：とてもゆっくりスタート→徐々に加速（pow 2.6 で滑らかな立ち上がり）
-            const u = 1 - t * 2; // 1 → 0
-            dur = 16 + Math.pow(u, 2.6) * 130; // 146ms → 16ms
+            const u = t * 2;       // 0→1
+            eased = Math.pow(u, 2.6) / 2;       // 0→0.5
           } else {
-            // 後半：ピーク→徐々に減速（pow 1.5 でなだらかに）
-            const u = (t - 0.5) * 2; // 0 → 1
-            dur = 16 + Math.pow(u, 1.5) * 75; // 16ms → 91ms
+            const u = (t - 0.5) * 2; // 0→1
+            eased = 0.5 + (1 - Math.pow(1 - u, 1.5)) / 2;
           }
-          setTimeout(nextStep, dur);
+
+          const sysAngle = eased * totalDelta;
+
+          cards.forEach((card, i) => {
+            const a = startAngles[i] + sysAngle;
+            const { x, z3d, scale, opacity, brightness } = styleAt(a);
+            (card as HTMLElement).style.transition = 'none';
+            (card as HTMLElement).style.transform =
+              `translate3d(calc(-50% + ${x}px), -50%, ${z3d}px) scale(${scale}) rotateY(0deg)`;
+            (card as HTMLElement).style.opacity = String(opacity);
+            (card as HTMLElement).style.filter = `brightness(${brightness})`;
+            inlineCleanup.push(card as HTMLElement);
+          });
+
+          if (t < 1) {
+            requestAnimationFrame(frame);
+          } else {
+            // クリーンアップ：inline-styleを外して通常のクラスベース表示に戻す
+            inlineCleanup.forEach(c => {
+              c.style.transition = '';
+              c.style.transform = '';
+              c.style.opacity = '';
+              c.style.filter = '';
+            });
+            current = newIndex;
+            update();
+            car.classList.remove('drum-fwd', 'drum-bwd', 'is-rapid');
+            voiceSection?.classList.remove('is-spinning');
+            isSpinning = false;
+          }
         }
 
-        nextStep();
+        requestAnimationFrame(frame);
       }
 
       // ドットクリック（クリーンアップ対象）
