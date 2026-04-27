@@ -434,52 +434,22 @@ const categories = [
     animation: none !important;
   }
 
-  /* ===== ドラム回転（3周ぐるっと、カードは正面固定） ===== */
-  @keyframes drumFwd {
-    from { transform: rotateY(0deg); }
-    to   { transform: rotateY(-1080deg); }
-  }
-  @keyframes drumBwd {
-    from { transform: rotateY(0deg); }
-    to   { transform: rotateY(1080deg); }
-  }
-  /* カードカウンター：カード自体は常に正面向き */
-  @keyframes cardCounterFwd {
-    from { rotate: y 0deg; }
-    to   { rotate: y 1080deg; }
-  }
-  @keyframes cardCounterBwd {
-    from { rotate: y 0deg; }
-    to   { rotate: y -1080deg; }
-  }
-
+  /* ===== カード位置遷移のみ（3D回転なし・カード向き完全固定） ===== */
   .voice-carousel.drum-fwd,
   .voice-carousel.drum-bwd {
-    will-change: transform;
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
   }
-  .voice-carousel.drum-fwd {
-    animation: drumFwd 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  .voice-carousel.drum-bwd {
-    animation: drumBwd 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  /* 各カードはカウンター回転でブレなく正面キープ */
+  /* 切り替え中はカードの transition を最適化（アニメーションは無し） */
   .voice-carousel.drum-fwd .voice-card,
   .voice-carousel.drum-bwd .voice-card {
-    transition: none !important;
-    will-change: transform, rotate;
+    transition:
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity   0.5s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    animation: none !important;
+    will-change: transform, opacity;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
-  }
-  .voice-carousel.drum-fwd .voice-card {
-    animation: cardCounterFwd 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
-  }
-  .voice-carousel.drum-bwd .voice-card {
-    animation: cardCounterBwd 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
   }
   /* 各カード自身もGPUレイヤを強制 */
   .voice-carousel.drum-fwd .voice-card,
@@ -664,7 +634,7 @@ const categories = [
         dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
       }
 
-      // ドラム回転：CSS animation 1本で連続回転、中間でカード位置を入替
+      // カード位置遷移のみ（3D回転なし）：class入替→CSS transition
       let isSpinning = false;
       const voiceSection = document.getElementById('voice');
       function drumTo(newIndex: number, dir: number) {
@@ -676,14 +646,15 @@ const categories = [
         car.classList.add(cls);
         voiceSection?.classList.add('is-spinning');
 
-        // 1.4s × 0.5 = 700ms（中間点でカード位置を更新）
-        setTimeout(() => update(), 700);
+        // 即座にカード位置を新状態に（transitionでスムーズに移動）
+        update();
 
-        car.addEventListener('animationend', () => {
-          car.classList.remove(cls);
+        // CSS transition (0.6s) 完了後に通常状態へ
+        setTimeout(() => {
+          car.classList.remove('drum-fwd', 'drum-bwd');
           voiceSection?.classList.remove('is-spinning');
           isSpinning = false;
-        }, { once: true });
+        }, 650);
       }
 
       // ドットクリック（クリーンアップ対象）
