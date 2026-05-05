@@ -262,15 +262,30 @@ const {
     80% { transform: translate(1px, -2px); filter: hue-rotate(360deg); }
     100% { transform: translate(0); filter: hue-rotate(0deg); }
   }
-  /* カウント完了時のきらり白光 */
+  /* カウント完了時のグリーン・グロー（白背景でも見える） */
   .digital-counter.glow {
-    animation: counterGlow 1.0s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: counterGlow 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
   @keyframes counterGlow {
-    0%   { text-shadow: none; color: inherit; }
-    25%  { text-shadow: 0 0 4px #fff, 0 0 12px #fff, 0 0 28px rgba(255,255,255,0.9), 0 0 55px rgba(255,255,255,0.5); color: #fff; }
-    50%  { text-shadow: 0 0 2px #fff, 0 0 8px rgba(255,255,255,0.95), 0 0 20px rgba(255,255,255,0.7), 0 0 45px rgba(255,255,255,0.4); color: #fff; }
-    100% { text-shadow: none; color: inherit; }
+    0%   { text-shadow: none; color: inherit; transform: scale(1); }
+    20%  {
+      text-shadow:
+        0 0 6px rgba(46, 125, 50, 0.95),
+        0 0 18px rgba(46, 125, 50, 0.85),
+        0 0 36px rgba(80, 200, 80, 0.65),
+        0 0 60px rgba(80, 200, 80, 0.35);
+      color: #2e7d32;
+      transform: scale(1.06);
+    }
+    50%  {
+      text-shadow:
+        0 0 4px rgba(46, 125, 50, 0.85),
+        0 0 14px rgba(46, 125, 50, 0.7),
+        0 0 28px rgba(80, 200, 80, 0.5);
+      color: #2e7d32;
+      transform: scale(1.03);
+    }
+    100% { text-shadow: none; color: inherit; transform: scale(1); }
   }
 
   .line-clamp-1 {
