@@ -120,24 +120,24 @@ const marketPrices = await getMarketPrices();
           </div>
         </div>
         
-        <div class="lg:w-2/3 grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6 items-end justify-items-center mx-auto">
+        <div id="instagram-embed-zone" class="lg:w-2/3 grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6 items-end justify-items-center mx-auto">
           <div class="flex justify-center w-full">
-            <div class="w-full max-w-[320px] shadow-sm rounded-2xl overflow-hidden instagram-clip-box bg-white border border-[#231815]/10">
+            <div class="w-full max-w-[320px] shadow-sm rounded-2xl overflow-hidden instagram-clip-box bg-white border border-[#231815]/10 ig-skeleton">
               <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIuN5gjy6W/" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:0; margin: 0; width:100%; min-width:100%;"></blockquote>
             </div>
           </div>
           <div class="flex justify-center w-full">
-            <div class="w-full max-w-[320px] shadow-sm rounded-2xl overflow-hidden instagram-clip-box bg-white border border-[#231815]/10">
+            <div class="w-full max-w-[320px] shadow-sm rounded-2xl overflow-hidden instagram-clip-box bg-white border border-[#231815]/10 ig-skeleton">
               <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DPKcekJk6--/" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:0; margin: 0; width:100%; min-width:100%;"></blockquote>
             </div>
           </div>
           <div class="flex justify-center w-full">
-            <div class="w-full max-w-[320px] shadow-sm rounded-2xl overflow-hidden instagram-clip-box bg-white border border-[#231815]/10">
+            <div class="w-full max-w-[320px] shadow-sm rounded-2xl overflow-hidden instagram-clip-box bg-white border border-[#231815]/10 ig-skeleton">
               <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DR1lvz6D6jY/" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:0; margin: 0; width:100%; min-width:100%;"></blockquote>
             </div>
           </div>
         </div>
-        <script is:inline src="//www.instagram.com/embed.js"></script>
+        {/* Instagram embed.js は IntersectionObserver で遅延ロード（下部 script 参照） */}
       </div>
     </div>
   </div>
@@ -486,6 +486,65 @@ const marketPrices = await getMarketPrices();
 
   document.addEventListener('astro:page-load', initCountUp);
   initCountUp();
+
+  // ============================================
+  // Instagram embed.js 遅延ロード（IntersectionObserver）
+  // 全ての Instagram 埋め込みゾーンを対象に、画面接近時のみ embed.js をロード
+  // ============================================
+  function initInstagramLazyLoad() {
+    const zoneIds = ['instagram-embed-zone', 'farmatch-instagram-zone'];
+    const zones = zoneIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (zones.length === 0) return;
+
+    let loaded = false;
+    const loadInstagramScript = () => {
+      if (loaded) return;
+      loaded = true;
+      // 既存スクリプトの重複読み込みを防止
+      if (document.querySelector('script[src*="instagram.com/embed.js"]')) {
+        // 既に読込済みなら即 process
+        const w = window as any;
+        if (w.instgrm && w.instgrm.Embeds) w.instgrm.Embeds.process();
+        return;
+      }
+      const s = document.createElement('script');
+      s.src = 'https://www.instagram.com/embed.js';
+      s.async = true;
+      s.onload = () => {
+        // スクリプト読込後、ページ内の全 blockquote を Instagram に渡す
+        const w = window as any;
+        if (w.instgrm && w.instgrm.Embeds) {
+          w.instgrm.Embeds.process();
+        }
+        // 全ゾーンのスケルトンを外す
+        document
+          .querySelectorAll('.ig-skeleton, .ig-skeleton-fm')
+          .forEach((el) => el.classList.remove('ig-skeleton', 'ig-skeleton-fm'));
+      };
+      document.body.appendChild(s);
+    };
+
+    // IntersectionObserver で 200px 手前から先読み
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            loadInstagramScript();
+            io.disconnect();
+          }
+        });
+      }, { rootMargin: '200px' });
+      zones.forEach((zone) => io.observe(zone));
+    } else {
+      // 古いブラウザ用フォールバック：即時ロード
+      loadInstagramScript();
+    }
+  }
+
+  document.addEventListener('astro:page-load', initInstagramLazyLoad);
+  initInstagramLazyLoad();
 </script>
 
 <style>
@@ -502,6 +561,18 @@ const marketPrices = await getMarketPrices();
   /* 埋め込み後のiframeの最小幅制限を解除 */
   :global(.instagram-media-rendered iframe) {
     min-width: 100% !important;
+  }
+
+  /* Instagram埋め込みロード前のスケルトン背景 */
+  .ig-skeleton {
+    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+    background-size: 200% 100%;
+    animation: ig-skeleton-shimmer 1.6s ease-in-out infinite;
+  }
+
+  @keyframes ig-skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
   }
 
   /* はみ出したヘッダーと、下すぎるフッターをカットする */

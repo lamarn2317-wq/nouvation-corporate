@@ -84,9 +84,9 @@
         </div>
 
         <!-- Right: Instagram Reel -->
-        <div class="flex justify-center">
+        <div id="farmatch-instagram-zone" class="flex justify-center">
           <div class="w-full max-w-[300px]">
-            <div class="rounded-2xl overflow-hidden shadow-lg border border-[#231815]/10 bg-white">
+            <div class="rounded-2xl overflow-hidden shadow-lg border border-[#231815]/10 bg-white ig-skeleton-fm">
               <div class="fm-reel-crop">
                 <blockquote
                   class="instagram-media"
@@ -97,7 +97,7 @@
               </div>
             </div>
           </div>
-          <script is:inline src="//www.instagram.com/embed.js" async></script>
+          {/* Instagram embed.js は IntersectionObserver で遅延ロード（下部 script 参照） */}
         </div>
       </div>
     </div>
@@ -105,6 +105,18 @@
 </section>
 
 <style>
+  /* Instagram埋め込みロード前のスケルトン背景 */
+  .ig-skeleton-fm {
+    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+    background-size: 200% 100%;
+    animation: ig-skeleton-fm-shimmer 1.6s ease-in-out infinite;
+  }
+
+  @keyframes ig-skeleton-fm-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
   .fm-logo-text {
     font-size: clamp(2.2rem, 5vw, 3rem);
     font-weight: 900;
