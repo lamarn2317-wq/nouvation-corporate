@@ -44,6 +44,9 @@ const {
     <link rel="icon" type="image/png" href="/images/favicon.png" />
     <link rel="shortcut icon" type="image/png" href="/images/favicon.png" />
     <link rel="apple-touch-icon" href="/images/favicon.png" />
+
+    <!-- Page-specific head injection slot -->
+    <slot name="head" />
   </head>
   <body class="font-sans overflow-x-hidden antialiased" data-theme="dark">
     <!-- Scroll Progress Bar -->
