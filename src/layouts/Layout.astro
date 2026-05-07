@@ -131,15 +131,42 @@ const {
     scroll-behavior: smooth;
   }
   
-  /* フォーカス時のアウトラインとリングを削除 */
+  /* フォーカススタイル（WCAG 2.4.7 準拠）
+     マウスクリック時は非表示、キーボード操作時のみブランドカラーで表示 */
   *:focus {
-    outline: none !important;
-    box-shadow: none !important;
+    outline: none;
   }
-  
-  *:focus-visible {
-    outline: none !important;
-    box-shadow: none !important;
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  summary:focus-visible,
+  details:focus-visible,
+  [tabindex]:focus-visible,
+  [role="button"]:focus-visible,
+  [role="tab"]:focus-visible,
+  [role="link"]:focus-visible {
+    outline: 2px solid #2e7d32;
+    outline-offset: 3px;
+    border-radius: 4px;
+    transition: outline-offset 0.15s ease;
+  }
+
+  /* 暗い背景セクション（Voice / Farmatch 等）ではライムカラーで表示 */
+  [data-section-theme="dark"] a:focus-visible,
+  [data-section-theme="dark"] button:focus-visible,
+  [data-section-theme="dark"] input:focus-visible,
+  [data-section-theme="dark"] select:focus-visible,
+  [data-section-theme="dark"] textarea:focus-visible,
+  [data-section-theme="dark"] summary:focus-visible,
+  [data-section-theme="dark"] details:focus-visible,
+  [data-section-theme="dark"] [tabindex]:focus-visible,
+  [data-section-theme="dark"] [role="button"]:focus-visible,
+  [data-section-theme="dark"] [role="tab"]:focus-visible,
+  [data-section-theme="dark"] [role="link"]:focus-visible {
+    outline-color: #D4FF00;
   }
   
   /* Grid Pattern */
