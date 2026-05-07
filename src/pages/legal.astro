@@ -20,16 +20,24 @@ import Footer from '../components/Footer.astro';
 
       <div class="bg-white rounded-3xl shadow-sm overflow-hidden">
         <!-- PC用画像 (md以上で表示) -->
-        <img 
-          src="/images/privacy.jpg" 
-          alt="" 
+        <img
+          src="/images/privacy.jpg"
+          alt=""
+          width="1600"
+          height="2774"
+          loading="lazy"
+          decoding="async"
           class="hidden md:block w-full h-auto"
           role="presentation"
         />
         <!-- スマホ用画像 (md未満で表示) -->
-        <img 
-          src="/images/privacy_sp.jpg" 
-          alt="" 
+        <img
+          src="/images/privacy_sp.jpg"
+          alt=""
+          width="800"
+          height="8076"
+          loading="lazy"
+          decoding="async"
           class="block md:hidden w-full h-auto"
           role="presentation"
         />
