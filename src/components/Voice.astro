@@ -32,7 +32,7 @@ const categories = [
 ];
 ---
 
-<section data-section-theme="light" id="voice" class="voice-section">
+<section data-section-theme="dark" id="voice" class="voice-section" aria-labelledby="voice-heading-title">
   <!-- 背景レイヤー -->
   <div class="vbg" aria-hidden="true">
     <div class="vbg__grad"></div>
@@ -43,41 +43,65 @@ const categories = [
 
   <div class="voice-container">
     <div class="voice-header" data-voice-anim>
-      <p class="voice-eyebrow">VOICE</p>
+      <p class="voice-eyebrow" id="voice-heading-title">VOICE</p>
       <h2 class="voice-heading">利 用 者 の 声</h2>
     </div>
 
-    <div class="voice-tabs" data-voice-anim>
+    <div class="voice-tabs" role="tablist" aria-label="カテゴリ切替" data-voice-anim>
       {categories.map((cat, i) => (
-        <button class={`voice-tab ${i === 0 ? 'is-active' : ''}`} data-tab={cat.id}>{cat.label}</button>
+        <button
+          role="tab"
+          id={`voice-tab-${cat.id}`}
+          aria-controls={`voice-panel-${cat.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          class={`voice-tab ${i === 0 ? 'is-active' : ''}`}
+          data-tab={cat.id}
+        >{cat.label}</button>
       ))}
     </div>
 
     <div class="voice-panels">
       {categories.map((cat, ci) => (
-        <div class={`voice-panel ${ci === 0 ? 'is-active' : ''}`} data-panel={cat.id}>
+        <div
+          role="tabpanel"
+          id={`voice-panel-${cat.id}`}
+          aria-labelledby={`voice-tab-${cat.id}`}
+          aria-roledescription="カルーセル"
+          tabindex={ci === 0 ? 0 : -1}
+          hidden={ci !== 0}
+          class={`voice-panel ${ci === 0 ? 'is-active' : ''}`}
+          data-panel={cat.id}
+        >
           <div class="voice-stage" data-voice-anim>
             <!-- Swipe Indicator Arrows -->
             <button class="voice-arrow voice-arrow--prev" data-arrow="prev" aria-label="前のカードへ">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="15 18 9 12 15 6"></polyline>
               </svg>
             </button>
             <button class="voice-arrow voice-arrow--next" data-arrow="next" aria-label="次のカードへ">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="9 6 15 12 9 18"></polyline>
               </svg>
             </button>
 
-            <div class="voice-carousel">
+            <div class="voice-carousel" aria-live="polite" aria-atomic="false">
               {cat.items.map((item, i) => (
-                <article class={`voice-card ${i === 0 ? 'is-current' : ''}`} data-ci={i}>
+                <article
+                  class={`voice-card ${i === 0 ? 'is-current' : ''}`}
+                  data-ci={i}
+                  role="group"
+                  aria-roledescription="スライド"
+                  aria-label={`${i + 1} / ${cat.items.length}`}
+                  aria-hidden={i !== 0 ? 'true' : 'false'}
+                >
                   <div class="card-face">
                     <div class="card-header">
                       <span class="card-age">{item.age}</span>
                     </div>
                     <div class="card-body-area">
-                      <p class="card-deco">"</p>
+                      <p class="card-deco" aria-hidden="true">"</p>
                       <h3 class="card-quote">{item.quote}</h3>
                       <p class="card-body">{item.text}</p>
                     </div>
@@ -98,9 +122,16 @@ const categories = [
             </div>
           </div>
 
-          <div class="voice-indicators" data-voice-anim>
+          <div class="voice-indicators" role="tablist" aria-label={`${cat.label}のスライド選択`} data-voice-anim>
             {cat.items.map((_, i) => (
-              <button class={`voice-dot ${i === 0 ? 'is-active' : ''}`} data-goto={i} aria-label={`${i + 1}番目`}></button>
+              <button
+                class={`voice-dot ${i === 0 ? 'is-active' : ''}`}
+                data-goto={i}
+                role="tab"
+                aria-selected={i === 0 ? 'true' : 'false'}
+                aria-label={`${i + 1}番目のスライドへ移動`}
+                tabindex={i === 0 ? 0 : -1}
+              ></button>
             ))}
           </div>
         </div>
@@ -544,12 +575,23 @@ const categories = [
   }
 
   .voice-dot {
+    position: relative;
     width: 7px; height: 7px;
     border-radius: 50%;
     border: none; padding: 0;
     background: rgba(255,255,255,0.35);
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+  }
+  /* 不可視の 44x44 タップ領域（WCAG 2.5.5 Target Size 準拠） */
+  .voice-dot::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
   }
   .voice-dot.is-active {
     width: 28px;
@@ -586,6 +628,43 @@ const categories = [
     .card-quote { font-size: 0.95rem; line-height: 1.6; }
     .card-body { font-size: 0.8rem; line-height: 1.85; }
   }
+
+  /* ===== Reduced Motion 対応（WCAG 2.3.3 / 視覚的前庭障害への配慮） =====
+     ユーザーが OS で「視差効果を減らす」設定をオンにしている場合、
+     アニメーション・トランジションを実質無効化する */
+  @media (prefers-reduced-motion: reduce) {
+    /* 背景の浮遊する葉と光のシマー演出を停止 */
+    .vbg__leaf,
+    .vbg__shine {
+      animation: none !important;
+    }
+
+    /* スクロール連動のフェードアップを瞬時表示に */
+    [data-voice-anim] {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+
+    /* タブ切替・カードのトランジションを無効化 */
+    .voice-tab,
+    .voice-card,
+    .voice-dot,
+    .voice-arrow,
+    .voice-swipe-hint {
+      transition: none !important;
+      animation: none !important;
+    }
+
+    /* カードのスライド・回転・スケール変化を停止
+       （JS の RAF アニメは下部スクリプトで分岐） */
+    .voice-card.is-prev,
+    .voice-card.is-next,
+    .voice-card.is-current,
+    .voice-card.is-hidden {
+      transition: none !important;
+    }
+  }
 </style>
 
 <script>
@@ -598,18 +677,42 @@ const categories = [
     const tabs   = document.querySelectorAll('.voice-tab')   as NodeListOf<HTMLElement>;
     const panels = document.querySelectorAll('.voice-panel') as NodeListOf<HTMLElement>;
 
-    // タブクリックリスナー（一度だけ登録）
-    tabs.forEach(tab => {
-      const onTabClick = () => {
-        const id = tab.dataset.tab;
-        tabs.forEach(t => t.classList.remove('is-active'));
-        tab.classList.add('is-active');
-        panels.forEach(p => {
-          p.classList.remove('is-active');
-          if (p.dataset.panel === id) { p.classList.add('is-active'); initCarousel(p); }
-        });
-      };
-      tab.addEventListener('click', onTabClick);
+    // OS 設定で「視差効果を減らす」が有効ならアニメ系の派手な動きを抑制
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ARIA 同期：タブ／パネルの選択状態を切り替える
+    function activateTab(targetTab: HTMLElement) {
+      const id = targetTab.dataset.tab;
+      tabs.forEach(t => {
+        const isActive = t === targetTab;
+        t.classList.toggle('is-active', isActive);
+        t.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        t.setAttribute('tabindex', isActive ? '0' : '-1');
+      });
+      panels.forEach(p => {
+        const isActive = p.dataset.panel === id;
+        p.classList.toggle('is-active', isActive);
+        p.toggleAttribute('hidden', !isActive);
+        p.setAttribute('tabindex', isActive ? '0' : '-1');
+        if (isActive) initCarousel(p);
+      });
+    }
+
+    // タブクリック＋キーボード操作（左右矢印・Home・End）
+    tabs.forEach((tab, idx) => {
+      tab.addEventListener('click', () => activateTab(tab));
+      tab.addEventListener('keydown', (e: KeyboardEvent) => {
+        let nextIdx = -1;
+        if (e.key === 'ArrowRight') nextIdx = (idx + 1) % tabs.length;
+        else if (e.key === 'ArrowLeft') nextIdx = (idx - 1 + tabs.length) % tabs.length;
+        else if (e.key === 'Home') nextIdx = 0;
+        else if (e.key === 'End') nextIdx = tabs.length - 1;
+        if (nextIdx >= 0) {
+          e.preventDefault();
+          activateTab(tabs[nextIdx]);
+          tabs[nextIdx].focus();
+        }
+      });
     });
 
     panels.forEach(p => { if (p.classList.contains('is-active')) initCarousel(p); });
@@ -634,8 +737,15 @@ const categories = [
           else if (i === (current + 1) % total)         card.classList.add('is-next');
           else if (i === (current - 1 + total) % total) card.classList.add('is-prev');
           else                                          card.classList.add('is-hidden');
+          // ARIA 同期：現在のカードのみ読み上げ可能、それ以外は隠す
+          card.setAttribute('aria-hidden', i === current ? 'false' : 'true');
         });
-        dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
+        dots.forEach((d, i) => {
+          const isActive = i === current;
+          d.classList.toggle('is-active', isActive);
+          d.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          d.setAttribute('tabindex', isActive ? '0' : '-1');
+        });
       }
 
       // 真円軌道アニメ：requestAnimationFrame で各カードの位置を毎フレーム計算
@@ -673,6 +783,17 @@ const categories = [
         cards.forEach(c => {
           c.classList.remove('is-dragging', 'is-springing');
         });
+
+        // 視差効果軽減モード：回転アニメをスキップして即座にスナップ
+        if (prefersReducedMotion) {
+          // RAF が書き込んだ inline style を解除して、is-current/is-prev/is-next の静的CSSに戻す
+          cards.forEach(c => { (c as HTMLElement).style.cssText = ''; });
+          current = newIndex;
+          update();
+          isSpinning = false;
+          voiceSection?.classList.remove('is-spinning');
+          return;
+        }
 
         car.classList.add(dir >= 0 ? 'drum-fwd' : 'drum-bwd');
         voiceSection?.classList.add('is-spinning');
