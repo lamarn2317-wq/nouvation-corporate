@@ -31,6 +31,10 @@
         {
           "key": "Cross-Origin-Opener-Policy",
           "value": "same-origin-allow-popups"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.instagram.com https://*.cdninstagram.com https://platform.instagram.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' https://sjgocvdpigcimpvuaxoe.supabase.co; frame-src 'self' https://www.instagram.com https://platform.instagram.com; connect-src 'self' https://www.instagram.com https://*.cdninstagram.com; form-action 'self' https://docs.google.com; base-uri 'self'; frame-ancestors 'self'; object-src 'none'; upgrade-insecure-requests"
         }
       ]
     },
