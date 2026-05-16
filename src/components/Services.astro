@@ -38,12 +38,18 @@ const marketPrices = await getMarketPrices();
             過去データと比較することで、意思決定（出荷タイミング）の自信に繋がります。
           </p>
         </div>
-        <p class="text-[#2e7d32] font-bold text-xl md:text-3xl flex items-center justify-center">
-          <svg class="mr-2 md:mr-3 w-6 h-6 md:w-8 md:h-8 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-          </svg>
-          市場価格推移グラフ
-        </p>
+        <div class="flex flex-col items-center gap-3 text-center mt-4">
+          <span class="market-pill inline-flex items-center gap-2 rounded-full border border-[#2e7d32]/15 px-4 py-1.5 text-[10px] md:text-xs font-bold tracking-[0.22em] text-[#2e7d32]">
+            <span class="market-pill__dot relative inline-block h-2 w-2 rounded-full bg-[#2e7d32]"></span>
+            MARKET PRICE LIVE MONITOR
+          </span>
+          <p class="text-[#2e7d32] font-bold text-2xl md:text-4xl flex items-center justify-center tracking-wide">
+            <svg class="mr-2 md:mr-3 w-6 h-6 md:w-8 md:h-8 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            市場価格速報
+          </p>
+        </div>
       </div>
       
       <div class="border border-[#231815]/20 rounded-3xl p-6 md:p-8 bg-white shadow-sm overflow-hidden fade-up">
@@ -548,6 +554,46 @@ const marketPrices = await getMarketPrices();
 </script>
 
 <style>
+  /* ===== Market Price Live Monitor: Status Pill ===== */
+  .market-pill {
+    background: linear-gradient(135deg,
+      rgba(212, 255, 0, 0.18) 0%,
+      rgba(46, 125, 50, 0.08) 100%);
+    backdrop-filter: blur(8px);
+    box-shadow:
+      0 0 0 1px rgba(46, 125, 50, 0.08),
+      0 4px 12px -2px rgba(46, 125, 50, 0.12);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .market-pill:hover {
+    transform: translateY(-1px);
+  }
+  .market-pill__dot {
+    box-shadow:
+      0 0 0 4px rgba(212, 255, 0, 0.18),
+      0 0 12px rgba(46, 125, 50, 0.5);
+  }
+  .market-pill__dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: rgba(46, 125, 50, 0.5);
+    animation: market-pulse 2s ease-out infinite;
+  }
+  @keyframes market-pulse {
+    0%   { transform: scale(0.5); opacity: 0.8; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .market-pill__dot::after {
+      animation: none;
+    }
+    .market-pill {
+      transition: none;
+    }
+  }
+
   /* Instagram埋め込みの強制フィット設定 */
   :global(.instagram-media) {
     margin: 0 !important;
