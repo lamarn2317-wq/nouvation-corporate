@@ -52,17 +52,20 @@ const marketPrices = await getMarketPrices();
         </div>
       </div>
       
-      <div class="border border-[#231815]/20 rounded-3xl p-6 md:p-8 bg-white shadow-sm overflow-hidden fade-up">
-        <div class="mb-6 flex flex-wrap gap-3 md:gap-4 items-center justify-between">
+      <div class="market-card relative rounded-3xl p-6 md:p-8 overflow-hidden fade-up">
+        <div class="mb-6 flex flex-wrap gap-3 md:gap-4 items-center justify-between relative z-10">
           <div class="flex gap-2 flex-1 min-w-0">
-            <select id="itemFilter" class="bg-[#F6F6EE] border-none rounded-lg px-3 md:px-4 py-2 text-xs md:text-sm font-bold text-[#231815] focus:ring-2 focus:ring-[#2e7d32] cursor-pointer min-w-0">
+            <select id="itemFilter" class="market-card__select bg-[#F6F6EE] border-none rounded-lg px-3 md:px-4 py-2 text-xs md:text-sm font-bold text-[#231815] focus:ring-2 focus:ring-[#2e7d32] cursor-pointer min-w-0">
             </select>
-            <select id="marketFilter" class="bg-[#F6F6EE] border-none rounded-lg px-3 md:px-4 py-2 text-xs md:text-sm font-bold text-[#231815] focus:ring-2 focus:ring-[#2e7d32] cursor-pointer min-w-0">
+            <select id="marketFilter" class="market-card__select bg-[#F6F6EE] border-none rounded-lg px-3 md:px-4 py-2 text-xs md:text-sm font-bold text-[#231815] focus:ring-2 focus:ring-[#2e7d32] cursor-pointer min-w-0">
             </select>
           </div>
-          <div class="text-right flex-shrink-0">
-            <span class="text-[10px] md:text-xs text-[#231815]/40 font-mono block">Unit: 円/kg</span>
-            <span class="text-[9px] md:text-[10px] text-[#2e7d32] font-bold">● LIVE DATA</span>
+          <div class="text-right flex-shrink-0 flex flex-col items-end gap-0.5">
+            <span class="text-[10px] md:text-xs text-[#231815]/45 font-mono tracking-wider">Unit: 円/kg</span>
+            <span class="market-card__live inline-flex items-center gap-1.5 text-[9px] md:text-[10px] text-[#2e7d32] font-bold tracking-[0.18em]">
+              <span class="market-card__live-dot relative inline-block h-1.5 w-1.5 rounded-full bg-[#2e7d32]"></span>
+              LIVE DATA
+            </span>
           </div>
         </div>
 
@@ -89,13 +92,13 @@ const marketPrices = await getMarketPrices();
           </div>
         </div>
         
-        <div class="relative h-[300px] md:h-[400px] w-full flex items-center justify-center">
+        <div class="market-card__chart-wrap relative h-[300px] md:h-[400px] w-full flex items-center justify-center rounded-2xl overflow-hidden">
           <!-- ローディング表示 -->
-          <div id="chartLoader" class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm transition-opacity duration-500">
+          <div id="chartLoader" class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/85 backdrop-blur-sm transition-opacity duration-500">
             <div class="w-12 h-12 border-4 border-[#2e7d32]/20 border-t-[#2e7d32] rounded-full animate-spin mb-4"></div>
             <p class="text-[#231815]/60 text-sm font-bold animate-pulse">市場データを取得中...</p>
           </div>
-          <canvas id="marketChart"></canvas>
+          <canvas id="marketChart" class="relative z-[1]"></canvas>
         </div>
       </div>
       
@@ -786,6 +789,79 @@ const marketPrices = await getMarketPrices();
       animation: none;
     }
     .market-pill {
+      transition: none;
+    }
+  }
+
+  /* ===== Market Card: Outer container styling ===== */
+  .market-card {
+    background:
+      radial-gradient(circle at 15% 0%,
+        rgba(212, 255, 0, 0.07) 0%,
+        transparent 50%),
+      radial-gradient(circle at 85% 100%,
+        rgba(46, 125, 50, 0.05) 0%,
+        transparent 45%),
+      #ffffff;
+    border: 1px solid rgba(46, 125, 50, 0.12);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.8) inset,
+      0 1px 2px rgba(35, 24, 21, 0.02),
+      0 8px 20px -6px rgba(46, 125, 50, 0.08),
+      0 24px 48px -12px rgba(35, 24, 21, 0.08);
+  }
+  /* 上部にアグリグリーン→ライム→アグリグリーンのアクセントバー */
+  .market-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      #2e7d32 15%,
+      #D4FF00 50%,
+      #2e7d32 85%,
+      transparent 100%);
+    opacity: 0.85;
+    pointer-events: none;
+  }
+  /* セレクトボックスのホバー効果 */
+  .market-card__select {
+    transition: background-color 0.2s ease;
+  }
+  .market-card__select:hover {
+    background-color: rgba(46, 125, 50, 0.06);
+  }
+  /* LIVE DATA ドットのパルスアニメ */
+  .market-card__live-dot {
+    box-shadow: 0 0 0 3px rgba(212, 255, 0, 0.25);
+  }
+  .market-card__live-dot::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: rgba(46, 125, 50, 0.45);
+    animation: market-pulse 2s ease-out infinite 0.5s;
+  }
+  /* チャート背景：薄いグリッドパターン（計測パネル感） */
+  .market-card__chart-wrap {
+    background:
+      linear-gradient(to right,
+        rgba(46, 125, 50, 0.025) 1px,
+        transparent 1px) 0 0 / 40px 40px,
+      linear-gradient(to bottom,
+        rgba(46, 125, 50, 0.025) 1px,
+        transparent 1px) 0 0 / 40px 40px,
+      linear-gradient(180deg,
+        rgba(246, 246, 238, 0.4) 0%,
+        rgba(255, 255, 255, 0) 100%);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .market-card__live-dot::after {
+      animation: none;
+    }
+    .market-card__select {
       transition: none;
     }
   }
