@@ -6,28 +6,160 @@ export interface MarketPriceData {
   unit: string;
 }
 
+/**
+ * 1行のCSV文字列をセル配列にパースする
+ * - ダブルクオートで囲まれたセル対応
+ * - クオート内のカンマは区切り扱いしない
+ * - クオート内のエスケープされたクオート（""）は1個のクオートに変換
+ */
+function parseCsvLine(line: string): string[] {
+  const cells: string[] = [];
+  let current = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQuotes && line[i + 1] === '"') {
+        current += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (ch === "," && !inQuotes) {
+      cells.push(current);
+      current = "";
+    } else {
+      current += ch;
+    }
+  }
+  cells.push(current);
+  return cells;
+}
+
+/**
+ * GAS から返ってくる「ワイド形式」のシートデータを
+ * Long形式（行＝1観測値）に変換する。
+ *
+ * 入力構造の例：
+ *   "日付","Thu Oct 02 2025 ...","Fri Oct 03 2025 ...", ...
+ *   "大田市場","","","",...        ← 市場ヘッダー行（値は空）
+ *   "キャベツ","97","97","","97.2",... ← 品目行（市場ヘッダー以降の品目はその市場に属する）
+ *   "レタス", ...
+ *   "札幌市場","","","",...        ← 次の市場ヘッダー
+ *   "キャベツ","85","82",...
+ */
+function parseWideSheet(text: string): MarketPriceData[] {
+  const result: MarketPriceData[] = [];
+  const lines = text.split(/\r?\n/);
+
+  // ヘッダー（日付）行を探す
+  let headerIdx = -1;
+  let headerCells: string[] = [];
+  for (let i = 0; i < lines.length; i++) {
+    const cells = parseCsvLine(lines[i]);
+    if (cells[0] === "日付" || cells[0] === "date") {
+      headerIdx = i;
+      headerCells = cells;
+      break;
+    }
+  }
+  if (headerIdx === -1) return [];
+
+  // 各列の日付を ISO 形式 (YYYY-MM-DD) に変換
+  const dates: (string | null)[] = headerCells.slice(1).map((raw) => {
+    if (!raw) return null;
+    const d = new Date(raw);
+    if (isNaN(d.getTime())) return null;
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  });
+
+  // 既知の市場名（行が市場ヘッダーか品目かを判別する手がかり）
+  const knownMarkets = new Set([
+    "札幌市場",
+    "仙台市場",
+    "大田市場",
+    "名古屋市場",
+    "大阪市場",
+    "広島市場",
+    "福岡市場",
+  ]);
+
+  let currentMarket = "";
+
+  for (let i = headerIdx + 1; i < lines.length; i++) {
+    const cells = parseCsvLine(lines[i]);
+    const first = cells[0]?.trim();
+    if (!first) continue;
+
+    // 市場ヘッダー判定：
+    // ① 既知の市場名に完全一致、または
+    // ② 行末まで値が全て空（市場名のあとに空セルが続くパターン）
+    const dataCells = cells.slice(1);
+    const allEmpty = dataCells.every((c) => c.trim() === "");
+    if (knownMarkets.has(first) || allEmpty) {
+      currentMarket = first;
+      continue;
+    }
+
+    // 品目行：各列の値を読んで {date, item, market, price} を生成
+    if (!currentMarket) continue;
+    const itemName = first;
+    for (let j = 0; j < dataCells.length && j < dates.length; j++) {
+      const date = dates[j];
+      if (!date) continue;
+      const raw = dataCells[j].trim();
+      if (!raw) continue;
+      const price = Number(raw);
+      if (!Number.isFinite(price) || price <= 0) continue;
+
+      result.push({
+        date,
+        item: itemName,
+        market: currentMarket,
+        price,
+        unit: "円/kg",
+      });
+    }
+  }
+
+  return result;
+}
+
 export async function getMarketPrices(): Promise<MarketPriceData[]> {
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbx7ESPQ9ohWe0e0fYARWrqtZwRhHl2pa0Euo8YuSGHMqX3A3k4hbUuZX8Ft3dIS579e/exec?type=market";
-  
+  // 新データソース：nouvation-agri ダッシュボードと同じ GAS
+  // ※旧 URL（AKfycbx7…）は 403 となり利用不可
+  const GAS_URL =
+    "https://script.google.com/macros/s/AKfycbyd_Or_Nxo2ZhqNk6GOo2btZ-uymgpJTU7kgE8bPWarWVTJ8bDX6QZW3YSD7Bij4Jvs/exec";
+
   try {
-    // サーバーサイドでのフェッチ（リダイレクトを自動追従）
-    const response = await fetch(GAS_URL, { redirect: 'follow' });
-    if (!response.ok) throw new Error('Network response was not ok');
-    
-    const rawData = await response.json();
-    
-    // rowsキーの中身を取得
-    const rawPrices = Array.isArray(rawData) ? rawData : (rawData.rows || rawData.data || rawData.contents || []);
-    
-    // データの正規化
-    return rawPrices.map((d: any) => ({
-      date: d.date || d.日付 || "",
-      item: d.item || d.品目 || "",
-      market: d.market || d.市場 || "",
-      price: Number(d.price || d.価格 || 0),
-      unit: d.unit || d.単位 || "円/kg"
-    })).filter((d: any) => d.date && d.item);
-    
+    const response = await fetch(GAS_URL, { redirect: "follow" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const text = await response.text();
+    const trimmed = text.trim();
+
+    // レスポンスが JSON ならそのまま処理、CSV っぽいなら parseWideSheet
+    if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
+      const data = JSON.parse(text);
+      const rows = Array.isArray(data)
+        ? data
+        : data.rows || data.data || data.contents || [];
+      return rows
+        .map((d: any) => ({
+          date: d.date || d.日付 || "",
+          item: d.item || d.品目 || "",
+          market: d.market || d.市場 || "",
+          price: Number(d.price || d.価格 || 0),
+          unit: d.unit || d.単位 || "円/kg",
+        }))
+        .filter((d: MarketPriceData) => d.date && d.item && d.price > 0);
+    }
+
+    // ワイド CSV 形式
+    return parseWideSheet(text);
   } catch (error) {
     console.error("Failed to fetch market prices at build time:", error);
     return [];

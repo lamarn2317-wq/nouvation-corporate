@@ -450,13 +450,17 @@ const marketPrices = await getMarketPrices();
       // 日付順にソート
       filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-      // 表示基準日を「今日」に設定
+      // 表示基準日：データ内の最新日（データ更新が止まっていても直近データを表示）
+      const latestEntry = filtered[filtered.length - 1];
       const now = new Date();
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const baseDay = latestEntry
+        ? new Date(latestEntry.date)
+        : new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const today = new Date(baseDay.getFullYear(), baseDay.getMonth(), baseDay.getDate());
       const oneWeekAgo = new Date(today);
       oneWeekAgo.setDate(today.getDate() - 7);
 
-      // データの絞り込み（今日から7日前まで）
+      // データの絞り込み（基準日から7日前まで）
       filtered = filtered.filter(p => {
         const d = new Date(p.date);
         return d >= oneWeekAgo && d <= today;
