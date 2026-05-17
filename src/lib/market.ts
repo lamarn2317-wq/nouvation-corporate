@@ -76,7 +76,7 @@ function parseWideSheet(text: string): MarketPriceData[] {
     return `${y}-${m}-${day}`;
   });
 
-  // 既知の市場名（行が市場ヘッダーか品目かを判別する手がかり）
+  // 既知の市場名（補助辞書。新しい市場名が登場しても下記の "市場" サフィックスで吸収する）
   const knownMarkets = new Set([
     "札幌市場",
     "仙台市場",
@@ -95,17 +95,19 @@ function parseWideSheet(text: string): MarketPriceData[] {
     if (!first) continue;
 
     // 市場ヘッダー判定：
-    // ① 既知の市場名に完全一致、または
-    // ② 行末まで値が全て空（市場名のあとに空セルが続くパターン）
-    const dataCells = cells.slice(1);
-    const allEmpty = dataCells.every((c) => c.trim() === "");
-    if (knownMarkets.has(first) || allEmpty) {
+    // ① 1列目が "市場" で終わる（厳密判定）
+    // ② または既知の市場名に完全一致
+    //
+    // 旧ロジックの「2列目以降が全て空なら市場」は false positive を起こすため廃止。
+    // （データ更新が滞った品目が誤って市場扱いされ、配下の品目が壊れる事故が発生したため）
+    if (first.endsWith("市場") || knownMarkets.has(first)) {
       currentMarket = first;
       continue;
     }
 
     // 品目行：各列の値を読んで {date, item, market, price} を生成
     if (!currentMarket) continue;
+    const dataCells = cells.slice(1);
     const itemName = first;
     for (let j = 0; j < dataCells.length && j < dates.length; j++) {
       const date = dates[j];
@@ -129,24 +131,26 @@ function parseWideSheet(text: string): MarketPriceData[] {
 }
 
 export async function getMarketPrices(): Promise<MarketPriceData[]> {
-  // 新データソース：nouvation-agri ダッシュボードと同じ GAS
-  // ※旧 URL（AKfycbx7…）は 403 となり利用不可
-  const GAS_URL =
+  // 第1優先：AWS S3 配信のCSV（DynamoDB バックエンド由来・毎日更新）
+  // 第2フォールバック：旧 GAS（停止していなければ）
+  const PRIMARY_URL =
+    "https://nouvation-market-preview.s3.ap-northeast-1.amazonaws.com/history.csv";
+  const FALLBACK_URL =
     "https://script.google.com/macros/s/AKfycbyd_Or_Nxo2ZhqNk6GOo2btZ-uymgpJTU7kgE8bPWarWVTJ8bDX6QZW3YSD7Bij4Jvs/exec";
 
-  try {
-    const response = await fetch(GAS_URL, { redirect: "follow" });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  async function fetchAndParse(url: string): Promise<MarketPriceData[]> {
+    const response = await fetch(url, { redirect: "follow" });
+    if (!response.ok) throw new Error(`HTTP ${response.status} for ${url}`);
 
     const text = await response.text();
     const trimmed = text.trim();
 
-    // レスポンスが JSON ならそのまま処理、CSV っぽいなら parseWideSheet
+    // JSON 応答（API Gateway 直叩き等）の場合はそのまま処理
     if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
       const data = JSON.parse(text);
       const rows = Array.isArray(data)
         ? data
-        : data.rows || data.data || data.contents || [];
+        : data.rows || data.data || data.contents || data.records || [];
       return rows
         .map((d: any) => ({
           date: d.date || d.日付 || "",
@@ -160,8 +164,22 @@ export async function getMarketPrices(): Promise<MarketPriceData[]> {
 
     // ワイド CSV 形式
     return parseWideSheet(text);
-  } catch (error) {
-    console.error("Failed to fetch market prices at build time:", error);
-    return [];
+  }
+
+  // まず S3 を試す
+  try {
+    const primary = await fetchAndParse(PRIMARY_URL);
+    if (primary.length > 0) return primary;
+    throw new Error("Primary source returned 0 records");
+  } catch (primaryErr) {
+    console.warn("[market] Primary source failed:", primaryErr);
+
+    // フォールバックを試す
+    try {
+      return await fetchAndParse(FALLBACK_URL);
+    } catch (fallbackErr) {
+      console.error("[market] All sources failed:", fallbackErr);
+      return [];
+    }
   }
 }

@@ -100,8 +100,23 @@ const marketPrices = await getMarketPrices();
           </div>
           <canvas id="marketChart" class="relative z-[1]"></canvas>
         </div>
+
+        <!-- 詳細ダッシュボードへのリンク (右下配置) -->
+        <div class="mt-5 md:mt-6 flex justify-end relative z-10">
+          <a
+            href="https://nouvation-agri-omega.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group inline-flex items-center gap-2 px-5 md:px-6 py-2.5 md:py-3 bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold rounded-full text-xs md:text-sm transition-all shadow-md hover:shadow-lg tracking-wider"
+          >
+            <span>📊 見返せる市場価格速報</span>
+            <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
       </div>
-      
+
       <!-- 注釈テキスト -->
       <div class="mt-4 px-2">
         <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
