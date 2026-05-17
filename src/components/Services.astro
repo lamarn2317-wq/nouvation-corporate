@@ -66,6 +66,7 @@ const marketPrices = await getMarketPrices();
               <span class="market-card__live-dot relative inline-block h-1.5 w-1.5 rounded-full bg-[#2e7d32]"></span>
               LIVE DATA
             </span>
+            <span id="kpiLastUpdated" class="text-[9px] md:text-[10px] text-[#231815]/40 font-mono tracking-wider" aria-live="polite">—</span>
           </div>
         </div>
 
@@ -652,10 +653,163 @@ const marketPrices = await getMarketPrices();
 
     itemFilter.addEventListener('change', updateChart);
     marketFilter.addEventListener('change', updateChart);
-    
+
     // 初期状態で最初の品目を選択
     if (items.length > 0) itemFilter.value = items[0];
     updateChart();
+
+    // ============================================================
+    // バックグラウンド refresh：SSGで埋め込んだデータの後に
+    // 最新CSVを取りに行き、新しければ静かに上書きする
+    // （SSG snapshot + client refresh の hybrid 構成）
+    // ============================================================
+    const S3_URL = "https://nouvation-market-preview.s3.ap-northeast-1.amazonaws.com/history.csv";
+    const GAS_FALLBACK_URL = "https://script.google.com/macros/s/AKfycbyd_Or_Nxo2ZhqNk6GOo2btZ-uymgpJTU7kgE8bPWarWVTJ8bDX6QZW3YSD7Bij4Jvs/exec";
+
+    function updateLastUpdatedIndicator(latestDateIso: string) {
+      const el = document.getElementById('kpiLastUpdated');
+      if (!el || !latestDateIso) return;
+      const d = new Date(latestDateIso);
+      if (isNaN(d.getTime())) return;
+      el.textContent = `最終更新: ${d.getMonth() + 1}/${d.getDate()}`;
+    }
+
+    // CSV 1行 → セル配列
+    function parseCsvLineClient(line: string): string[] {
+      const cells: string[] = [];
+      let current = "";
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQuotes && line[i + 1] === '"') { current += '"'; i++; }
+          else { inQuotes = !inQuotes; }
+        } else if (ch === "," && !inQuotes) {
+          cells.push(current);
+          current = "";
+        } else {
+          current += ch;
+        }
+      }
+      cells.push(current);
+      return cells;
+    }
+
+    // ワイド形式CSV → Long形式（market.ts の parseWideSheet と同等ロジック）
+    function parseWideSheetClient(text: string): MarketPrice[] {
+      const result: MarketPrice[] = [];
+      const lines = text.split(/\r?\n/);
+      let headerIdx = -1;
+      let headerCells: string[] = [];
+      for (let i = 0; i < lines.length; i++) {
+        const cells = parseCsvLineClient(lines[i]);
+        if (cells[0] === "日付" || cells[0] === "date") {
+          headerIdx = i;
+          headerCells = cells;
+          break;
+        }
+      }
+      if (headerIdx === -1) return [];
+      const dates = headerCells.slice(1).map(raw => {
+        if (!raw) return null;
+        const d = new Date(raw);
+        if (isNaN(d.getTime())) return null;
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      });
+      const knownMarkets = new Set(['札幌市場','仙台市場','大田市場','名古屋市場','大阪市場','広島市場','福岡市場']);
+      let currentMarket = '';
+      for (let i = headerIdx + 1; i < lines.length; i++) {
+        const cells = parseCsvLineClient(lines[i]);
+        const first = cells[0]?.trim();
+        if (!first) continue;
+        if (first.endsWith('市場') || knownMarkets.has(first)) {
+          currentMarket = first;
+          continue;
+        }
+        if (!currentMarket) continue;
+        const dataCells = cells.slice(1);
+        for (let j = 0; j < dataCells.length && j < dates.length; j++) {
+          const date = dates[j];
+          if (!date) continue;
+          const raw = dataCells[j].trim();
+          if (!raw) continue;
+          const price = Number(raw);
+          if (!Number.isFinite(price) || price <= 0) continue;
+          result.push({ date, item: first, market: currentMarket, price, unit: '円/kg' });
+        }
+      }
+      return result;
+    }
+
+    async function refreshFromRemote() {
+      let fresh: MarketPrice[] = [];
+      try {
+        const res = await fetch(S3_URL, { cache: 'no-cache' });
+        if (!res.ok) throw new Error(`S3 HTTP ${res.status}`);
+        fresh = parseWideSheetClient(await res.text());
+      } catch (e) {
+        console.warn('[market] S3 refresh failed, trying GAS fallback:', e);
+        try {
+          const res = await fetch(GAS_FALLBACK_URL, { redirect: 'follow' });
+          if (!res.ok) throw new Error(`GAS HTTP ${res.status}`);
+          fresh = parseWideSheetClient(await res.text());
+        } catch (e2) {
+          console.warn('[market] All refresh sources failed; keeping SSG data:', e2);
+          return;
+        }
+      }
+      if (fresh.length === 0) return;
+
+      const currentLatest = prices.length > 0
+        ? prices.reduce((a, b) => a.date > b.date ? a : b).date
+        : '';
+      const freshLatest = fresh.reduce((a, b) => a.date > b.date ? a : b).date;
+      if (freshLatest <= currentLatest) {
+        // SSG が既に最新と同等 → 何もしない
+        return;
+      }
+
+      // 配列を mutate（updateChart クロージャ経由で同じ参照を見ているため）
+      prices.length = 0;
+      prices.push(...fresh);
+
+      // フィルター選択肢を最新化（新しい品目/市場が登場した場合に備えて）
+      const userItem = itemFilter.value;
+      const userMarket = marketFilter.value;
+      const newItems = [...new Set(prices.map(p => p.item))].filter(Boolean).sort();
+      const newMarkets = [...new Set(prices.map(p => p.market))].filter(Boolean).sort();
+
+      itemFilter.innerHTML = '';
+      marketFilter.innerHTML = '';
+      newItems.forEach(it => {
+        const opt = document.createElement('option');
+        opt.value = it;
+        opt.textContent = it;
+        itemFilter.appendChild(opt);
+      });
+      newMarkets.forEach(mk => {
+        const opt = document.createElement('option');
+        opt.value = mk;
+        opt.textContent = mk;
+        marketFilter.appendChild(opt);
+      });
+      // ユーザーの選択を可能な限り維持
+      if (newItems.includes(userItem)) itemFilter.value = userItem;
+      if (newMarkets.includes(userMarket)) marketFilter.value = userMarket;
+
+      updateChart();
+      updateLastUpdatedIndicator(freshLatest);
+      console.log(`[market] Background refresh applied: ${currentLatest} → ${freshLatest}`);
+    }
+
+    // 初期インジケータ：まず SSG snapshot の最新日を表示
+    const ssgLatest = prices.length > 0
+      ? prices.reduce((a, b) => a.date > b.date ? a : b).date
+      : '';
+    if (ssgLatest) updateLastUpdatedIndicator(ssgLatest);
+
+    // ページが見えてからバックグラウンド更新（初回レンダリングを邪魔しない）
+    setTimeout(() => { refreshFromRemote(); }, 800);
   }
 
   // Astroのライフサイクルに合わせて初期化
