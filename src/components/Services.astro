@@ -118,10 +118,25 @@ const marketPrices = await getMarketPrices();
         </div>
       </div>
 
-      <!-- 注釈テキスト -->
-      <div class="mt-4 px-2">
+      <!-- 注釈テキスト：最低限必要な計算ルールを開示。さらに詳しくはFAQへ。 -->
+      <div class="mt-4 px-2 space-y-1">
         <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
-          ※価格は原則「中値（1kgあたり）」を表示。中値が取得できない場合のみ「高値」を代替表示。産地は取引量の多い主産地を優先。
+          ※価格は原則「相対取引の中値（1kgあたり）」を表示。
+        </p>
+        <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
+          中値が取れない場合は推定値「（高値+安値）÷2」（※推定）または高値（※高値）を代替表示。
+        </p>
+        <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
+          札幌市場のみ、相対取引がない品目はせり値を補完（※せり）。
+        </p>
+        <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
+          箱・束・小袋取引は単位を併記（例：1,620円（箱））、前日比は単位違い時「±0」表記。
+        </p>
+        <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
+          産地は生産量上位の主要産地を優先、外国産混入の可能性がある第三販売は除外。
+        </p>
+        <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
+          水・日曜・祝日は市場休市のため配信を行いません。
         </p>
       </div>
 
