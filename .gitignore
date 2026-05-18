@@ -35,3 +35,14 @@ public/videos/*.webm
 public/videos/*.mov
 
 .vercel
+
+# ─────────────────────────────────────────
+# 永久削除済みアセット（再復活防止用）
+# 2026-05-08 (commit d13cbca) で削除した未使用・重量アセット。
+# 復活した場合：ファイルシステム上はOKだが Git は無視 → 本番に再上陸しない。
+# 必要になった場合は別ファイル名で配置するか、この行を消して合意の上で復活させること。
+# ─────────────────────────────────────────
+public/images/mission.png
+public/images/mission_bg.jpg
+public/images/service_ai.png
+public/images/texture.jpg
