@@ -1,7 +1,25 @@
 ---
-// Voice - 利用者の声 | Premium Green × Postcard
+// Voice - 利用者の声 | Premium Green × 静謐ミニマル
 
 const categories = [
+  {
+    id: 'shinki',
+    label: '新規就農',
+    items: [
+      { age: '30代 / 兼業農家', quote: '脱サラして新規就農する予定です', text: '今はサラリーマンをしながら週末農家として野菜を栽培しています。今後脱サラして新規就農する予定です。農業をもっと身近に、もっと魅力あるものにしていければと思っています。' },
+      { age: '20代 / 研修中', quote: '補助金情報を知りたくてフォロー', text: '現在いちご農家になるため研修中です。新規就農するにあたり、いちごの高設栽培の初期費用が高額なため、どのような補助金があるのか気になり、フォローさせていただきました。' },
+      { age: '30代 / 新規就農(就農済み)', quote: 'まだまだ学ばせてください', text: '新規就農しました。まだまだ無知なことが多いので、色々と学ばせて頂きたいと思っています。NOUVATIONさんの発信を日々の勉強に活用しています。' },
+    ]
+  },
+  {
+    id: 'kotsugi',
+    label: '後継ぎ',
+    items: [
+      { age: '20代 / 祖父母継承', quote: '0からスタートしました', text: '私は去年、祖父母がしてきた農業を守り次へと繋げたいとおもい0からスタートしました。わからないことだらけですので大変有難いコミュニティです！' },
+      { age: '20代 / 祖父ぶどう園後継ぎ', quote: '再来年、後継ぎをしようと考えています', text: '現在、祖父がぶどう園を経営しており、再来年に後継ぎをしようと考えています。最近、助成金や補助金などを調べていました。NOUVATION様の投稿などを参考にさせていただいています。' },
+      { age: '40代 / 兼業×両親手伝い', quote: '自分の関わりを増やさないと', text: '専業ではなく、両親の田んぼを手伝いしています。最近、両親の体力の低下が気になり、そろそろ自分の関わりを増やさないといけないなと考えています。仕事をしているのでどうしたら良いものかと考えているうちにNOUVATIONに辿り着きました。' },
+    ]
+  },
   {
     id: 'shisetsu',
     label: '施設野菜',
@@ -15,44 +33,26 @@ const categories = [
     id: 'roji',
     label: '露地栽培',
     items: [
-      { age: '50代', quote: '非常に参考になる投稿', text: '毎日、天候や市場価格などの情報を丁寧に更新されており、非常に参考になる投稿ばかりで、勉強させていただいております。' },
-      { age: '50代', quote: 'ベテランでも新しい発見がある', text: '長年農業をやってきましたが、最新のテクノロジーや市場の動向についてはNOUVATIONから学ぶことが多いです。' },
-      { age: '40代', quote: '市場価格の透明性が嬉しい', text: 'これまでは不透明だった市場の動きが、グラフで可視化されることで、納得感のある取引ができるようになりました。' },
-    ]
-  },
-  {
-    id: 'shinki',
-    label: '新規就農',
-    items: [
-      { age: '30代 / 兼業農家', quote: '脱サラして新規就農する予定です', text: '今はサラリーマンをしながら週末農家として野菜を栽培しています。今後脱サラして新規就農する予定です。農業をもっと身近に、もっと魅力あるものにしていければと思っています。' },
-      { age: '20代 / 研修中', quote: '補助金情報を知りたくてフォロー', text: '現在いちご農家になるため研修中です。新規就農するにあたり、いちごの高設栽培の初期費用が高額なため、どのような補助金があるのか気になり、フォローさせていただきました。' },
-      { age: '30代 / 新規就農（就農済み）', quote: 'まだまだ学ばせてください', text: '新規就農しました。まだまだ無知なことが多いので、色々と学ばせて頂きたいと思っています。NOUVATIONさんの発信を日々の勉強に活用しています。' },
-    ]
-  },
-  {
-    id: 'kotsugi',
-    label: '後継ぎ',
-    items: [
-      { age: '20代 / 祖父ぶどう園後継ぎ', quote: '再来年、後継ぎをしようと考えています', text: '現在、祖父がぶどう園を経営しており、再来年に後継ぎをしようと考えています。最近、助成金や補助金などを調べていました。NOUVATION様の投稿などを参考にさせていただいています。' },
-      { age: '40代 / 兼業×両親手伝い', quote: '自分の関わりを増やさないと', text: '専業ではなく、両親の田んぼを手伝いしています。最近、両親の体力の低下が気になり、そろそろ自分の関わりを増やさないといけないなと考えています。仕事をしているのでどうしたら良いものかと考えているうちにNOUVATIONに辿り着きました。' },
-      { age: '30代 / 後継ぎ検討中', quote: '後を継ぐかどうか迷っています', text: '実家が農家をしています。両親も高齢者で、後継者不足の今、後を継ぐかどうか迷っています。色々な知識もないため、NOUVATIONさんの発信があると本当に助かります。' },
+      { age: '30代 / 北海道 / 玉ねぎ', quote: '美しい空に癒されながら', text: '北海道で農業をしています。今玉ねぎの収穫真っ最中〜ハードな仕事ですが、美しい空に癒されながらがんばっています。農業はちゃんと稼げることが大事ですよね！' },
+      { age: '30-40代 / 柑橘 / 兼業', quote: '柑橘栽培をしている兼業農家です', text: 'いつも有効な情報発信ありがとうございます！私は農業関係者です。柑橘栽培をしている兼業農家です。' },
+      { age: '北海道 / 現役農家', quote: '役立つ情報が発信されていたので', text: '北海道で農家を営農してます。とても役立つ情報が発信されていたのでフォローさせて頂きました。' },
     ]
   }
 ];
 ---
 
 <section data-section-theme="dark" id="voice" class="voice-section" aria-labelledby="voice-heading-title">
-  <!-- 背景レイヤー -->
+  <!-- 背景レイヤー（明るい緑グラデ＋静謐） -->
   <div class="vbg" aria-hidden="true">
     <div class="vbg__grad"></div>
     <div class="vbg__shine"></div>
-    <div class="vbg__leaf vbg__leaf--1"></div>
-    <div class="vbg__leaf vbg__leaf--2"></div>
+    <div class="vbg__halo vbg__halo--tl"></div>
+    <div class="vbg__halo vbg__halo--br"></div>
   </div>
 
   <div class="voice-container">
     <div class="voice-header" data-voice-anim>
-      <p class="voice-eyebrow" id="voice-heading-title">VOICE</p>
+      <p class="voice-eyebrow font-serif" id="voice-heading-title">Voice</p>
       <h2 class="voice-heading">利 用 者 の 声</h2>
     </div>
 
@@ -158,19 +158,20 @@ const categories = [
     isolation: isolate;
   }
 
-  /* ===== Background ===== */
+  /* ===== Background（明るい緑グラデ／既存復活＋静謐） ===== */
   .vbg { position: absolute; inset: 0; pointer-events: none; }
 
   .vbg__grad {
     position: absolute;
     inset: 0;
-    background: linear-gradient(160deg,
-      #0d3320 0%,
-      #1b5e3a 25%,
-      #267a4a 48%,
-      #3da564 72%,
-      #6dce88 90%,
-      #8ddfa0 100%
+    background: linear-gradient(180deg,
+      #3da564 0%,
+      #2a8550 18%,
+      #1d6840 36%,
+      #134a2d 56%,
+      #0c331e 74%,
+      #061b10 90%,
+      #030a06 100%
     );
   }
 
@@ -183,92 +184,114 @@ const categories = [
       radial-gradient(ellipse 40% 30% at 80% 80%, rgba(255,255,255,0.04) 0%, transparent 50%);
   }
 
-  /* 葉っぱシルエット */
-  .vbg__leaf {
+  /* 角に滲む光輪（控えめ） */
+  .vbg__halo {
     position: absolute;
-    border-radius: 0 100% 0 100%;
-    background: rgba(255,255,255,0.03);
-    animation: leafSway 12s ease-in-out infinite;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center,
+      rgba(255,255,255,0.08) 0%,
+      rgba(255,255,255,0.025) 45%,
+      transparent 75%);
+    filter: blur(70px);
+    pointer-events: none;
   }
-  .vbg__leaf--1 {
-    width: 260px; height: 260px;
-    top: -60px; left: -40px;
-    transform: rotate(20deg);
-  }
-  .vbg__leaf--2 {
-    width: 200px; height: 200px;
-    bottom: -40px; right: -20px;
-    transform: rotate(-30deg);
-    animation-delay: -6s;
-  }
-  @keyframes leafSway {
-    0%,100% { transform: rotate(20deg) scale(1); }
-    50% { transform: rotate(25deg) scale(1.05); }
-  }
+  .vbg__halo--tl { top: -280px; left: -240px; }
+  .vbg__halo--br { bottom: -280px; right: -220px; }
+
 
   /* ===== Container ===== */
   .voice-container {
     position: relative;
     z-index: 1;
-    max-width: 960px;
+    max-width: 1120px;
     margin: 0 auto;
     padding: 0 1.5rem;
   }
 
-  /* ===== Header ===== */
-  .voice-header { text-align: center; margin-bottom: 2.5rem; }
+  /* ===== Header（Aesop 風セリフ＋適度な余白） ===== */
+  .voice-header {
+    text-align: center;
+    margin-bottom: 2.6rem;
+  }
 
   .voice-eyebrow {
-    font-size: clamp(2.4rem, 6vw, 3.8rem);
-    font-weight: 800;
-    letter-spacing: 0.18em;
-    color: #fff;
-    line-height: 1;
-    text-shadow:
-      0 2px 0 rgba(0,0,0,0.15),
-      0 4px 30px rgba(0,0,0,0.2);
+    font-size: clamp(2.6rem, 6.4vw, 5rem);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0.02em;
+    color: rgba(255,255,255,0.96);
+    line-height: 1.05;
   }
 
   .voice-heading {
-    font-size: 0.82rem;
-    font-weight: 500;
-    letter-spacing: 0.35em;
-    color: rgba(255,255,255,0.7);
-    margin-top: 0.7rem;
+    font-size: 0.78rem;
+    font-weight: 400;
+    letter-spacing: 0.55em;
+    color: rgba(255,255,255,0.55);
+    margin-top: 1.6rem;
+    padding-left: 0.55em; /* letter-spacing 補正 */
   }
 
-  /* ===== Tabs ===== */
+  /* ===== Tabs（Aesop 風アンダーライン式 / プレミアム） ===== */
   .voice-tabs {
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 2.5rem;
+    gap: 2.4rem;
+    margin-bottom: 2.4rem;
     flex-wrap: wrap;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 0.7rem 0;
   }
 
   .voice-tab {
-    padding: 0.5rem 1.5rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    color: rgba(255,255,255,0.75);
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 100px;
+    position: relative;
+    padding: 0.6rem 0;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    color: rgba(255,255,255,0.55);
+    background: transparent;
+    border: none;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    backdrop-filter: blur(8px);
+    transition: color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                text-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .voice-tab::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 1px;
+    background: rgba(255,255,255,0.95);
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                left 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                background 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .voice-tab:hover {
-    color: #fff;
-    background: rgba(255,255,255,0.22);
+    color: #B8FF1A;
+    text-shadow: 0 0 14px rgba(184, 255, 26, 0.45);
+  }
+  .voice-tab:hover::after {
+    left: 0;
+    width: 100%;
+    background: #B8FF1A;
+    box-shadow: 0 0 10px rgba(184, 255, 26, 0.6);
   }
   .voice-tab.is-active {
-    color: #1b5e3a;
-    background: #fff;
-    border-color: #fff;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    font-weight: 700;
+    color: #fff;
+    font-weight: 500;
+  }
+  .voice-tab.is-active::after {
+    left: 0;
+    width: 100%;
+  }
+  .voice-tab.is-active:hover {
+    color: #B8FF1A;
   }
 
   /* ===== Panels ===== */
@@ -286,8 +309,8 @@ const categories = [
   /* ===== Stage + Carousel ===== */
   .voice-stage {
     position: relative;
-    height: 540px;
-    perspective: 1600px;
+    height: 560px;
+    perspective: 1800px;
     perspective-origin: 50% 50%;
     /* GPU合成 */
     transform: translateZ(0);
@@ -349,24 +372,10 @@ const categories = [
   .voice-arrow:active {
     transform: translateY(-50%) scale(0.92);
   }
-  .voice-arrow--prev {
-    left: 0.5rem;
-    animation: arrowPulseLeft 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-  .voice-arrow--next {
-    right: 0.5rem;
-    animation: arrowPulseRight 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    animation-delay: 1.3s;
-  }
-  @keyframes arrowPulseLeft {
-    0%, 100% { transform: translateY(-50%) translateX(0); }
-    50%      { transform: translateY(-50%) translateX(-4px); }
-  }
-  @keyframes arrowPulseRight {
-    0%, 100% { transform: translateY(-50%) translateX(0); }
-    50%      { transform: translateY(-50%) translateX(4px); }
-  }
-  /* スワイプヒント — 数秒で消える */
+  .voice-arrow--prev { left: 1rem; }
+  .voice-arrow--next { right: 1rem; }
+
+  /* スワイプヒント — 数秒で消える（静止表示） */
   .voice-swipe-hint {
     position: absolute;
     bottom: -8px;
@@ -375,46 +384,41 @@ const categories = [
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.3rem 0.85rem;
+    padding: 0.32rem 0.95rem;
     border-radius: 100px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.62rem;
-    letter-spacing: 0.18em;
-    font-weight: 700;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    font-weight: 500;
     pointer-events: none;
     z-index: 10;
-    animation: swipeHint 3s ease-in-out 0.8s infinite;
+    opacity: 0.85;
+    transition: opacity 0.5s ease, transform 0.5s ease;
   }
   .voice-swipe-hint.is-hidden {
     opacity: 0;
     transform: translateX(-50%) translateY(8px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    animation: none;
   }
   .vsh-icon { display: inline-flex; }
   .vsh-icon svg { width: 22px; height: 16px; }
-  @keyframes swipeHint {
-    0%, 100% { transform: translateX(-50%); opacity: 0.85; }
-    50%      { transform: translateX(-44%); opacity: 1; }
-  }
 
   /* ===== Card ===== */
   .voice-card {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 330px;
+    width: 380px;
     transform: translate3d(-50%, -50%, -200px) scale(0.5) rotateY(0deg);
     opacity: 0;
-    /* Apple級スプリング感のイージング（cubic-bezier調整） */
+    /* Aesop 級の静かで上品なイージング */
     transition:
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity   0.55s cubic-bezier(0.22, 1, 0.36, 1),
-      filter    0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      transform 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity   0.65s cubic-bezier(0.22, 1, 0.36, 1),
+      filter    0.65s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform, opacity, filter;
     pointer-events: none;
     backface-visibility: hidden;
@@ -423,14 +427,13 @@ const categories = [
     -webkit-transform-style: preserve-3d;
   }
 
-  /* 前面 — 大きく浮かび上がる */
+  /* 前面 — 大きく浮かび上がる（静止） */
   .voice-card.is-current {
-    transform: translate3d(-50%, -50%, 0px) scale(1.05) rotateY(0deg);
+    transform: translate3d(-50%, -50%, 0px) scale(1.04) rotateY(0deg);
     opacity: 1;
     z-index: 3;
     pointer-events: auto;
-    filter: drop-shadow(0 30px 50px rgba(0,0,0,0.35));
-    animation: cardFloat 5s ease-in-out infinite;
+    filter: drop-shadow(0 50px 80px rgba(0,0,0,0.45));
   }
 
   /* 右 — 遠ざかる */
@@ -509,70 +512,129 @@ const categories = [
     animation: none !important;
   }
 
-  @keyframes cardFloat {
-    0%,100% { transform: translate3d(-50%, -50%, 0px) scale(1.05) rotateY(0deg); }
-    50%      { transform: translate3d(-50%, calc(-50% - 9px), 0px) scale(1.05) rotateY(0deg); }
-  }
-
-  /* ===== Card Face ===== */
+  /* ===== Card Face（緑クリームガラス＋黄緑ネオン縁） ===== */
   .card-face {
-    background: rgba(255, 255, 255, 0.96);
-    border-radius: 1rem;
-    border: 1px solid rgba(255,255,255,0.8);
+    position: relative;
+    background:
+      linear-gradient(135deg,
+        rgba(250, 255, 242, 0.24) 0%,
+        rgba(248, 255, 238, 0.08) 45%,
+        rgba(248, 255, 238, 0.16) 100%
+      );
+    backdrop-filter: blur(50px) saturate(200%);
+    -webkit-backdrop-filter: blur(50px) saturate(200%);
+    border-radius: 0.9rem;
+    border: 1px solid rgba(184, 255, 26, 0.5);
     box-shadow:
-      0 2px 0 rgba(255,255,255,1) inset,
-      0 20px 50px rgba(0,0,0,0.18);
+      inset 0 1px 0 rgba(184, 255, 26, 0.45),
+      inset 0 0 0 1px rgba(184, 255, 26, 0.08),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.06),
+      0 0 24px rgba(184, 255, 26, 0.18),
+      0 44px 88px -22px rgba(0, 0, 0, 0.6),
+      0 24px 48px -14px rgba(0, 0, 0, 0.34);
     display: flex;
     flex-direction: column;
-    min-height: 400px;
+    min-height: 420px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* 表面の光沢ハイライト（上半分に光が走る） */
+  .card-face::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.18) 0%,
+      rgba(255, 255, 255, 0.06) 50%,
+      transparent 100%
+    );
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+  }
+
+  /* 右下に淡い色味の屈折（ガラスのレンズ感） */
+  .card-face::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    right: -20%;
+    width: 70%;
+    height: 70%;
+    background: radial-gradient(circle,
+      rgba(184, 255, 26, 0.08) 0%,
+      transparent 60%
+    );
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+  }
+
+  /* 内側コンテンツを表面光沢の上に */
+  .card-face > .card-header,
+  .card-face > .card-body-area {
+    position: relative;
+    z-index: 1;
   }
 
   /* ===== Card Header ===== */
   .card-header {
-    padding: 1.4rem 1.6rem 0.6rem;
+    padding: 2rem 2rem 0.4rem;
   }
 
-  /* 年代バッジ */
+  /* 年代ラベル（深緑ガラスバッジ） */
   .card-age {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: #1b5e3a;
-    padding: 0.25rem 0.8rem;
-    background: rgba(47,143,85,0.1);
-    border: 1px solid rgba(47,143,85,0.25);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: #fff;
+    padding: 0.35rem 0.95rem;
+    background: rgba(27, 94, 58, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
     border-radius: 100px;
     display: inline-block;
   }
 
   /* 本文エリア */
   .card-body-area {
-    padding: 0.4rem 1.6rem 1.6rem;
+    padding: 1rem 2rem 2.1rem;
     flex: 1;
   }
 
   .card-deco {
-    font-size: 3.2rem;
-    font-weight: 700;
-    line-height: 1;
-    color: rgba(47,143,85,0.15);
-    font-family: Georgia, serif;
-    margin-bottom: -0.6rem;
+    font-family: 'Cormorant Garamond', 'Noto Serif JP', Georgia, serif;
+    font-size: 3.6rem;
+    font-weight: 400;
+    line-height: 0.6;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 0.2rem;
     user-select: none;
   }
 
   .card-quote {
-    font-size: 1.05rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 1.32rem;
     font-weight: 700;
-    line-height: 1.65;
-    color: #1a3d28;
-    margin-bottom: 0.9rem;
+    line-height: 1.55;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+    margin-bottom: 1.1rem;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.32);
   }
 
   .card-body {
-    font-size: 0.78rem;
-    line-height: 1.9;
-    color: #3a5a45;
+    font-size: 0.88rem;
+    line-height: 1.95;
+    color: rgba(255, 255, 255, 0.97);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.22);
   }
 
   /* ===== Indicators ===== */
@@ -605,8 +667,10 @@ const categories = [
   .voice-dot.is-active {
     width: 28px;
     border-radius: 100px;
-    background: rgba(255,255,255,0.9);
-    box-shadow: 0 0 14px rgba(255,255,255,0.35);
+    background: #B8FF1A;
+    box-shadow:
+      0 0 14px rgba(184, 255, 26, 0.6),
+      0 0 28px rgba(184, 255, 26, 0.22);
   }
 
   /* ===== Scroll Reveal ===== */
@@ -623,27 +687,31 @@ const categories = [
 
   /* ===== Responsive ===== */
   @media (max-width: 640px) {
-    .voice-section { padding: 4rem 0 4.5rem; }
-    .voice-container { padding: 0 1rem; }
-    .voice-eyebrow { font-size: 2rem; letter-spacing: 0.12em; }
-    .voice-heading { font-size: 0.72rem; letter-spacing: 0.25em; }
-    .voice-tabs { gap: 0.35rem; }
-    .voice-tab { padding: 0.4rem 1rem; font-size: 0.72rem; }
-    .voice-stage { height: 440px; }
-    .voice-card { width: 240px; }
-    .card-face { min-height: 320px; }
-    .card-header { padding: 1.1rem 1.3rem 0.5rem; }
-    .card-body-area { padding: 0.4rem 1.3rem 1.3rem; }
-    .card-quote { font-size: 0.95rem; line-height: 1.6; }
-    .card-body { font-size: 0.8rem; line-height: 1.85; }
+    .voice-section { padding: 4.5rem 0 5rem; }
+    .voice-container { padding: 0 1.2rem; }
+    .voice-eyebrow { font-size: clamp(2.2rem, 10vw, 2.8rem); letter-spacing: 0.02em; }
+    .voice-heading { font-size: 0.68rem; letter-spacing: 0.4em; margin-top: 1rem; padding-left: 0.4em; }
+    .voice-header { margin-bottom: 1.8rem; }
+    .voice-tabs { gap: 1.4rem; margin-bottom: 1.8rem; padding: 0.6rem 0; }
+    .voice-tab { padding: 0.45rem 0; font-size: 0.74rem; letter-spacing: 0.12em; }
+    .voice-stage { height: 460px; }
+    .voice-card { width: 270px; }
+    .card-face { min-height: 350px; }
+    .card-header { padding: 1.5rem 1.5rem 0.4rem; }
+    .card-body-area { padding: 0.7rem 1.5rem 1.6rem; }
+    .card-deco { font-size: 2.8rem; }
+    .card-quote { font-size: 1.08rem; line-height: 1.55; margin-bottom: 0.85rem; font-weight: 700; }
+    .card-body { font-size: 0.82rem; line-height: 1.85; font-weight: 500; }
+    .vbg__halo { width: 420px; height: 420px; filter: blur(60px); }
+    .vbg__halo--tl { top: -220px; left: -200px; }
+    .vbg__halo--br { bottom: -220px; right: -180px; }
   }
 
   /* ===== Reduced Motion 対応（WCAG 2.3.3 / 視覚的前庭障害への配慮） =====
      ユーザーが OS で「視差効果を減らす」設定をオンにしている場合、
      アニメーション・トランジションを実質無効化する */
   @media (prefers-reduced-motion: reduce) {
-    /* 背景の浮遊する葉と光のシマー演出を停止 */
-    .vbg__leaf,
+    /* 背景の光のシマー演出を停止 */
     .vbg__shine {
       animation: none !important;
     }
@@ -771,10 +839,10 @@ const categories = [
         const cos = Math.cos(rad);
         const depth = (cos + 1) / 2; // 1(前) → 0.25(±120°) → 0(背面)
 
-        // 静的値: 角度0°でscale 1.05/op 1.0、角度±120°でscale 0.55/op 0.45 をぴったり実現
-        const x = sin * 260;                      // angle ±120° で ±225px ≈ 静的translate(±68%)
+        // 静的値: 角度0°でscale 1.04/op 1.0、角度±120°でscale 0.55/op 0.45 をぴったり実現
+        const x = sin * 280;                      // 余白拡大によるカード幅調整
         const z = (cos - 1) * 120;                // angle ±120° で -180px (静的と一致)
-        const scale = 0.383 + depth * 0.667;       // 0° → 1.05、±120° → 0.55
+        const scale = 0.387 + depth * 0.653;       // 0° → 1.04、±120° → 0.55
         const opacity = 0.267 + depth * 0.733;     // 0° → 1.0、±120° → 0.45
         const brightness = 0.85 + depth * 0.15;    // 0° → 1.0、±120° → 0.85
 
@@ -979,7 +1047,7 @@ const categories = [
         const ac = car.querySelector('.is-current') as HTMLElement;
         if (ac) {
           const rot = resistDx * -0.022;
-          const scl = Math.max(1.05 - absDx * 0.00035, 0.95);
+          const scl = Math.max(1.04 - absDx * 0.00035, 0.95);
           const tY = absDx * 0.025;
           ac.style.transform = `translate3d(calc(-50% + ${resistDx}px), calc(-50% + ${tY}px), 0) scale(${scl}) rotateY(${rot}deg)`;
         }
@@ -1038,7 +1106,7 @@ const categories = [
           const dragOffset = {
             dx: dx,
             tY: absDx * 0.025,
-            sclDelta: Math.max(1.05 - absDx * 0.00035, 0.95) - 1.05, // 現在のscale - 1.05
+            sclDelta: Math.max(1.04 - absDx * 0.00035, 0.95) - 1.04, // 現在のscale - 1.04
             rot: dx * -0.022,
           };
           drumTo((current + dir + total) % total, dir, dragOffset);

@@ -1,0 +1,439 @@
+---
+// IndustryVoices - 業界の声 | B2B / プロフェッショナルからの評価
+// 近未来農業 HUD spec、Voice と対をなすベージュトーン
+
+// 本物の DM（B2B層 / 業界関係者）
+const items = [
+  {
+    role: '小売バイヤー / 本部勤務',
+    badge: '本部',
+    quote: '気になるのを見つけれて嬉しい限り',
+    text: '市場価格をよく本部から案内あったりするので、気になるのを見つけれて嬉しい限りです！どんどんいろんな発信楽しみに待ってまーす！',
+  },
+  {
+    role: '農業経営者 / 業界オピニオン',
+    badge: '経営',
+    quote: '農家が自ら強い経営体制を',
+    text: '昨年、今年と米の不作、高騰で良くも悪くも注目が集まっている農業ですが、表面のことしか報道されない、国政にも頼れない状況で、農家が自ら強い経営体制を作って行かなければ、今後日本の農業はどうなっていくか分からないと危機感を抱いています。NOUVATIONさんには期待しています。',
+  },
+  {
+    role: '流通関係者 / アグリネ利用者',
+    badge: '流通',
+    quote: 'アグリネで市場チェックできない時に',
+    text: 'アグリネですぐ市場チェックできない時に、情報が得られるようフォローしました。',
+  },
+];
+---
+
+<section data-section-theme="dark" id="industry-voices" class="iv-section" aria-labelledby="iv-heading-title">
+  <!-- 背景レイヤー（控えめなアンビエント） -->
+  <div class="iv-bg" aria-hidden="true">
+    <div class="iv-bg__halo iv-bg__halo--tl"></div>
+    <div class="iv-bg__halo iv-bg__halo--br"></div>
+  </div>
+
+  <div class="iv-container">
+    <div class="iv-header" data-iv-anim>
+      <p class="iv-eyebrow font-serif" id="iv-heading-title">From the Industry</p>
+      <p class="iv-sub">業界からの声</p>
+      <ul class="iv-chips" role="list" aria-label="業界カバレッジ">
+        <li class="iv-chip">小売バイヤー</li>
+        <li class="iv-chip">農業経営者</li>
+        <li class="iv-chip">流通関係者</li>
+      </ul>
+      <p class="iv-lead">
+        農業法人本部・流通・卸など、<br class="iv-br-sp" />プロフェッショナル現場からの評価。
+      </p>
+    </div>
+
+    <ul class="iv-grid" role="list">
+      {items.map((it) => (
+        <li class="iv-card" data-iv-anim role="listitem">
+          <div class="iv-card__head">
+            <span class="iv-card__badge">{it.badge}</span>
+          </div>
+          <p class="iv-card__role">{it.role}</p>
+          <h3 class="iv-card__quote">
+            <span class="iv-card__deco" aria-hidden="true">"</span>{it.quote}
+          </h3>
+          <p class="iv-card__body">{it.text}</p>
+        </li>
+      ))}
+    </ul>
+
+    <div class="iv-cta" data-iv-anim>
+      <p class="iv-cta__lead">業界・法人の皆さまへ</p>
+      <p class="iv-cta__sub">共同企画 / 販路支援 / 契約販売マッチング / スポンサー契約など、ご相談承ります。</p>
+      <a
+        href="https://docs.google.com/forms/d/1_vNsJ2fG7TYejJu8Zqh5xKqUOtYDag1r6iOnLgRJZ2Y/viewform"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="iv-cta__button"
+        aria-label="業界・法人向けお問い合わせフォーム(新しいタブで開く)"
+      >
+        <span>お問い合わせフォームへ</span>
+        <svg class="iv-cta__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ===== Section（Voice と統一・上明→下暗の緑グラデ） ===== */
+  .iv-section {
+    position: relative;
+    padding: 7rem 0 8rem;
+    background: linear-gradient(180deg,
+      #4a9b76 0%,
+      #357d5d 18%,
+      #235e44 36%,
+      #163f2d 56%,
+      #0d2a1c 74%,
+      #061810 90%,
+      #03090a 100%
+    );
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* ===== Background（控えめな白光輪・Voice と統一） ===== */
+  .iv-bg { position: absolute; inset: 0; pointer-events: none; }
+  .iv-bg__halo {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+      rgba(255,255,255,0.08) 0%,
+      rgba(255,255,255,0.025) 45%,
+      transparent 75%);
+    filter: blur(70px);
+  }
+  .iv-bg__halo--tl { top: -280px; left: -240px; }
+  .iv-bg__halo--br { bottom: -280px; right: -220px; }
+
+  /* ===== Container ===== */
+  .iv-container {
+    position: relative;
+    z-index: 1;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* ===== Header（Voice と統一・白文字） ===== */
+  .iv-header { text-align: center; margin-bottom: 3rem; }
+  .iv-eyebrow {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0.01em;
+    color: rgba(255, 255, 255, 0.98);
+    line-height: 1.1;
+    margin-bottom: 1.2rem;
+  }
+  .iv-sub {
+    font-size: 0.76rem;
+    font-weight: 400;
+    letter-spacing: 0.5em;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 1.4rem;
+    padding-left: 0.5em;
+  }
+  .iv-lead {
+    font-size: 0.88rem;
+    line-height: 2;
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 30em;
+    margin: 0 auto;
+    letter-spacing: 0.04em;
+  }
+  .iv-br-sp { display: none; }
+  @media (max-width: 640px) {
+    .iv-br-sp { display: inline; }
+  }
+
+  /* ===== 業界カバレッジチップ ===== */
+  .iv-chips {
+    display: flex;
+    justify-content: center;
+    gap: 0.7rem;
+    list-style: none;
+    margin: 0.4rem 0 1.6rem;
+    padding: 0;
+    flex-wrap: wrap;
+  }
+  .iv-chip {
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.82);
+    padding: 0.4rem 1rem;
+    background: rgba(184, 255, 26, 0.08);
+    border: 1px solid rgba(184, 255, 26, 0.32);
+    border-radius: 100px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* ===== B2B CTA ===== */
+  .iv-cta {
+    text-align: center;
+    margin-top: 4.5rem;
+  }
+  .iv-cta__lead {
+    font-family: 'Cormorant Garamond', 'Noto Serif JP', Georgia, serif;
+    font-size: 1.65rem;
+    font-style: italic;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.02em;
+  }
+  .iv-cta__sub {
+    font-size: 0.82rem;
+    font-weight: 500;
+    line-height: 1.9;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 1.8rem;
+    letter-spacing: 0.04em;
+    max-width: 32em;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1.8rem;
+  }
+  .iv-cta__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 1.05rem 2.2rem;
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #0a1b10;
+    background: linear-gradient(135deg, #c8ff3a 0%, #B8FF1A 50%, #a3e810 100%);
+    border-radius: 100px;
+    text-decoration: none;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.45),
+      0 0 28px rgba(184, 255, 26, 0.4),
+      0 14px 36px -6px rgba(0, 0, 0, 0.4);
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.45s ease;
+  }
+  .iv-cta__button:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      0 0 40px rgba(184, 255, 26, 0.6),
+      0 18px 44px -6px rgba(0, 0, 0, 0.5);
+  }
+  .iv-cta__button:active {
+    transform: translateY(-1px);
+  }
+  .iv-cta__arrow {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .iv-cta__button:hover .iv-cta__arrow {
+    transform: translateX(4px);
+  }
+
+  /* ===== Grid ===== */
+  .iv-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.4rem;
+  }
+
+  /* ===== Card（Voice と統一 / 黄緑ネオン縁のガラス） ===== */
+  .iv-card {
+    position: relative;
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.32) 0%,
+      rgba(255, 255, 255, 0.12) 45%,
+      rgba(255, 255, 255, 0.20) 100%
+    );
+    backdrop-filter: blur(50px) saturate(200%);
+    -webkit-backdrop-filter: blur(50px) saturate(200%);
+    border: 1px solid rgba(184, 255, 26, 0.5);
+    border-radius: 0.9rem;
+    box-shadow:
+      inset 0 1px 0 rgba(184, 255, 26, 0.45),
+      inset 0 0 0 1px rgba(184, 255, 26, 0.08),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.06),
+      0 0 24px rgba(184, 255, 26, 0.18),
+      0 44px 88px -22px rgba(0, 0, 0, 0.6),
+      0 24px 48px -14px rgba(0, 0, 0, 0.34);
+    padding: 2.4rem 2rem 2.2rem;
+    overflow: hidden;
+    isolation: isolate;
+    transition: transform 0.6s cubic-bezier(0.22,1,0.36,1), box-shadow 0.6s ease, border-color 0.6s ease;
+  }
+  .iv-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(184, 255, 26, 0.75);
+    box-shadow:
+      inset 0 1px 0 rgba(184, 255, 26, 0.6),
+      inset 0 0 0 1px rgba(184, 255, 26, 0.12),
+      0 0 36px rgba(184, 255, 26, 0.28),
+      0 54px 108px -22px rgba(0, 0, 0, 0.7),
+      0 28px 56px -14px rgba(0, 0, 0, 0.4);
+  }
+  /* 表面光沢（上半分） */
+  .iv-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.18) 0%,
+      rgba(255, 255, 255, 0.06) 50%,
+      transparent 100%
+    );
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+  }
+  /* 右下のレンズフレア */
+  .iv-card::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    right: -20%;
+    width: 70%;
+    height: 70%;
+    background: radial-gradient(circle,
+      rgba(184, 255, 26, 0.08) 0%,
+      transparent 60%
+    );
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+  }
+  .iv-card > * { position: relative; z-index: 1; }
+
+  .iv-card__head {
+    margin-bottom: 1.1rem;
+  }
+  .iv-card__badge {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: #fff;
+    padding: 0.35rem 0.95rem;
+    background: rgba(27, 94, 58, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 100px;
+    text-transform: none;
+  }
+  .iv-card__role {
+    font-size: 0.74rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 1.1rem;
+  }
+  .iv-card__quote {
+    position: relative;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 1.22rem;
+    font-weight: 700;
+    line-height: 1.55;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+    margin-bottom: 1.1rem;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.32);
+  }
+  .iv-card__deco {
+    font-family: 'Cormorant Garamond', 'Noto Serif JP', Georgia, serif;
+    font-size: 1.7rem;
+    color: rgba(255, 255, 255, 0.45);
+    margin-right: 0.15em;
+  }
+  .iv-card__body {
+    font-size: 0.86rem;
+    line-height: 1.95;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 500;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.22);
+  }
+
+  /* ===== Scroll Reveal ===== */
+  [data-iv-anim] {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1),
+                transform 0.7s cubic-bezier(0.22,1,0.36,1);
+  }
+  [data-iv-anim].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .iv-card:nth-child(2)[data-iv-anim] { transition-delay: 0.08s; }
+  .iv-card:nth-child(3)[data-iv-anim] { transition-delay: 0.16s; }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 900px) {
+    .iv-grid { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; gap: 1.6rem; }
+  }
+  @media (max-width: 640px) {
+    .iv-section { padding: 4.5rem 0 5rem; }
+    .iv-container { padding: 0 1.2rem; }
+    .iv-header { margin-bottom: 2rem; }
+    .iv-eyebrow { font-size: clamp(1.9rem, 8vw, 2.4rem); letter-spacing: 0.01em; }
+    .iv-sub { font-size: 0.68rem; letter-spacing: 0.4em; margin-bottom: 1.1rem; padding-left: 0.4em; }
+    .iv-lead { font-size: 0.82rem; line-height: 1.95; }
+    .iv-chips { gap: 0.5rem; margin: 0.4rem 0 1.3rem; }
+    .iv-chip { font-size: 0.62rem; padding: 0.32rem 0.85rem; letter-spacing: 0.1em; }
+    .iv-card { padding: 1.8rem 1.5rem 1.7rem; }
+    .iv-card__quote { font-size: 1.08rem; line-height: 1.55; margin-bottom: 1rem; font-weight: 700; }
+    .iv-card__body { font-size: 0.82rem; line-height: 1.85; font-weight: 500; }
+    .iv-card__role { font-size: 0.72rem; margin-bottom: 1rem; }
+    .iv-cta { margin-top: 3rem; }
+    .iv-cta__lead { font-size: 1.35rem; }
+    .iv-cta__sub { font-size: 0.78rem; line-height: 1.85; margin-bottom: 1.4rem; }
+    .iv-cta__button { padding: 0.9rem 1.8rem; font-size: 0.85rem; letter-spacing: 0.06em; }
+    .iv-bg__halo { width: 420px; height: 420px; filter: blur(60px); }
+    .iv-bg__halo--tl { top: -200px; left: -200px; }
+    .iv-bg__halo--br { bottom: -200px; right: -200px; }
+  }
+
+  /* ===== Reduced Motion ===== */
+  @media (prefers-reduced-motion: reduce) {
+    .iv-card { transition: none !important; }
+    .iv-card:hover { transform: none !important; }
+    [data-iv-anim] {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const els = document.querySelectorAll('[data-iv-anim]');
+    if (els.length === 0) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          (e.target as HTMLElement).classList.add('is-visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(el => obs.observe(el));
+  });
+</script>

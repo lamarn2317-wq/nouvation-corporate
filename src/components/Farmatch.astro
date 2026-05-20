@@ -51,7 +51,9 @@
 
           <!-- Result Card -->
           <div class="fm-result-card mb-8">
-            <p class="text-xs text-[#231815]/60 mb-4 tracking-widest">ローンチから10日の実績</p>
+            <p class="text-xs text-[#231815]/60 mb-4 tracking-widest">
+              ローンチから<span class="fm-result-period">30日</span>の実績
+            </p>
             <div class="flex items-end gap-6 flex-wrap">
               <div>
                 <div class="font-display text-3xl md:text-4xl font-bold text-[#231815]">
@@ -62,9 +64,9 @@
               <div class="fm-result-divider"></div>
               <div>
                 <div class="font-display text-3xl md:text-4xl font-bold text-[#2e7d32]">
-                  <span id="farmatch-match-num" class="fm-stat-num">0</span><span class="text-sm font-normal text-[#231815]/60 ml-1">件</span>
+                  <span id="farmatch-match-num" class="fm-stat-num">0</span><span class="text-sm font-normal text-[#231815]/60 ml-1">回</span>
                 </div>
-                <p class="text-xs text-[#231815]/60 mt-1">マッチング成立</p>
+                <p class="text-xs text-[#231815]/60 mt-1">累計閲覧数</p>
               </div>
             </div>
           </div>
@@ -285,6 +287,33 @@
     height: 40px;
     background: rgba(46, 125, 50, 0.2);
   }
+  .fm-result-period {
+    color: #2e7d32;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  /* 実績下の補足コピー */
+  .fm-result-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #2e7d32;
+  }
+  .fm-result-note__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #2e7d32;
+    box-shadow: 0 0 8px rgba(46, 125, 50, 0.45);
+    flex-shrink: 0;
+  }
+  @media (max-width: 640px) {
+    .fm-result-note { font-size: 0.7rem; letter-spacing: 0.06em; }
+  }
 
   /* 近未来ボタン（他セクションと同じ緑グラデ） */
   .fm-btn {
@@ -306,15 +335,17 @@
 <script>
   function countUp(el: HTMLElement, target: number, duration: number, decimals: number) {
     const start = performance.now();
+    const format = (n: number) =>
+      decimals > 0 ? n.toFixed(decimals) : Math.floor(n).toLocaleString('en-US');
     const update = (now: number) => {
       const t = Math.min((now - start) / duration, 1);
       const ease = 1 - Math.pow(1 - t, 4);
       const val = ease * target;
-      el.textContent = decimals > 0 ? val.toFixed(decimals) : Math.floor(val).toString();
+      el.textContent = format(val);
       if (t < 1) {
         requestAnimationFrame(update);
       } else {
-        el.textContent = decimals > 0 ? target.toFixed(decimals) : target.toString();
+        el.textContent = decimals > 0 ? target.toFixed(decimals) : target.toLocaleString('en-US');
         el.classList.add('glow');
       }
     };
@@ -342,12 +373,12 @@
         }
         if (t === reg && !done.reg) {
           done.reg = true;
-          countUp(reg, 20, 1500, 0);
+          countUp(reg, 50, 1500, 0);
           obs.unobserve(reg);
         }
         if (t === match && !done.match) {
           done.match = true;
-          setTimeout(() => countUp(match, 1, 1200, 0), 500);
+          setTimeout(() => countUp(match, 5078, 2200, 0), 500);
           obs.unobserve(match);
         }
       });

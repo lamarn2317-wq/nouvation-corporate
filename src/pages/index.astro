@@ -8,6 +8,9 @@ import Mission from '../components/Mission.astro';
 import Services from '../components/Services.astro';
 import Farmatch from '../components/Farmatch.astro';
 import Voice from '../components/Voice.astro';
+// 業界の声セクションは一時非表示。
+// 復活させたい時は下の Layout 内 {/* <IndustryVoices /> */} のコメントを外す。
+import IndustryVoices from '../components/IndustryVoices.astro';
 import FAQ from '../components/FAQ.astro';
 import Footer from '../components/Footer.astro';
 ---
@@ -22,6 +25,8 @@ import Footer from '../components/Footer.astro';
     <Services />
     <Farmatch />
     <Voice />
+    {/* 業界の声セクション ─ 一時非表示中。表示したい時はこの行のコメントを外す → */}
+    {/* <IndustryVoices /> */}
     <FAQ />
   </main>
   <Footer />

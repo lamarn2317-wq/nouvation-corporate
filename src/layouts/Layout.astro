@@ -21,8 +21,8 @@ const {
     <!-- Google Fonts Preload -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" as="style">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@400;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@400;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
     
     <!-- OGP Tags -->
     <meta property="og:title" content={title} />
@@ -115,6 +115,12 @@ const {
   .font-maru {
     font-family: 'Zen Maru Gothic', sans-serif;
   }
+
+  /* Aesop / Apple 系の上品なセリフ書体（見出し用） */
+  .font-serif {
+    font-family: 'Cormorant Garamond', 'Noto Serif JP', Georgia, serif;
+    font-feature-settings: "liga" 1, "kern" 1;
+  }
   
   /* Noise Texture */
   .noise-texture::before {
@@ -170,14 +176,6 @@ const {
   [data-section-theme="dark"] [role="tab"]:focus-visible,
   [data-section-theme="dark"] [role="link"]:focus-visible {
     outline-color: #D4FF00;
-  }
-  
-  /* Grid Pattern */
-  .grid-pattern {
-    background-image: 
-      linear-gradient(rgba(212, 255, 0, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(212, 255, 0, 0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
   }
   
   /* Character Reveal Animation */
