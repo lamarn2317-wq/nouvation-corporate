@@ -43,6 +43,8 @@ export async function getNewsList(limit = 10): Promise<NewsItem[]> {
         title:
           "農業情報インフラ「NOUVATION」公式サイトをリニューアルオープンしました",
       },
+      // ↓ デモ記事として一時非表示中。実際に掲載が確定したら下記コメントを外せば即復活。
+      /*
       {
         id: "2",
         createdAt: "2025-11-15T00:00:00.000Z",
@@ -53,6 +55,7 @@ export async function getNewsList(limit = 10): Promise<NewsItem[]> {
         category: "メディア掲載",
         title: "日本農業新聞にて、当社のAI相談サービスが紹介されました",
       },
+      */
     ];
   }
 
