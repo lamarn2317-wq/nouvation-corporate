@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+# ===========================================================================
+# pre-commit ガード：大量削除と重要ファイル削除を検出してコミットを止める
+# ---------------------------------------------------------------------------
+# トリガー条件:
+#   ① ステージング中の削除ファイル数が 10 を超える
+#   ② package.json / astro.config.mjs / vercel.json / tsconfig.json
+#      など「絶対消えてはいけないファイル」が削除予定になっている
+#
+# 出るとき:
+#   echo で理由を出してから exit 1 → コミットが中断される
+#   どうしても通したい場合のみ `git commit --no-verify` で迂回可能
+# ===========================================================================
+
+set -euo pipefail
+
+deleted_files="$(git diff --cached --name-only --diff-filter=D 2>/dev/null || true)"
+deleted_count="$(echo -n "$deleted_files" | grep -c '^' || true)"
+
+# 重要ファイルのリスト（プロジェクトのコアになるもの）
+critical_files=(
+  "package.json"
+  "package-lock.json"
+  "astro.config.mjs"
+  "vercel.json"
+  "tsconfig.json"
+  ".gitignore"
+  "src/layouts/Layout.astro"
+  "src/pages/index.astro"
+  "src/components/Voice.astro"
+  "src/components/Services.astro"
+  "src/components/FAQ.astro"
+  "src/components/Footer.astro"
+  "src/components/Header.astro"
+  "src/lib/market.ts"
+)
+
+# ① 大量削除検査
+if [ "$deleted_count" -gt 10 ]; then
+  echo ""
+  echo "🚨 pre-commit ガード発動：${deleted_count} 件のファイル削除を検出"
+  echo "   想定外の削除の可能性があります。中身を確認してください："
+  echo ""
+  echo "$deleted_files" | head -20 | sed 's/^/   - /'
+  if [ "$deleted_count" -gt 20 ]; then
+    echo "   ... 他 $((deleted_count - 20)) 件"
+  fi
+  echo ""
+  echo "💡 本当に削除して良ければ：git commit --no-verify"
+  echo "💡 取り消すなら：git reset HEAD"
+  exit 1
+fi
+
+# ② 重要ファイル削除検査
+violated=""
+while IFS= read -r f; do
+  [ -z "$f" ] && continue
+  for c in "${critical_files[@]}"; do
+    if [ "$f" = "$c" ]; then
+      violated="${violated}   - ${f}\n"
+    fi
+  done
+done <<< "$deleted_files"
+
+if [ -n "$violated" ]; then
+  echo ""
+  echo "🚨 pre-commit ガード発動：重要ファイルの削除を検出"
+  printf "%b" "$violated"
+  echo ""
+  echo "💡 本当に削除して良ければ：git commit --no-verify"
+  echo "💡 取り消すなら：git reset HEAD"
+  exit 1
+fi
+
+exit 0
