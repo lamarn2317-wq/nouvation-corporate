@@ -29,10 +29,9 @@ pnpm-debug.log*
 # Astro
 .astro/
 
-# Video files (using Cloudinary)
-public/videos/*.mp4
-public/videos/*.webm
-public/videos/*.mov
+# Video files
+# 動画はローカル public/videos/ で配信中（Vercel CDN 経由）
+# 必要なら個別に除外する
 
 .vercel
 
