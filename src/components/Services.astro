@@ -1,0 +1,1252 @@
+---
+// Services Component
+import { getMarketPrices } from "../lib/market";
+const marketPrices = await getMarketPrices();
+---
+
+<!-- Section Title -->
+<section data-section-theme="light" id="services" class="pt-16 md:pt-24 pb-0 bg-[#F6F6EE]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="text-center fade-up">
+      <h2 class="text-4xl md:text-[5rem] font-bold mb-2 leading-[1.2] text-[#231815]">
+        <span class="font-maru">SERVICE</span>
+      </h2>
+      <p class="text-lg md:text-xl text-[#231815] mb-0 flex items-baseline justify-center">
+        NOUVATIONが提供する<span class="text-4xl md:text-6xl font-bold font-display mx-1 translate-y-1 text-[#2e7d32]">4</span>つのサービス
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Service 01: Market Graph -->
+<section data-section-theme="light" id="service-01" class="pt-8 md:pt-12 pb-24 md:pb-32 bg-[#F6F6EE]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="fade-up">
+      <div class="flex items-center gap-2 mb-6">
+        <span class="text-[#2e7d32] text-2xl">⚫︎</span>
+        <span class="font-display text-2xl font-bold text-[#231815]">01</span>
+      </div>
+      
+      <div class="mb-10">        
+        <div class="max-w-3xl">
+          <h3 class="char-reveal text-2xl md:text-[2.8rem] font-bold mb-6 leading-relaxed text-[#231815]">
+            「生きた数字」が見える。<br />迷いが消える。
+          </h3>
+          
+          <p class="text-[#231815] leading-loose mb-8 text-[0.78rem] md:text-base ja-keep">
+            全国主要都市7市場・16品目の価格情報を一元化。<br />
+            過去データと比較することで、意思決定（出荷タイミング）の自信に繋がります。
+          </p>
+        </div>
+        <div class="flex flex-col items-center gap-3 text-center mt-4">
+          <span class="market-pill inline-flex items-center gap-2 rounded-full border border-[#2e7d32]/15 px-4 py-1.5 text-[10px] md:text-xs font-bold tracking-[0.22em] text-[#2e7d32]">
+            <span class="market-pill__dot relative inline-block h-2 w-2 rounded-full bg-[#2e7d32]"></span>
+            MARKET PRICE LIVE MONITOR
+          </span>
+          <p class="text-[#2e7d32] font-bold text-2xl md:text-4xl flex items-center justify-center tracking-wide">
+            <svg class="mr-2 md:mr-3 w-6 h-6 md:w-8 md:h-8 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            市場価格速報
+          </p>
+        </div>
+      </div>
+      
+      <div class="market-card relative rounded-3xl p-6 md:p-8 overflow-hidden fade-up">
+        <div class="mb-6 flex flex-wrap gap-3 md:gap-4 items-center justify-between relative z-10">
+          <div class="flex gap-2 flex-1 min-w-0">
+            <select id="itemFilter" class="market-card__select bg-[#F6F6EE] border-none rounded-lg px-3 md:px-4 py-2 text-xs md:text-sm font-bold text-[#231815] focus:ring-2 focus:ring-[#2e7d32] cursor-pointer min-w-0">
+            </select>
+            <select id="marketFilter" class="market-card__select bg-[#F6F6EE] border-none rounded-lg px-3 md:px-4 py-2 text-xs md:text-sm font-bold text-[#231815] focus:ring-2 focus:ring-[#2e7d32] cursor-pointer min-w-0">
+            </select>
+          </div>
+          <div class="text-right flex-shrink-0 flex flex-col items-end gap-0.5">
+            <span class="text-[10px] md:text-xs text-[#231815]/45 font-mono tracking-wider">Unit: 円/kg</span>
+            <span class="market-card__live inline-flex items-center gap-1.5 text-[9px] md:text-[10px] text-[#2e7d32] font-bold tracking-[0.18em]">
+              <span class="market-card__live-dot relative inline-block h-1.5 w-1.5 rounded-full bg-[#2e7d32]"></span>
+              LIVE DATA
+            </span>
+            <span id="kpiLastUpdated" class="text-[9px] md:text-[10px] text-[#231815]/40 font-mono tracking-wider" aria-live="polite">—</span>
+          </div>
+        </div>
+
+        <!-- KPI Cards: Current / Day Change / Week Range / Summary -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-3 mb-6">
+          <div class="kpi-card kpi-card--primary">
+            <p class="kpi-card__label">CURRENT</p>
+            <p id="kpiCurrent" class="kpi-card__value kpi-card__value--mono">—</p>
+            <p id="kpiCurrentDate" class="kpi-card__sub">—</p>
+          </div>
+          <div class="kpi-card">
+            <p class="kpi-card__label">DAY CHANGE</p>
+            <p id="kpiChange" class="kpi-card__value kpi-card__value--mono">—</p>
+            <p id="kpiChangeRate" class="kpi-card__sub">—</p>
+          </div>
+          <div class="kpi-card">
+            <p class="kpi-card__label">WEEK RANGE</p>
+            <p id="kpiRange" class="kpi-card__value kpi-card__value--mono kpi-card__value--small">—</p>
+            <p id="kpiRangeSpread" class="kpi-card__sub">—</p>
+          </div>
+          <div class="kpi-card kpi-card--summary">
+            <p class="kpi-card__label">MARKET INSIGHT</p>
+            <p id="kpiSummary" class="kpi-card__summary-text">データを解析中…</p>
+          </div>
+        </div>
+        
+        <div class="market-card__chart-wrap relative h-[300px] md:h-[400px] w-full flex items-center justify-center rounded-2xl overflow-hidden">
+          <!-- ローディング表示 -->
+          <div id="chartLoader" class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/85 backdrop-blur-sm transition-opacity duration-500">
+            <div class="w-12 h-12 border-4 border-[#2e7d32]/20 border-t-[#2e7d32] rounded-full animate-spin mb-4"></div>
+            <p class="text-[#231815]/60 text-sm font-bold animate-pulse">市場データを取得中...</p>
+          </div>
+          <canvas id="marketChart" class="relative z-[1]"></canvas>
+        </div>
+
+        <!-- 詳細ダッシュボードへのリンク (右下配置) -->
+        <div class="mt-5 md:mt-6 flex justify-end relative z-10">
+          <a
+            href="https://nouvation-agri-omega.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group inline-flex items-center gap-2 px-5 md:px-6 py-2.5 md:py-3 bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold rounded-full text-xs md:text-sm transition-all shadow-md hover:shadow-lg tracking-wider"
+          >
+            <span>📊 見返せる市場価格速報</span>
+            <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 注釈テキスト：最低限必要な計算ルールを開示。さらに詳しくはFAQへ。 -->
+      <div class="mt-4 px-2 space-y-1">
+        <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
+          ※価格は原則「相対取引の中値（1kgあたり）」を表示。
+        </p>
+        <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
+          中値が取れない場合は推定値「（高値+安値）÷2」または高値を代替表示。
+        </p>
+        <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
+          相対取引がない品目はせり値を補完。
+        </p>
+        <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
+          箱・束・小袋取引は単位を併記、前日比は単位違い時「±0」表記。
+        </p>
+        <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
+          産地は生産量上位の主要産地を優先、外国産混入の可能性がある第三販売は除外。
+        </p>
+        <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
+          水・日曜・祝日は市場休市のため配信を行いません。
+        </p>
+        <p class="text-[10px] md:text-xs text-[#231815]/50 leading-relaxed mt-2 pt-2 border-t border-[#231815]/10">
+          ※データは各卸売市場の公開情報を統合したものです。「中値」は取引中位価格を指す業界慣習に基づきます。本情報は出荷判断の参考であり、最終的な意思決定はご自身の責任でお願いします。
+        </p>
+      </div>
+
+      <!-- Pre-fetched Data for SSG -->
+      <div id="market-data-container" data-prices={JSON.stringify(marketPrices)} hidden></div>
+    </div>
+  </div>
+</section>
+
+<!-- Service 02: Instagram -->
+<section data-section-theme="light" id="service-02" class="pt-16 md:pt-24 pb-24 md:pb-32 bg-[#F0ECDE]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="fade-up">
+      <div class="flex flex-col lg:flex-row gap-12 items-end">
+        <div class="lg:w-1/3">
+          <div class="flex items-center gap-2 mb-6">
+            <span class="text-[#2e7d32] text-2xl">⚫︎</span>
+            <span class="font-display text-2xl font-bold text-[#231815]">02</span>
+          </div>
+          <h3 class="text-2xl md:text-[2.8rem] font-bold mb-4 leading-relaxed text-[#231815]">
+            選ばれている理由はその「質」
+          </h3>
+          
+          <p class="text-[#231815] font-bold text-lg mb-6 flex items-center">
+            <img src="/images/Insta.png" alt="Instagram" width="24" height="24" loading="lazy" decoding="async" class="w-6 h-6 mr-2 object-contain" />
+            Instagramメディア
+          </p>
+          
+          <div class="space-y-4 text-[#231815] leading-loose text-[0.72rem] md:text-base ja-keep">
+            Instagramのインサイトでは、<br />
+            フォロワーの18〜64歳が全体の96%を占めており、<br>次世代の農業界を担う
+            若手〜現役プレイヤー層に<br />効率よくリーチできます。<br /><br />
+            さらに、フォロワーの約8割が
+            農家・農業関係者で、<br />
+            農業界でも数少ない“実働世代向けメディア”として、<br />高い反応率（エンゲージメント)
+            のコミュニティを築いています。
+          </div>
+          
+          <div class="mt-8 p-6 bg-white border border-[#231815]/20 rounded-2xl inline-block">
+            <div class="font-display text-4xl font-bold text-[#231815]">
+              <span id="followerCount" class="digital-counter">0</span><span class="text-2xl">+</span>
+              <span class="text-sm font-normal text-[#231815]/60 ml-2">Followers</span>
+            </div>
+          </div>
+        </div>
+        
+        <div id="instagram-embed-zone" class="lg:w-2/3 grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6 items-end justify-items-center mx-auto">
+          <div class="flex justify-center w-full">
+            <div class="w-full max-w-[320px] shadow-sm rounded-2xl overflow-hidden instagram-clip-box bg-white border border-[#231815]/10 ig-skeleton">
+              <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIuN5gjy6W/" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:0; margin: 0; width:100%; min-width:100%;"></blockquote>
+            </div>
+          </div>
+          <div class="flex justify-center w-full">
+            <div class="w-full max-w-[320px] shadow-sm rounded-2xl overflow-hidden instagram-clip-box bg-white border border-[#231815]/10 ig-skeleton">
+              <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DPKcekJk6--/" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:0; margin: 0; width:100%; min-width:100%;"></blockquote>
+            </div>
+          </div>
+          <div class="flex justify-center w-full">
+            <div class="w-full max-w-[320px] shadow-sm rounded-2xl overflow-hidden instagram-clip-box bg-white border border-[#231815]/10 ig-skeleton">
+              <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DR1lvz6D6jY/" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:0; margin: 0; width:100%; min-width:100%;"></blockquote>
+            </div>
+          </div>
+        </div>
+        {/* Instagram embed.js は IntersectionObserver で遅延ロード（下部 script 参照） */}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Service 03: AI Support -->
+<section data-section-theme="light" id="service-03" class="pt-16 md:pt-24 pb-24 md:pb-32 bg-[#F6F6EE]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="fade-up">
+      <div class="flex items-center gap-2 mb-6">
+        <span class="text-[#2e7d32] text-2xl">⚫︎</span>
+        <span class="font-display text-2xl font-bold text-[#231815]">03</span>
+        <span class="bg-[#2e7d32] text-white text-xs font-bold px-4 py-1.5 rounded-full ml-2">
+          NEW
+        </span>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-12 items-end">
+        <div>
+          <h3 class="text-2xl md:text-[2.8rem] font-bold mb-4 leading-relaxed text-[#231815]">
+            困ったらすぐ聞ける相棒を
+          </h3>
+          
+          <p class="text-[#231815] font-bold text-lg mb-6 flex items-center">
+            <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+            NOUVATION農業AIサポート
+          </p>
+          
+          <p class="text-[#231815] leading-loose mb-4 text-[0.8rem] md:text-base ja-keep">
+            病害虫対策から補助金情報まで。<br>
+「誰に聞けばいいか分からない」も、<br>
+「調べても答えが出ない」も無くします。<br><br>
+あなたの疑問に即座に応え、<br>
+使うほど“あなたに合わせて成長していく”<br>
+農業専門パートナーAI。<br><br>
+検索の手間を減らし、
+機会損失を利益に変える。
+          </p>
+          
+          <p class="text-sm text-[#231815]/60">※サービス登録者には契約販売の優先案内を予定（実績3件）</p>
+        </div>
+        
+        <div class="flex flex-col items-center">
+          <div class="rounded-2xl overflow-hidden shadow-lg border border-[#231815]/10 bg-white relative group w-full">
+            <img 
+              src="/images/service_ai.jpg"
+              alt="NOUVATION農業AIサポート イメージ"
+              width="1280"
+              height="720"
+              loading="lazy"
+              decoding="async"
+              class="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
+            />
+          </div>
+          
+          <div class="mt-8 w-full flex justify-center">
+            <a 
+              href="https://lin.ee/upXJEaf"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="novel-btn inline-flex items-center justify-center px-6 md:px-10 py-3.5 md:py-4 text-white text-[0.95rem] md:text-lg font-bold rounded-full transition-all hover:-translate-y-1 focus:outline-none shadow-lg w-full max-w-[320px] md:w-auto md:min-w-[280px]"
+              aria-label="ノヴェル君に無料で10通相談する"
+            >
+              <span class="flex flex-col items-center leading-tight">
+                <span>ノヴェル君に</span>
+                <span>無料で10通相談する 🦊</span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Service 04: Web Production -->
+<!-- <section data-section-theme="light" id="service-04" class="py-24 md:py-32 bg-[#F6F6EE]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="fade-up">
+      <div class="grid md:grid-cols-2 gap-12 items-end">
+        <div class="order-2 md:order-1 bg-white rounded-2xl border border-[#231815]/20 p-8 h-64 flex items-center justify-center">
+          <div class="text-center">
+            <svg class="mx-auto mb-4 text-[#231815]/40" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 19l7-7 3 3-7 7-3-3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              <path d="M2 2l7.586 7.586" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              <circle cx="11" cy="11" r="2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle>
+            </svg>
+            <span class="text-[#231815]/60">Web Design Mockup</span>
+          </div>
+        </div>
+        
+        <div class="order-1 md:order-2">
+          <div class="flex items-center gap-2 mb-6">
+            <span class="text-[#2e7d32] text-2xl">⚫︎</span>
+            <span class="font-display text-2xl font-bold text-[#231815]">04</span>
+          </div>
+          <h3 class="text-2xl md:text-4xl font-bold mb-4 leading-relaxed text-[#231815]">
+            農業の現場を知る<br />私たちだから、<br />
+            想いが伝わるHPが<br class="hidden md:block" />作れる。
+          </h3>
+          
+          <p class="text-[#231815] font-bold text-lg mb-6 flex items-center">
+            <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 19l7-7 3 3-7 7-3-3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+            農業特化型Web制作
+          </p>
+          
+          <div class="space-y-4 text-[#231815] leading-loose">
+            <p>
+              「ITはよく分からない」という方でもご安心ください。農業界の知見とWebの技術を持つ私たちが、ヒアリングから公開まで丸ごとサポートします。
+            </p>
+            <p>
+              採用強化や販路拡大に必要な機能を絞り込み、高品質かつリーズナブルな価格で提供します。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+<script>
+  import Chart from 'chart.js/auto';
+  import 'chartjs-adapter-luxon';
+
+  interface MarketPrice {
+    date: string;
+    item: string;
+    market: string;
+    price: number;
+    unit: string;
+  }
+
+  async function initChart() {
+    const container = document.getElementById('market-data-container');
+    if (!container) return;
+
+    // データの読み込み（SSG: 埋め込まれたデータを即座に取得）
+    let prices: MarketPrice[] = [];
+    try {
+      prices = JSON.parse(container.dataset.prices || '[]');
+    } catch (e) {
+      console.error("Data Load Error:", e);
+      return;
+    }
+
+    console.log("Market Prices Data Count:", prices.length);
+
+    // ローディングを即座に非表示にする
+    const loader = document.getElementById('chartLoader');
+    if (loader) {
+      loader.style.display = 'none';
+    }
+
+    const canvas = document.getElementById('marketChart') as HTMLCanvasElement;
+    const itemFilter = document.getElementById('itemFilter') as HTMLSelectElement;
+    const marketFilter = document.getElementById('marketFilter') as HTMLSelectElement;
+
+    if (!canvas || !itemFilter || !marketFilter || prices.length === 0) {
+      console.warn("Required elements or data missing", { canvas, itemFilter, marketFilter, dataCount: prices.length });
+      return;
+    }
+
+    // 既存の選択肢をクリア
+    itemFilter.innerHTML = '';
+    marketFilter.innerHTML = '';
+
+    // フィルターの選択肢を生成
+    const items = [...new Set(prices.map(p => p.item))].filter(Boolean).sort();
+    const markets = [...new Set(prices.map(p => p.market))].filter(Boolean).sort();
+
+    items.forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item;
+      opt.textContent = item;
+      itemFilter.appendChild(opt);
+    });
+
+    markets.forEach(market => {
+      const opt = document.createElement('option');
+      opt.value = market;
+      opt.textContent = market;
+      marketFilter.appendChild(opt);
+    });
+
+    let chart: Chart | null = null;
+
+    // --- KPIカード更新ロジック ---
+    // 直近価格・前日比・週レンジ・サマリーをデータから計算してDOMへ反映
+    function updateKpiCards(seriesData: MarketPrice[], itemName: string, marketName: string) {
+      const elCurrent      = document.getElementById('kpiCurrent');
+      const elCurrentDate  = document.getElementById('kpiCurrentDate');
+      const elChange       = document.getElementById('kpiChange');
+      const elChangeRate   = document.getElementById('kpiChangeRate');
+      const elRange        = document.getElementById('kpiRange');
+      const elRangeSpread  = document.getElementById('kpiRangeSpread');
+      const elSummary      = document.getElementById('kpiSummary');
+
+      // データが空の場合は全カードを「—」表示にリセット
+      if (!seriesData.length) {
+        [elCurrent, elChange, elRange].forEach(el => { if (el) el.textContent = '—'; });
+        [elCurrentDate, elChangeRate, elRangeSpread].forEach(el => { if (el) el.textContent = '—'; });
+        if (elSummary) elSummary.textContent = 'データなし';
+        // 色のリセット
+        elChange?.classList.remove('kpi-card__value--up', 'kpi-card__value--down', 'kpi-card__value--flat');
+        return;
+      }
+
+      const latest   = seriesData[seriesData.length - 1];
+      const previous = seriesData.length > 1 ? seriesData[seriesData.length - 2] : null;
+      const allPrices = seriesData.map(p => p.price);
+      const highest   = Math.max(...allPrices);
+      const lowest    = Math.min(...allPrices);
+      const average   = allPrices.reduce((a, b) => a + b, 0) / allPrices.length;
+
+      // CURRENT
+      if (elCurrent) elCurrent.textContent = `¥${latest.price.toLocaleString()}`;
+      if (elCurrentDate) {
+        const d = new Date(latest.date);
+        elCurrentDate.textContent = `${d.getMonth() + 1}/${d.getDate()} 時点`;
+      }
+
+      // DAY CHANGE
+      if (elChange && elChangeRate) {
+        elChange.classList.remove('kpi-card__value--up', 'kpi-card__value--down', 'kpi-card__value--flat');
+        if (previous) {
+          const delta = latest.price - previous.price;
+          const rate  = previous.price !== 0 ? (delta / previous.price) * 100 : 0;
+          const sign  = delta > 0 ? '+' : (delta < 0 ? '−' : '±');
+          const abs   = Math.abs(delta).toLocaleString();
+          elChange.textContent = `${sign}¥${abs}`;
+          elChangeRate.textContent = `${delta >= 0 ? '+' : '−'}${Math.abs(rate).toFixed(1)}%`;
+          if (delta > 0) elChange.classList.add('kpi-card__value--up');
+          else if (delta < 0) elChange.classList.add('kpi-card__value--down');
+          else elChange.classList.add('kpi-card__value--flat');
+        } else {
+          elChange.textContent = '—';
+          elChangeRate.textContent = '前日データなし';
+          elChange.classList.add('kpi-card__value--flat');
+        }
+      }
+
+      // WEEK RANGE
+      if (elRange) elRange.textContent = `¥${lowest.toLocaleString()}–¥${highest.toLocaleString()}`;
+      if (elRangeSpread) {
+        const spread = highest - lowest;
+        const spreadRate = average !== 0 ? (spread / average) * 100 : 0;
+        elRangeSpread.textContent = `振れ幅 ${spreadRate.toFixed(1)}%`;
+      }
+
+      // MARKET INSIGHT（自動要約）
+      if (elSummary) {
+        const vsAvg = latest.price - average;
+        const vsAvgRate = average !== 0 ? (vsAvg / average) * 100 : 0;
+        const trend = vsAvg > 0
+          ? `週平均比 +${vsAvgRate.toFixed(1)}% の上振れ`
+          : vsAvg < 0
+            ? `週平均比 ${vsAvgRate.toFixed(1)}% の下振れ`
+            : '週平均と同水準';
+        elSummary.textContent = `${marketName}の${itemName}：${trend}`;
+      }
+    }
+
+    function updateChart() {
+      const selectedItem = itemFilter.value;
+      const selectedMarket = marketFilter.value;
+
+      let filtered = prices.filter(p => 
+        p.item === selectedItem && p.market === selectedMarket
+      );
+
+      // 日付順にソート
+      filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+      // 表示基準日：データ内の最新日（データ更新が止まっていても直近データを表示）
+      const latestEntry = filtered[filtered.length - 1];
+      const now = new Date();
+      const baseDay = latestEntry
+        ? new Date(latestEntry.date)
+        : new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const today = new Date(baseDay.getFullYear(), baseDay.getMonth(), baseDay.getDate());
+      const oneWeekAgo = new Date(today);
+      oneWeekAgo.setDate(today.getDate() - 7);
+
+      // データの絞り込み（基準日から7日前まで）
+      filtered = filtered.filter(p => {
+        const d = new Date(p.date);
+        return d >= oneWeekAgo && d <= today;
+      });
+
+      // --- KPI カードの更新 ---
+      updateKpiCards(filtered, selectedItem, selectedMarket);
+
+      if (chart) {
+        chart.destroy();
+      }
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      // --- 主要メトリクス計算（Chart演出に使用）---
+      const allPrices  = filtered.map(p => p.price);
+      const seriesAvg  = allPrices.length
+        ? allPrices.reduce((a, b) => a + b, 0) / allPrices.length
+        : 0;
+      const seriesHigh = allPrices.length ? Math.max(...allPrices) : 0;
+      const seriesLow  = allPrices.length ? Math.min(...allPrices) : 0;
+      const isMobile   = window.matchMedia('(max-width: 767px)').matches;
+
+      // --- 縦方向グラデーション：上=アグリグリーン濃、中=ライム、下=透明 ---
+      const canvasHeight = canvas.height || (isMobile ? 300 : 400);
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvasHeight);
+      gradient.addColorStop(0,    'rgba(46, 125, 50, 0.28)');
+      gradient.addColorStop(0.45, 'rgba(212, 255, 0, 0.18)');
+      gradient.addColorStop(1,    'rgba(246, 246, 238, 0)');
+
+      // --- ポイントカラー：最高値=ライム、最安値=濃緑、それ以外=透明 ---
+      const pointBgColors = filtered.map(p => {
+        if (p.price === seriesHigh) return '#D4FF00';   // 最高値: ライム
+        if (p.price === seriesLow)  return '#1B5E20';   // 最安値: 濃緑
+        return 'rgba(46, 125, 50, 0.55)';                // 通常: 半透明緑
+      });
+      const pointBorderColors = filtered.map(p => {
+        if (p.price === seriesHigh) return '#2e7d32';
+        if (p.price === seriesLow)  return '#ffffff';
+        return '#ffffff';
+      });
+      const pointRadii = filtered.map(p => {
+        if (p.price === seriesHigh || p.price === seriesLow) return isMobile ? 5 : 6;
+        return isMobile ? 0 : 3;
+      });
+      const pointBorderWidths = filtered.map(p => {
+        if (p.price === seriesHigh || p.price === seriesLow) return 2.5;
+        return 1.5;
+      });
+
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: [
+            {
+              label: '価格推移',
+              data: filtered.map(p => ({ x: new Date(p.date).getTime(), y: p.price })),
+              borderColor: '#2e7d32',
+              backgroundColor: gradient,
+              borderWidth: 2.5,
+              fill: true,
+              tension: 0.32,
+              pointRadius: pointRadii,
+              pointHoverRadius: 8,
+              pointBackgroundColor: pointBgColors,
+              pointBorderColor: pointBorderColors,
+              pointBorderWidth: pointBorderWidths,
+              pointHoverBorderWidth: 3,
+              spanGaps: true,
+              order: 1,
+            },
+            {
+              label: '週平均',
+              data: allPrices.length
+                ? filtered.map(p => ({ x: new Date(p.date).getTime(), y: seriesAvg }))
+                : [],
+              borderColor: 'rgba(17, 17, 17, 0.28)',
+              borderDash: [5, 5],
+              borderWidth: 1.25,
+              pointRadius: 0,
+              pointHoverRadius: 0,
+              fill: false,
+              tension: 0,
+              order: 2,
+            }
+          ]
+        } as any,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { intersect: false, mode: 'index' },
+          animation: {
+            duration: 1000,
+            easing: 'easeOutQuart',
+          },
+          plugins: {
+            legend: {
+              display: !isMobile,
+              position: 'top',
+              align: 'end',
+              labels: {
+                usePointStyle: true,
+                boxWidth: 8,
+                boxHeight: 8,
+                color: 'rgba(35, 24, 21, 0.6)',
+                font: { family: "'Noto Sans JP', sans-serif", size: 11, weight: 600 },
+                padding: 12,
+                filter: (item: any) => item.text !== '価格推移',
+              }
+            },
+            tooltip: {
+              backgroundColor: '#111111',
+              titleColor: '#D4FF00',
+              bodyColor: '#F6F6EE',
+              padding: 14,
+              cornerRadius: 12,
+              displayColors: false,
+              titleFont: { family: "'Noto Sans JP', sans-serif", size: 12, weight: 700 },
+              bodyFont: { family: 'ui-monospace, SF Mono, monospace', size: 13, weight: 600 },
+              borderColor: 'rgba(212, 255, 0, 0.2)',
+              borderWidth: 1,
+              callbacks: {
+                title: (tooltipItems: any) => {
+                  const item = tooltipItems[0];
+                  const d = new Date(item.parsed.x);
+                  return `${d.getMonth() + 1}月${d.getDate()}日`;
+                },
+                label: (context: any) => {
+                  const v = context.parsed.y;
+                  const isAvg = context.datasetIndex === 1;
+                  if (isAvg) return `  週平均  ¥${v.toLocaleString()}`;
+                  const diff = v - seriesAvg;
+                  const pct  = seriesAvg !== 0 ? (diff / seriesAvg) * 100 : 0;
+                  const sign = diff >= 0 ? '+' : '−';
+                  const tag  = v === seriesHigh ? ' ★最高' : v === seriesLow ? ' ☆最安' : '';
+                  return [
+                    `  価格  ¥${v.toLocaleString()}/kg${tag}`,
+                    `  平均比 ${sign}${Math.abs(pct).toFixed(1)}%`,
+                  ];
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              type: 'time',
+              time: { unit: 'day', displayFormats: { day: 'M/d' } },
+              min: oneWeekAgo.getTime(),
+              max: today.getTime(),
+              grid: { display: false },
+              border: { display: false },
+              ticks: {
+                font: { size: isMobile ? 9 : 10, family: 'ui-monospace, SF Mono, monospace' },
+                color: 'rgba(35, 24, 21, 0.55)',
+                maxRotation: 0,
+              }
+            },
+            y: {
+              beginAtZero: false,
+              grace: '20%',
+              grid: { color: 'rgba(46, 125, 50, 0.06)' },
+              border: { display: false },
+              ticks: {
+                font: { size: isMobile ? 9 : 10, family: 'ui-monospace, SF Mono, monospace' },
+                color: 'rgba(35, 24, 21, 0.55)',
+                callback: (v: any) => `¥${v}`
+              }
+            }
+          }
+        } as any
+      });
+    }
+
+    itemFilter.addEventListener('change', updateChart);
+    marketFilter.addEventListener('change', updateChart);
+
+    // 初期状態で最初の品目を選択
+    if (items.length > 0) itemFilter.value = items[0];
+    updateChart();
+
+    // ============================================================
+    // バックグラウンド refresh：SSGで埋め込んだデータの後に
+    // 最新CSVを取りに行き、新しければ静かに上書きする
+    // （SSG snapshot + client refresh の hybrid 構成）
+    // ============================================================
+    const S3_URL = "https://nouvation-market-preview.s3.ap-northeast-1.amazonaws.com/history.csv";
+    const GAS_FALLBACK_URL = "https://script.google.com/macros/s/AKfycbyd_Or_Nxo2ZhqNk6GOo2btZ-uymgpJTU7kgE8bPWarWVTJ8bDX6QZW3YSD7Bij4Jvs/exec";
+
+    function updateLastUpdatedIndicator(latestDateIso: string) {
+      const el = document.getElementById('kpiLastUpdated');
+      if (!el || !latestDateIso) return;
+      const d = new Date(latestDateIso);
+      if (isNaN(d.getTime())) return;
+      el.textContent = `最終更新: ${d.getMonth() + 1}/${d.getDate()}`;
+    }
+
+    // CSV 1行 → セル配列
+    function parseCsvLineClient(line: string): string[] {
+      const cells: string[] = [];
+      let current = "";
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQuotes && line[i + 1] === '"') { current += '"'; i++; }
+          else { inQuotes = !inQuotes; }
+        } else if (ch === "," && !inQuotes) {
+          cells.push(current);
+          current = "";
+        } else {
+          current += ch;
+        }
+      }
+      cells.push(current);
+      return cells;
+    }
+
+    // ワイド形式CSV → Long形式（market.ts の parseWideSheet と同等ロジック）
+    function parseWideSheetClient(text: string): MarketPrice[] {
+      const result: MarketPrice[] = [];
+      const lines = text.split(/\r?\n/);
+      let headerIdx = -1;
+      let headerCells: string[] = [];
+      for (let i = 0; i < lines.length; i++) {
+        const cells = parseCsvLineClient(lines[i]);
+        if (cells[0] === "日付" || cells[0] === "date") {
+          headerIdx = i;
+          headerCells = cells;
+          break;
+        }
+      }
+      if (headerIdx === -1) return [];
+      const dates = headerCells.slice(1).map(raw => {
+        if (!raw) return null;
+        const d = new Date(raw);
+        if (isNaN(d.getTime())) return null;
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      });
+      const knownMarkets = new Set(['札幌市場','仙台市場','大田市場','名古屋市場','大阪市場','広島市場','福岡市場']);
+      let currentMarket = '';
+      for (let i = headerIdx + 1; i < lines.length; i++) {
+        const cells = parseCsvLineClient(lines[i]);
+        const first = cells[0]?.trim();
+        if (!first) continue;
+        if (first.endsWith('市場') || knownMarkets.has(first)) {
+          currentMarket = first;
+          continue;
+        }
+        if (!currentMarket) continue;
+        const dataCells = cells.slice(1);
+        for (let j = 0; j < dataCells.length && j < dates.length; j++) {
+          const date = dates[j];
+          if (!date) continue;
+          const raw = dataCells[j].trim();
+          if (!raw) continue;
+          const price = Number(raw);
+          if (!Number.isFinite(price) || price <= 0) continue;
+          result.push({ date, item: first, market: currentMarket, price, unit: '円/kg' });
+        }
+      }
+      return result;
+    }
+
+    async function refreshFromRemote() {
+      let fresh: MarketPrice[] = [];
+      try {
+        const res = await fetch(S3_URL, { cache: 'no-cache' });
+        if (!res.ok) throw new Error(`S3 HTTP ${res.status}`);
+        fresh = parseWideSheetClient(await res.text());
+      } catch (e) {
+        console.warn('[market] S3 refresh failed, trying GAS fallback:', e);
+        try {
+          const res = await fetch(GAS_FALLBACK_URL, { redirect: 'follow' });
+          if (!res.ok) throw new Error(`GAS HTTP ${res.status}`);
+          fresh = parseWideSheetClient(await res.text());
+        } catch (e2) {
+          console.warn('[market] All refresh sources failed; keeping SSG data:', e2);
+          return;
+        }
+      }
+      if (fresh.length === 0) return;
+
+      const currentLatest = prices.length > 0
+        ? prices.reduce((a, b) => a.date > b.date ? a : b).date
+        : '';
+      const freshLatest = fresh.reduce((a, b) => a.date > b.date ? a : b).date;
+      if (freshLatest <= currentLatest) {
+        // SSG が既に最新と同等 → 何もしない
+        return;
+      }
+
+      // 配列を mutate（updateChart クロージャ経由で同じ参照を見ているため）
+      prices.length = 0;
+      prices.push(...fresh);
+
+      // フィルター選択肢を最新化（新しい品目/市場が登場した場合に備えて）
+      const userItem = itemFilter.value;
+      const userMarket = marketFilter.value;
+      const newItems = [...new Set(prices.map(p => p.item))].filter(Boolean).sort();
+      const newMarkets = [...new Set(prices.map(p => p.market))].filter(Boolean).sort();
+
+      itemFilter.innerHTML = '';
+      marketFilter.innerHTML = '';
+      newItems.forEach(it => {
+        const opt = document.createElement('option');
+        opt.value = it;
+        opt.textContent = it;
+        itemFilter.appendChild(opt);
+      });
+      newMarkets.forEach(mk => {
+        const opt = document.createElement('option');
+        opt.value = mk;
+        opt.textContent = mk;
+        marketFilter.appendChild(opt);
+      });
+      // ユーザーの選択を可能な限り維持
+      if (newItems.includes(userItem)) itemFilter.value = userItem;
+      if (newMarkets.includes(userMarket)) marketFilter.value = userMarket;
+
+      updateChart();
+      updateLastUpdatedIndicator(freshLatest);
+      console.log(`[market] Background refresh applied: ${currentLatest} → ${freshLatest}`);
+    }
+
+    // 初期インジケータ：まず SSG snapshot の最新日を表示
+    const ssgLatest = prices.length > 0
+      ? prices.reduce((a, b) => a.date > b.date ? a : b).date
+      : '';
+    if (ssgLatest) updateLastUpdatedIndicator(ssgLatest);
+
+    // ページが見えてからバックグラウンド更新（初回レンダリングを邪魔しない）
+    setTimeout(() => { refreshFromRemote(); }, 800);
+  }
+
+  // Astroのライフサイクルに合わせて初期化
+  document.addEventListener('astro:page-load', initChart);
+  // 初期読み込み時にも実行
+  // 初回読み込み時にも実行
+  initChart();
+
+  // --- フォロワー数のカウントアップ・ギミック ---
+  function initCountUp() {
+    const target = document.getElementById('followerCount');
+    if (!target) return;
+
+    const finalValue = 30000;
+    const duration = 2000;
+    const frameRate = 1000 / 60;
+    const totalFrames = Math.round(duration / frameRate);
+    let currentFrame = 0;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        // グリッチ開始
+        target.classList.add('glitch');
+        setTimeout(() => target.classList.remove('glitch'), 300);
+
+        const timer = setInterval(() => {
+          currentFrame++;
+          const progress = currentFrame / totalFrames;
+          const easeOutQuad = 1 - (1 - progress) * (1 - progress);
+          const currentValue = Math.floor(easeOutQuad * finalValue);
+
+          target.textContent = currentValue.toLocaleString();
+
+          if (currentFrame === totalFrames) {
+            clearInterval(timer);
+            // 完了時：上品なロックイン演出（スケール微変＋ライム下線シャイン）
+            // 二重グリッチは廃止 → 数字が確定する「確かさ」を表現
+            target.classList.add('glow');
+            setTimeout(() => target.classList.remove('glow'), 900);
+          }
+        }, frameRate);
+
+        observer.unobserve(target);
+      }
+    }, { threshold: 0.5 });
+
+    observer.observe(target);
+  }
+
+  document.addEventListener('astro:page-load', initCountUp);
+  initCountUp();
+
+  // ============================================
+  // Instagram embed.js 遅延ロード（IntersectionObserver）
+  // 全ての Instagram 埋め込みゾーンを対象に、画面接近時のみ embed.js をロード
+  // ============================================
+  function initInstagramLazyLoad() {
+    const zoneIds = ['instagram-embed-zone', 'farmatch-instagram-zone'];
+    const zones = zoneIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (zones.length === 0) return;
+
+    let loaded = false;
+    const loadInstagramScript = () => {
+      if (loaded) return;
+      loaded = true;
+      // 既存スクリプトの重複読み込みを防止
+      if (document.querySelector('script[src*="instagram.com/embed.js"]')) {
+        // 既に読込済みなら即 process
+        const w = window as any;
+        if (w.instgrm && w.instgrm.Embeds) w.instgrm.Embeds.process();
+        return;
+      }
+      const s = document.createElement('script');
+      s.src = 'https://www.instagram.com/embed.js';
+      s.async = true;
+      s.onload = () => {
+        // スクリプト読込後、ページ内の全 blockquote を Instagram に渡す
+        const w = window as any;
+        if (w.instgrm && w.instgrm.Embeds) {
+          w.instgrm.Embeds.process();
+        }
+        // 全ゾーンのスケルトンを外す
+        document
+          .querySelectorAll('.ig-skeleton, .ig-skeleton-fm')
+          .forEach((el) => el.classList.remove('ig-skeleton', 'ig-skeleton-fm'));
+      };
+      document.body.appendChild(s);
+    };
+
+    // IntersectionObserver で 200px 手前から先読み
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            loadInstagramScript();
+            io.disconnect();
+          }
+        });
+      }, { rootMargin: '200px' });
+      zones.forEach((zone) => io.observe(zone));
+    } else {
+      // 古いブラウザ用フォールバック：即時ロード
+      loadInstagramScript();
+    }
+  }
+
+  document.addEventListener('astro:page-load', initInstagramLazyLoad);
+  initInstagramLazyLoad();
+</script>
+
+<style>
+  /* ===== Market Price Live Monitor: Status Pill ===== */
+  .market-pill {
+    background: linear-gradient(135deg,
+      rgba(212, 255, 0, 0.18) 0%,
+      rgba(46, 125, 50, 0.08) 100%);
+    backdrop-filter: blur(8px);
+    box-shadow:
+      0 0 0 1px rgba(46, 125, 50, 0.08),
+      0 4px 12px -2px rgba(46, 125, 50, 0.12);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .market-pill:hover {
+    transform: translateY(-1px);
+  }
+  .market-pill__dot {
+    box-shadow:
+      0 0 0 4px rgba(212, 255, 0, 0.18),
+      0 0 12px rgba(46, 125, 50, 0.5);
+  }
+  .market-pill__dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: rgba(46, 125, 50, 0.5);
+    animation: market-pulse 2s ease-out infinite;
+  }
+  @keyframes market-pulse {
+    0%   { transform: scale(0.5); opacity: 0.8; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .market-pill__dot::after {
+      animation: none;
+    }
+    .market-pill {
+      transition: none;
+    }
+  }
+
+  /* ===== Market Card: Outer container styling ===== */
+  .market-card {
+    background:
+      radial-gradient(circle at 15% 0%,
+        rgba(212, 255, 0, 0.07) 0%,
+        transparent 50%),
+      radial-gradient(circle at 85% 100%,
+        rgba(46, 125, 50, 0.05) 0%,
+        transparent 45%),
+      #ffffff;
+    border: 1px solid rgba(46, 125, 50, 0.12);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.8) inset,
+      0 1px 2px rgba(35, 24, 21, 0.02),
+      0 8px 20px -6px rgba(46, 125, 50, 0.08),
+      0 24px 48px -12px rgba(35, 24, 21, 0.08);
+  }
+  /* 上部にアグリグリーン→ライム→アグリグリーンのアクセントバー */
+  .market-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      #2e7d32 15%,
+      #D4FF00 50%,
+      #2e7d32 85%,
+      transparent 100%);
+    opacity: 0.85;
+    pointer-events: none;
+  }
+  /* セレクトボックスのホバー効果 */
+  .market-card__select {
+    transition: background-color 0.2s ease;
+  }
+  .market-card__select:hover {
+    background-color: rgba(46, 125, 50, 0.06);
+  }
+  /* LIVE DATA ドットのパルスアニメ */
+  .market-card__live-dot {
+    box-shadow: 0 0 0 3px rgba(212, 255, 0, 0.25);
+  }
+  .market-card__live-dot::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: rgba(46, 125, 50, 0.45);
+    animation: market-pulse 2s ease-out infinite 0.5s;
+  }
+  /* チャート背景：薄いグリッドパターン（計測パネル感） */
+  .market-card__chart-wrap {
+    background:
+      linear-gradient(to right,
+        rgba(46, 125, 50, 0.025) 1px,
+        transparent 1px) 0 0 / 40px 40px,
+      linear-gradient(to bottom,
+        rgba(46, 125, 50, 0.025) 1px,
+        transparent 1px) 0 0 / 40px 40px,
+      linear-gradient(180deg,
+        rgba(246, 246, 238, 0.4) 0%,
+        rgba(255, 255, 255, 0) 100%);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .market-card__live-dot::after {
+      animation: none;
+    }
+    .market-card__select {
+      transition: none;
+    }
+  }
+
+  /* ===== KPI Cards (Current / Day Change / Week Range / Insight) ===== */
+  .kpi-card {
+    position: relative;
+    padding: 0.875rem 1rem;
+    border-radius: 1rem;
+    background: linear-gradient(145deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(246, 246, 238, 0.85) 100%);
+    border: 1px solid rgba(46, 125, 50, 0.08);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.7) inset,
+      0 1px 8px -2px rgba(35, 24, 21, 0.04);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow: hidden;
+  }
+  .kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.7) inset,
+      0 12px 24px -8px rgba(46, 125, 50, 0.18);
+  }
+  /* CURRENT カードのみ、左ボーダーをアクセント色に */
+  .kpi-card--primary {
+    background: linear-gradient(145deg,
+      #ffffff 0%,
+      rgba(212, 255, 0, 0.06) 100%);
+    border-color: rgba(46, 125, 50, 0.16);
+  }
+  .kpi-card--primary::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 12px; bottom: 12px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: linear-gradient(180deg, #2e7d32 0%, #D4FF00 100%);
+  }
+  /* SUMMARY カードは2カラム時はフルワイド、4カラム時は1枠 */
+  .kpi-card--summary {
+    grid-column: span 2;
+  }
+  @media (min-width: 1024px) {
+    .kpi-card--summary {
+      grid-column: auto;
+    }
+  }
+  .kpi-card__label {
+    font-family: ui-monospace, "SF Mono", "JetBrains Mono", monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: rgba(35, 24, 21, 0.45);
+    margin-bottom: 0.25rem;
+  }
+  @media (min-width: 768px) {
+    .kpi-card__label { font-size: 10px; }
+  }
+  .kpi-card__value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #111111;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  @media (min-width: 768px) {
+    .kpi-card__value { font-size: 1.875rem; }
+  }
+  .kpi-card__value--mono {
+    font-family: ui-monospace, "SF Mono", "JetBrains Mono", monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi-card__value--small {
+    font-size: 1.05rem;
+  }
+  @media (min-width: 768px) {
+    .kpi-card__value--small { font-size: 1.25rem; }
+  }
+  .kpi-card__value--up    { color: #2e7d32; }
+  .kpi-card__value--down  { color: #c62828; }
+  .kpi-card__value--flat  { color: rgba(35, 24, 21, 0.55); }
+  .kpi-card__sub {
+    margin-top: 0.25rem;
+    font-size: 10px;
+    color: rgba(35, 24, 21, 0.5);
+    font-weight: 500;
+  }
+  @media (min-width: 768px) {
+    .kpi-card__sub { font-size: 11px; }
+  }
+  .kpi-card__summary-text {
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: rgba(35, 24, 21, 0.78);
+    font-weight: 600;
+  }
+  @media (min-width: 768px) {
+    .kpi-card__summary-text { font-size: 0.875rem; }
+  }
+
+  /* Instagram埋め込みの強制フィット設定 */
+  :global(.instagram-media) {
+    margin: 0 !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    /* ヘッダー（プロフィールとボタン）を枠の上に追い出す */
+    transform: translateY(-64px);
+  }
+  
+  /* 埋め込み後のiframeの最小幅制限を解除 */
+  :global(.instagram-media-rendered iframe) {
+    min-width: 100% !important;
+  }
+
+  /* Instagram埋め込みロード前のスケルトン背景 */
+  .ig-skeleton {
+    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+    background-size: 200% 100%;
+    animation: ig-skeleton-shimmer 1.6s ease-in-out infinite;
+  }
+
+  @keyframes ig-skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* はみ出したヘッダーと、下すぎるフッターをカットする */
+  .instagram-clip-box {
+    height: 380px; /* 3つ並べるために高さを少し抑える */
+    overflow: hidden;
+  }
+  @media (max-width: 1024px) {
+    .instagram-clip-box {
+      height: 437px;
+    }
+  }
+  @media (max-width: 768px) {
+    .instagram-clip-box {
+      height: 540px;
+    }
+  }
+
+  /* ローディングアニメーション */
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* LINE Button Custom Styles */
+  .line-btn {
+    background: linear-gradient(180deg, #2ea854 0%, #45d468 50%, #7aedaa 100%) !important;
+    border: 1.5px solid rgba(130, 240, 160, 0.55) !important;
+    box-shadow: 0 0 14px rgba(80, 220, 120, 0.45),
+                0 0 30px rgba(80, 220, 120, 0.18) !important;
+    transition: all 0.3s ease !important;
+    color: white !important;
+    text-decoration: none !important;
+  }
+
+  .line-btn:hover {
+    box-shadow: 0 0 20px rgba(80, 220, 120, 0.65),
+                0 0 45px rgba(80, 220, 120, 0.28) !important;
+    transform: translateY(-2px) !important;
+    opacity: 1 !important;
+  }
+
+  /* ノヴェル君ボタン：オレンジ */
+  .novel-btn {
+    background: linear-gradient(180deg, #e67e22 0%, #f39c12 50%, #f5b041 100%) !important;
+    border: 1.5px solid rgba(245, 176, 65, 0.55) !important;
+    box-shadow: 0 0 14px rgba(243, 156, 18, 0.4),
+                0 0 30px rgba(243, 156, 18, 0.15) !important;
+    transition: all 0.3s ease !important;
+    color: white !important;
+    text-decoration: none !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+
+  .novel-btn:hover {
+    box-shadow: 0 0 20px rgba(243, 156, 18, 0.6),
+                0 0 45px rgba(243, 156, 18, 0.25) !important;
+    transform: translateY(-2px) !important;
+    opacity: 1 !important;
+  }
+</style>

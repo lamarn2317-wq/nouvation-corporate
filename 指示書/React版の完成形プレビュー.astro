@@ -1,0 +1,569 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Menu, X, ChevronDown, ArrowRight, BarChart3, Instagram, Bot, PenTool } from 'lucide-react';
+
+const NouvationSite = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsHeaderVisible(false);
+      } else {
+        setIsHeaderVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-fadeUp');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div className="font-sans bg-[#111111] text-[#E5E7EB] overflow-x-hidden">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
+        
+        body {
+          font-family: 'Noto Sans JP', sans-serif;
+          background: #111111;
+        }
+        
+        .font-display {
+          font-family: 'Syne', sans-serif;
+        }
+        
+        .noise-texture::before {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+          pointer-events: none;
+          z-index: 1;
+          opacity: 0.5;
+        }
+        
+        .fade-up {
+          opacity: 0;
+          transform: translateY(30px);
+          transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        
+        .animate-fadeUp {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        .smart-header {
+          transform: translateY(${isHeaderVisible ? '0' : '-100%'});
+          transition: transform 0.3s ease-in-out, background-color 0.3s ease;
+        }
+        
+        .grid-pattern {
+          background-image: 
+            linear-gradient(rgba(212, 255, 0, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(212, 255, 0, 0.03) 1px, transparent 1px);
+          background-size: 50px 50px;
+        }
+        
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        
+        .marquee-container {
+          overflow: hidden;
+          white-space: nowrap;
+        }
+        
+        .marquee-text {
+          display: inline-block;
+          animation: marquee 30s linear infinite;
+        }
+
+        .line-clamp-1 {
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      `}</style>
+
+      <div className="noise-texture"></div>
+
+      {/* HEADER */}
+      <header className={`fixed w-full top-0 z-50 smart-header ${isScrolled ? 'bg-[#111111]/95 backdrop-blur-md border-b border-[#D4FF00]/20' : 'bg-transparent'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex justify-between items-center h-20">
+            <div className="font-display font-bold text-2xl tracking-tight text-[#D4FF00]">
+              NOUVATION
+            </div>
+
+            {/* PC Nav */}
+            <nav className="hidden md:flex space-x-8 text-sm font-bold">
+              <a href="#news" className="hover:text-[#D4FF00] transition-colors">News</a>
+              <a href="#mission" className="hover:text-[#D4FF00] transition-colors">Mission</a>
+              <a href="#services" className="hover:text-[#D4FF00] transition-colors">Services</a>
+              <a href="#story" className="hover:text-[#D4FF00] transition-colors">Story</a>
+              <a href="#voice" className="hover:text-[#D4FF00] transition-colors">Voice</a>
+            </nav>
+
+            {/* PC Button */}
+            <div className="hidden md:block">
+              <a href="#" className="px-6 py-3 bg-[#1B5E20] text-white text-sm font-bold rounded-full hover:bg-[#2e7d32] transition-all hover:shadow-lg hover:-translate-y-0.5">
+                LINE登録
+              </a>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2 text-[#E5E7EB] hover:text-[#D4FF00] transition-colors"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-[#111111]/98 backdrop-blur-md border-t border-[#D4FF00]/20">
+            <div className="px-4 py-6 space-y-4">
+              <a href="#news" className="block text-sm font-bold hover:text-[#D4FF00] transition-colors" onClick={() => setIsMenuOpen(false)}>News</a>
+              <a href="#mission" className="block text-sm font-bold hover:text-[#D4FF00] transition-colors" onClick={() => setIsMenuOpen(false)}>Mission</a>
+              <a href="#services" className="block text-sm font-bold hover:text-[#D4FF00] transition-colors" onClick={() => setIsMenuOpen(false)}>Services</a>
+              <a href="#story" className="block text-sm font-bold hover:text-[#D4FF00] transition-colors" onClick={() => setIsMenuOpen(false)}>Story</a>
+              <a href="#voice" className="block text-sm font-bold hover:text-[#D4FF00] transition-colors" onClick={() => setIsMenuOpen(false)}>Voice</a>
+              <div className="pt-4 border-t border-[#D4FF00]/20">
+                <a href="#" className="block w-full text-center px-6 py-3 bg-[#1B5E20] text-white text-sm font-bold rounded-full">
+                  LINE登録
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* FV */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#111111]"></div>
+        <div className="absolute inset-0 grid-pattern"></div>
+        <div className="absolute inset-0 bg-cover bg-center opacity-30" style={{backgroundImage: "url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1920')"}}></div>
+        
+        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
+          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-extrabold mb-8 text-white leading-tight tracking-tight">
+            農業界に、<br />
+            <span className="text-[#D4FF00]">情報</span>で革新を。
+          </h1>
+          <p className="text-lg md:text-2xl font-medium text-[#E5E7EB] leading-relaxed">
+            農家が報われる社会を、情報とつながりで実現する<br className="hidden md:block" />
+            次世代の農業インフラメディア
+          </p>
+          <div className="mt-12">
+            <ChevronDown className="mx-auto animate-bounce text-[#D4FF00]" size={32} />
+          </div>
+        </div>
+      </section>
+
+      {/* NEWS */}
+      <section id="news" className="py-12 bg-[#F4F4F5] border-y border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-12">
+            <div className="flex items-center flex-shrink-0">
+              <h2 className="font-display text-2xl font-bold text-[#1B5E20] tracking-wider mr-4">NEWS</h2>
+              <span className="text-xs text-gray-500">お知らせ</span>
+            </div>
+
+            <div className="flex-grow w-full">
+              <ul className="space-y-4">
+                <li className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6 border-b md:border-none border-gray-200 pb-3 md:pb-0">
+                  <time className="text-sm text-gray-600 font-display flex-shrink-0">2025.12.20</time>
+                  <span className="text-xs font-bold text-white bg-[#1F2937] px-3 py-1 rounded w-fit">プレスリリース</span>
+                  <a href="#" className="text-sm font-bold text-[#1F2937] hover:text-[#1B5E20] transition-colors line-clamp-1">
+                    農業情報インフラ「NOUVATION」公式サイトをリニューアルオープンしました
+                  </a>
+                </li>
+                <li className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6">
+                  <time className="text-sm text-gray-600 font-display flex-shrink-0">2025.11.15</time>
+                  <span className="text-xs font-bold text-white bg-[#1F2937] px-3 py-1 rounded w-fit">メディア掲載</span>
+                  <a href="#" className="text-sm font-bold text-[#1F2937] hover:text-[#1B5E20] transition-colors line-clamp-1">
+                    日本農業新聞にて、当社のAI相談サービスが紹介されました
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div className="hidden md:block flex-shrink-0">
+              <a href="#" className="text-xs font-bold text-gray-600 hover:text-[#1B5E20] flex items-center group whitespace-nowrap transition-colors">
+                VIEW ALL 
+                <ArrowRight className="ml-2 transition-transform group-hover:translate-x-1" size={16} />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SOCIAL ISSUES */}
+      <section className="py-24 md:py-32 bg-[#111111] relative overflow-hidden">
+        <div className="absolute inset-0 grid-pattern opacity-30"></div>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10 fade-up">
+          <p className="font-display text-sm tracking-widest mb-6 text-[#D4FF00]">SOCIAL ISSUES</p>
+          <h2 className="font-display text-3xl md:text-5xl font-bold mb-12 leading-tight">
+            農業が抱える<br className="md:hidden" />「情報格差」
+          </h2>
+          <div className="space-y-6 leading-loose text-base md:text-lg text-[#E5E7EB]">
+            <p>
+              農業界には根深い課題が存在します。努力や根性では解決できない"構造不全"です。
+            </p>
+            <p>
+              多くの農家が補助金や助成金を取り逃し、市場価格が分からず不利な取引を強いられ、そしてSNS発信が点在することで若手農家は孤立し、夢を描けずにいます。
+            </p>
+            <p className="text-[#D4FF00] font-bold">
+              情報の欠如と分断が、経済格差や世代間の格差を生み、地域を衰退させ、農業の未来を奪っているのです。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* MISSION */}
+      <section id="mission" className="py-24 md:py-32 bg-[#F4F4F5]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+            <div className="fade-up">
+              <span className="font-display font-bold text-[#1B5E20] block mb-4 text-sm tracking-wider">OUR MISSION</span>
+              <h2 className="font-display text-3xl md:text-5xl font-bold mb-8 leading-tight text-[#1F2937]">
+                「知らなかった」で<br />
+                失われる機会を<br className="hidden md:block" />なくし、<br className="md:hidden" />
+                「伝わらなかった」を<br />
+                「届いた」に変える。
+              </h2>
+              <p className="text-lg leading-relaxed text-gray-700 mb-8">
+                汗と努力が報われる社会へ。<br />
+                私たちは情報の力で、農業の構造を変革します。
+              </p>
+            </div>
+            <div className="fade-up">
+              <div className="aspect-video bg-gradient-to-br from-[#1B5E20] to-[#2e7d32] rounded-2xl flex items-center justify-center relative overflow-hidden shadow-2xl">
+                <div className="absolute inset-0 opacity-20" style={{backgroundImage: "url('https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=800')", backgroundSize: 'cover', backgroundPosition: 'center'}}></div>
+                <div className="relative z-10 text-white text-center p-8">
+                  <div className="text-6xl mb-4">🌾</div>
+                  <p className="font-display font-bold text-xl">つながる。広がる。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SERVICES */}
+      <section id="services" className="py-24 md:py-32 bg-[#111111]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-20 fade-up">
+            <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
+              NOUVATIONが提供する<br className="md:hidden" />4つのサービス
+            </h2>
+            <div className="w-24 h-1 bg-[#D4FF00] mx-auto mt-6"></div>
+          </div>
+
+          <div className="space-y-24">
+            {/* Service 01 */}
+            <article className="bg-[#1F2937] border border-[#D4FF00]/20 rounded-2xl p-8 md:p-12 fade-up">
+              <span className="font-display text-6xl font-bold text-[#D4FF00]/20 block mb-6">01</span>
+              <div className="mb-10 max-w-3xl">
+                <h3 className="font-display text-2xl md:text-4xl font-bold mb-4 leading-tight">
+                  「生きた数字」が見える。<br />迷いが消える。
+                </h3>
+                <p className="text-[#D4FF00] font-bold text-lg mb-4 flex items-center">
+                  <BarChart3 className="mr-2" size={24} />
+                  市場価格推移グラフ
+                </p>
+                <p className="text-[#E5E7EB] leading-relaxed">
+                  全国7市場・14品目の価格情報を一元化。<br />
+                  過去データと比較することで、意思決定（出荷タイミング）の自信に繋がります。
+                </p>
+              </div>
+              <div className="border border-[#D4FF00]/30 rounded-2xl p-8 bg-[#111111] h-80 flex items-center justify-center">
+                <div className="text-center">
+                  <BarChart3 className="mx-auto mb-4 text-[#D4FF00]" size={64} />
+                  <span className="text-gray-500">Interactive Graph UI</span>
+                </div>
+              </div>
+            </article>
+
+            {/* Service 02 */}
+            <article className="bg-[#1F2937] border border-[#D4FF00]/20 rounded-2xl p-8 md:p-12 fade-up">
+              <span className="font-display text-6xl font-bold text-[#D4FF00]/20 block mb-6">02</span>
+              <div className="grid md:grid-cols-2 gap-12">
+                <div>
+                  <h3 className="font-display text-2xl md:text-4xl font-bold mb-4 leading-tight">
+                    選ばれている理由は<br />その「質」
+                  </h3>
+                  <p className="text-[#D4FF00] font-bold text-lg mb-6 flex items-center">
+                    <Instagram className="mr-2" size={24} />
+                    Instagramメディア
+                  </p>
+                  <div className="space-y-4 text-[#E5E7EB] leading-relaxed">
+                    <p>
+                      農家・農業関係者の年齢層が16~64歳で96%を占めており、次世代を担う若手・現役プレイヤーにリーチできます。
+                    </p>
+                    <p>
+                      また、農家・農業関係者比率が約8割。<br />
+                      農業界でも数少ない"実働世代向け"メディアとして、高い行動率（エンゲージメント）を誇ります。
+                    </p>
+                  </div>
+                  <div className="mt-8 p-6 bg-[#111111] border border-[#D4FF00]/30 rounded-2xl inline-block">
+                    <div className="font-display text-4xl font-bold text-[#D4FF00]">
+                      17,500<span className="text-2xl">+</span>
+                      <span className="text-sm font-normal text-gray-400 ml-2">Followers</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-[#111111] aspect-[4/5] rounded-2xl border border-[#D4FF00]/20 flex items-center justify-center">
+                    <Instagram className="text-[#D4FF00]/50" size={48} />
+                  </div>
+                  <div className="bg-[#111111] aspect-[4/5] rounded-2xl border border-[#D4FF00]/20 flex items-center justify-center">
+                    <Instagram className="text-[#D4FF00]/50" size={48} />
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            {/* Service 03 */}
+            <article className="bg-[#1F2937] border border-[#D4FF00]/20 rounded-2xl p-8 md:p-12 relative overflow-hidden fade-up">
+              <div className="absolute top-0 right-0 bg-[#D4FF00] text-[#111111] text-xs font-bold px-6 py-2 rounded-bl-2xl">
+                COMING SOON
+              </div>
+              <span className="font-display text-6xl font-bold text-[#D4FF00]/20 block mb-6">03</span>
+              <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                  <h3 className="font-display text-2xl md:text-4xl font-bold mb-4 leading-tight">
+                    栽培の悩みも、<br />補助金のことも。<br />
+                    「誰に聞けばいいか<br className="hidden md:block" />分からない」を無くします。
+                  </h3>
+                  <p className="text-[#D4FF00] font-bold text-lg mb-6 flex items-center">
+                    <Bot className="mr-2" size={24} />
+                    農業AI専用サポート
+                  </p>
+                  <p className="text-[#E5E7EB] leading-relaxed mb-4">
+                    栽培技術から補助金申請まで。24時間365日、あなたの疑問に即座に応えるパートナーAI。
+                  </p>
+                  <p className="text-sm text-gray-500">※現在サービス構築中です</p>
+                </div>
+                <div className="bg-[#111111] rounded-2xl border border-[#D4FF00]/30 p-8 h-64 flex items-center justify-center">
+                  <div className="text-center">
+                    <Bot className="mx-auto mb-4 text-[#D4FF00]" size={64} />
+                    <span className="text-gray-500">AI Chat Interface</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            {/* Service 04 */}
+            <article className="bg-[#1F2937] border border-[#D4FF00]/20 rounded-2xl p-8 md:p-12 fade-up">
+              <span className="font-display text-6xl font-bold text-[#D4FF00]/20 block mb-6">04</span>
+              <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div className="order-2 md:order-1 bg-[#111111] rounded-2xl border border-[#D4FF00]/30 p-8 h-64 flex items-center justify-center">
+                  <div className="text-center">
+                    <PenTool className="mx-auto mb-4 text-[#D4FF00]" size={64} />
+                    <span className="text-gray-500">Web Design Mockup</span>
+                  </div>
+                </div>
+                <div className="order-1 md:order-2">
+                  <h3 className="font-display text-2xl md:text-4xl font-bold mb-4 leading-tight">
+                    農業の現場を知る<br />私たちだから、<br />
+                    想いが伝わるHPが<br className="hidden md:block" />作れる。
+                  </h3>
+                  <p className="text-[#D4FF00] font-bold text-lg mb-6 flex items-center">
+                    <PenTool className="mr-2" size={24} />
+                    農業特化型Web制作
+                  </p>
+                  <div className="space-y-4 text-[#E5E7EB] leading-relaxed">
+                    <p>
+                      「ITはよく分からない」という方でもご安心ください。農業界の知見とWebの技術を持つ私たちが、ヒアリングから公開まで丸ごとサポートします。
+                    </p>
+                    <p>
+                      採用強化や販路拡大に必要な機能を絞り込み、高品質かつリーズナブルな価格で提供します。
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      {/* STORY */}
+      <section id="story" className="py-24 md:py-32 bg-[#F4F4F5]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+            <div className="fade-up">
+              <div className="aspect-[3/4] bg-gradient-to-br from-[#1B5E20] to-[#2e7d32] rounded-2xl overflow-hidden shadow-2xl relative">
+                <div className="absolute inset-0 opacity-40" style={{backgroundImage: "url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800')", backgroundSize: 'cover', backgroundPosition: 'center'}}></div>
+              </div>
+            </div>
+            <div className="fade-up">
+              <span className="font-display font-bold text-[#1B5E20] block mb-4 text-sm tracking-wider">FOUNDER'S STORY</span>
+              <h2 className="font-display text-3xl md:text-4xl font-bold mb-8 leading-tight text-[#1F2937]">
+                「祖父が創り、<br />父が守ったものを、<br />
+                テクノロジーで<br className="hidden md:block" />拡げていく」
+              </h2>
+              <div className="space-y-6 text-gray-700 leading-relaxed">
+                <p>
+                  家業で農業に関わる中で、「真面目に頑張る農家さんが、情報のなさゆえに損をする現実」を目の当たりにしてきました。この不均衡を解消することが、私の使命だと感じました。
+                </p>
+                <p>
+                  父の背中から学んだ「地域と共に生きる」という経営スタンス。これらを掛け合わせ、向井工業が「モノ」で支えた農業を、私は「情報」と「テクノロジー」で支えたいと考えています。
+                </p>
+                <div className="mt-8 pt-6 border-t border-gray-300">
+                  <p className="font-bold text-[#1F2937]">Founder / CEO</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* VOICE */}
+      <section id="voice" className="py-24 md:py-32 bg-[#111111]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-20 fade-up">
+            <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">Voice</h2>
+            <p className="text-gray-500">利用者の声</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { age: '30代・施設野菜', title: '「出荷の迷いがなくなりました」', text: '毎朝LINEでグラフを見てから出荷量を決めています。前年比が見れるのが本当に便利で、経営判断のスピードが上がりました。' },
+              { age: '20代・新規就農', title: '「孤独感が消えました」', text: '同世代の農家さんが頑張っている様子を見るだけでモチベーションになります。' },
+              { age: '50代・露地栽培', title: '「これなら私にも使えます」', text: '難しいアプリは苦手で避けてきましたが、いつも使っているLINEに届くので抵抗なく使えています。' }
+            ].map((voice, i) => (
+              <div key={i} className="bg-[#1F2937] border border-[#D4FF00]/20 rounded-2xl p-8 fade-up hover:border-[#D4FF00]/40 transition-all">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-[#D4FF00]/20 rounded-full mr-4 flex items-center justify-center text-[#D4FF00] font-bold">
+                    {voice.age.charAt(0)}
+                  </div>
+                  <span className="font-bold text-sm">{voice.age}</span>
+                </div>
+                <h3 className="font-bold text-xl mb-4">{voice.title}</h3>
+                <p className="text-sm text-[#E5E7EB] leading-relaxed">{voice.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-24 md:py-32 bg-[#F4F4F5]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
+          <h2 className="font-display text-3xl md:text-5xl font-bold text-center mb-16 text-[#1F2937] fade-up">Q&A</h2>
+          <div className="space-y-6">
+            {[
+              { q: 'Q. 企業ですが、協業や広告掲載は可能ですか？', a: 'A. はい、可能です。お問い合わせフォームよりご連絡ください。' },
+              { q: 'Q. サービスは誰でも使えますか？', a: 'A. はい、農家の方はもちろん、農業関係者様もご利用いただけます。' }
+            ].map((faq, i) => (
+              <div key={i} className="bg-white border border-gray-200 rounded-2xl p-8 fade-up hover:shadow-lg transition-shadow">
+                <h3 className="font-bold text-[#1F2937] mb-3">{faq.q}</h3>
+                <p className="text-sm text-gray-700">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="bg-[#111111] pt-20 pb-8 relative overflow-hidden border-t border-[#D4FF00]/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+            <div className="md:col-span-1">
+              <h2 className="font-display text-3xl font-bold tracking-tight mb-6 text-[#D4FF00]">NOUVATION</h2>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                農業を稼げる産業に変える<br />
+                情報インフラカンパニー
+              </p>
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-gray-400 uppercase mb-6 tracking-wider">Contents</h3>
+              <ul className="space-y-3 text-sm">
+                <li><a href="#mission" className="text-gray-400 hover:text-[#D4FF00] transition-colors">Mission</a></li>
+                <li><a href="#services" className="text-gray-400 hover:text-[#D4FF00] transition-colors">Services</a></li>
+                <li><a href="#story" className="text-gray-400 hover:text-[#D4FF00] transition-colors">Story</a></li>
+                <li><a href="#voice" className="text-gray-400 hover:text-[#D4FF00] transition-colors">Voice</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-gray-400 uppercase mb-6 tracking-wider">Legal & Contact</h3>
+              <ul className="space-y-3 text-sm">
+                <li><a href="#" className="text-gray-400 hover:text-[#D4FF00] transition-colors">プライバシーポリシー</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-[#D4FF00] transition-colors">特定商取引法に基づく表記</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-[#D4FF00] transition-colors">お問い合わせ</a></li>
+              </ul>
+            </div>
+            <div>
+              <a href="#" className="block bg-[#1B5E20] hover:bg-[#2e7d32] transition-all text-white p-6 rounded-2xl text-center group shadow-lg hover:shadow-xl hover:-translate-y-1">
+                <span className="block text-xs text-[#D4FF00] mb-2 font-bold">市場価格速報を受け取る</span>
+                <div className="flex items-center justify-center font-bold text-lg">
+                  <span className="mr-2">📱</span>
+                  <span>公式LINE登録</span>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-800 pt-8 mb-8">
+            <p className="text-center text-xs text-gray-600 font-display">
+              &copy; 2025 NOUVATION. All Rights Reserved.
+            </p>
+          </div>
+        </div>
+
+        {/* Marquee */}
+        <div className="marquee-container py-8 border-t border-[#D4FF00]/10">
+          <div className="marquee-text">
+            <span className="font-display text-8xl md:text-9xl font-black text-[#D4FF00]/10 px-12">
+              NOUVATION · NOUVATION · NOUVATION · NOUVATION · 
+            </span>
+            <span className="font-display text-8xl md:text-9xl font-black text-[#D4FF00]/10 px-12">
+              NOUVATION · NOUVATION · NOUVATION · NOUVATION · 
+            </span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default NouvationSite;

@@ -1,0 +1,174 @@
+---
+// Footer Component
+---
+
+<footer class="bg-[#0a0a0a] pt-20 pb-8 relative overflow-hidden">
+  <!-- 土の世界レイヤー（普段は見えない） -->
+  <div class="soil-world absolute inset-0 pointer-events-none">
+    <!-- 土の色ベース（地層風グラデーション） -->
+    <div class="absolute inset-0" style="background: linear-gradient(180deg, #4a3220 0%, #5c3f24 15%, #6b4a2a 25%, #4e3518 40%, #3d2a14 55%, #5a3d1e 70%, #3a2510 85%, #2a1c0e 100%);"></div>
+    <!-- ノイズテクスチャ（強め） -->
+    <div class="absolute inset-0 opacity-60" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 512 512%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%228%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E');"></div>
+    <!-- 土の層の水平ライン -->
+    <div class="absolute inset-0 opacity-15" style="background: repeating-linear-gradient(180deg, transparent 0px, transparent 60px, rgba(255,255,255,0.08) 60px, rgba(255,255,255,0.08) 62px, transparent 62px, transparent 140px, rgba(180,130,60,0.1) 140px, rgba(180,130,60,0.1) 141px);"></div>
+  </div>
+
+  <!-- 微生物パーティクル -->
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="microbe" style="--x: 15%; --y: 25%; --size: 3px; --delay: 0s; --duration: 4s; --glow-color: #7fff7f;"></div>
+    <div class="microbe" style="--x: 30%; --y: 60%; --size: 2px; --delay: 0.8s; --duration: 3.5s; --glow-color: #7fffdf;"></div>
+    <div class="microbe" style="--x: 50%; --y: 40%; --size: 4px; --delay: 1.2s; --duration: 5s; --glow-color: #D4FF00;"></div>
+    <div class="microbe" style="--x: 70%; --y: 65%; --size: 2px; --delay: 0.3s; --duration: 3s; --glow-color: #7fff7f;"></div>
+    <div class="microbe" style="--x: 85%; --y: 30%; --size: 3px; --delay: 2s; --duration: 4.5s; --glow-color: #aaffaa;"></div>
+    <div class="microbe" style="--x: 25%; --y: 75%; --size: 2px; --delay: 1.5s; --duration: 3.8s; --glow-color: #D4FF00;"></div>
+    <div class="microbe" style="--x: 60%; --y: 20%; --size: 3px; --delay: 0.5s; --duration: 4.2s; --glow-color: #7fffbf;"></div>
+    <div class="microbe" style="--x: 40%; --y: 80%; --size: 2px; --delay: 2.5s; --duration: 3.2s; --glow-color: #aaffaa;"></div>
+    <div class="microbe" style="--x: 10%; --y: 55%; --size: 2px; --delay: 1.8s; --duration: 4.8s; --glow-color: #7fff7f;"></div>
+    <div class="microbe" style="--x: 90%; --y: 50%; --size: 3px; --delay: 0.7s; --duration: 3.6s; --glow-color: #D4FF00;"></div>
+    <div class="microbe" style="--x: 45%; --y: 15%; --size: 2px; --delay: 3s; --duration: 5.5s; --glow-color: #7fffdf;"></div>
+    <div class="microbe" style="--x: 75%; --y: 45%; --size: 4px; --delay: 1s; --duration: 4s; --glow-color: #aaffaa;"></div>
+    <div class="microbe" style="--x: 20%; --y: 85%; --size: 2px; --delay: 2.2s; --duration: 3.4s; --glow-color: #7fff7f;"></div>
+    <div class="microbe" style="--x: 55%; --y: 70%; --size: 3px; --delay: 0.2s; --duration: 4.6s; --glow-color: #D4FF00;"></div>
+    <div class="microbe" style="--x: 35%; --y: 35%; --size: 2px; --delay: 1.7s; --duration: 3.9s; --glow-color: #7fffbf;"></div>
+    <div class="microbe" style="--x: 80%; --y: 85%; --size: 2px; --delay: 2.8s; --duration: 5.2s; --glow-color: #aaffaa;"></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+    <!-- Footer Content Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+      <!-- Company Info -->
+      <div class="md:col-span-1">
+        <a href="/" class="inline-block mb-6 hover:opacity-80 transition-opacity focus:outline-none rounded" aria-label="NOUVATION トップページへ">
+          <img src="/images/logo.svg" alt="NOUVATION" class="h-10 w-auto brightness-0 saturate-100 invert" style="filter: brightness(0) saturate(100%) invert(100%);" />
+        </a>
+        <p class="text-white/80 text-sm leading-relaxed">
+          農業を、稼げる産業に変える。<br />
+          次世代農業プラットフォーム
+        </p>
+      </div>
+
+      <!-- Contents -->
+      <div>
+        <h3 class="font-bold text-sm text-white/80 uppercase mb-6 tracking-wider">
+          Contents
+        </h3>
+        <ul class="space-y-3 text-sm">
+          <li>
+            <a href="#mission" class="text-white/80 hover:text-white transition-colors focus:outline-none rounded px-1" aria-label="Missionセクションへ移動">Mission</a>
+          </li>
+          <li>
+            <a href="#services" class="text-white/80 hover:text-white transition-colors focus:outline-none rounded px-1" aria-label="Servicesセクションへ移動">Services</a>
+          </li>
+          {/* <li>
+            <a href="#story" class="text-white/80 hover:text-white transition-colors focus:outline-none rounded px-1" aria-label="Storyセクションへ移動">Story</a>
+          </li> */}
+          <li>
+            <a href="#voice" class="text-white/80 hover:text-white transition-colors focus:outline-none rounded px-1" aria-label="Voiceセクションへ移動">Voice</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Legal & Contact -->
+      <div>
+        <h3 class="font-bold text-sm text-white/80 uppercase mb-6 tracking-wider">
+          Legal & Contact
+        </h3>
+        <ul class="space-y-3 text-sm">
+          <li>
+            <a href="/privacy" class="text-white/80 hover:text-white transition-colors focus:outline-none rounded px-1">プライバシーポリシー</a>
+          </li>
+          <li>
+            <a href="/legal" class="text-white/80 hover:text-white transition-colors focus:outline-none rounded px-1">特定商取引法に基づく表記</a>
+          </li>
+          <li>
+            <a href="https://docs.google.com/forms/d/1_vNsJ2fG7TYejJu8Zqh5xKqUOtYDag1r6iOnLgRJZ2Y/edit" target="_blank" rel="noopener noreferrer" class="text-white/80 hover:text-white transition-colors focus:outline-none rounded px-1">お問い合わせ</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- LINE CTA -->
+      <div>
+        <a 
+          href="https://line.me/R/ti/p/@356rpise" 
+          target="_blank"
+          rel="noopener noreferrer"
+          class="line-btn block p-6 rounded-2xl text-center group focus:outline-none min-h-[44px] flex flex-col items-center justify-center text-white"
+          aria-label="公式LINEアカウントに登録する"
+        >
+          <div class="flex items-center justify-center font-bold text-lg mb-2">            
+            <span>公式LINE登録</span>
+          </div>
+          <span class="block text-xs text-white/80 group-hover:text-white font-bold transition-colors">
+            毎朝6時、市場価格を見逃さない
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="pt-8 mb-8">
+      <p class="text-center text-xs text-white/60 font-display">
+        &copy; 2026 NOUVATION. All Rights Reserved.
+      </p>
+    </div>
+  </div>
+
+  <!-- Marquee -->
+  <div class="marquee-container py-8">
+    <!-- ... existing marquee code ... -->
+  </div>
+</footer>
+
+<style>
+  .line-btn {
+    background: linear-gradient(180deg, #2ea854 0%, #45d468 50%, #7aedaa 100%) !important;
+    border: 1.5px solid rgba(130, 240, 160, 0.55) !important;
+    box-shadow: 0 0 14px rgba(80, 220, 120, 0.45),
+                0 0 30px rgba(80, 220, 120, 0.18) !important;
+    transition: all 0.3s ease !important;
+    color: white !important;
+  }
+
+  .line-btn:hover {
+    box-shadow: 0 0 20px rgba(80, 220, 120, 0.65),
+                0 0 45px rgba(80, 220, 120, 0.28) !important;
+    transform: translateY(-4px) !important;
+  }
+
+  .microbe {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow:
+      0 0 4px rgba(255,255,255,0.6),
+      0 0 12px rgba(255,255,255,0.3),
+      0 0 24px rgba(255,255,255,0.15);
+    animation: firefly var(--duration) ease-in-out var(--delay) infinite;
+    opacity: 0;
+  }
+
+  @keyframes firefly {
+    0%, 100% { opacity: 0; }
+    40% { opacity: 0.9; }
+    50% { opacity: 1; }
+    60% { opacity: 0.8; }
+    80% { opacity: 0; }
+  }
+
+  .soil-world {
+    opacity: 0;
+    animation: soil-glimpse 15s ease-in-out infinite;
+  }
+
+  @keyframes soil-glimpse {
+    0%, 35% { opacity: 0; }
+    42% { opacity: 0.6; }
+    58% { opacity: 0.6; }
+    68% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+</style>

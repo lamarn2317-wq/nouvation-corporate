@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOUVATION | ワイヤーフレーム v7</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans JP"', 'sans-serif'],
+            en: ['"Montserrat"', 'sans-serif'],
+          },
+          colors: {
+            brand: { base: '#2e7d32', dark: '#1b5e20' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background-color: #ffffff;
+      color: #333;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* モバイルメニューのアニメーション */
+    #mobile-menu {
+      transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+
+    #mobile-menu.open {
+      max-height: 500px;
+      /* 十分な高さを確保 */
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body class="antialiased">
+
+  <!-- HEADER -->
+  <header class="fixed w-full top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center h-20">
+        <div class="font-en font-bold text-2xl tracking-tighter text-brand-base">NOUVATION</div>
+
+        <!-- PC Nav -->
+        <nav class="hidden md:flex space-x-8 text-sm font-bold text-gray-600">
+          <a href="#news" class="hover:text-brand-base transition">News</a>
+          <a href="#mission" class="hover:text-brand-base transition">Mission</a>
+          <a href="#services" class="hover:text-brand-base transition">Services</a>
+          <a href="#story" class="hover:text-brand-base transition">Story</a>
+          <a href="#voice" class="hover:text-brand-base transition">Voice</a>
+        </nav>
+
+        <!-- PC Button -->
+        <div class="hidden md:block">
+          <a href="#" class="px-6 py-2 bg-gray-800 text-white text-sm font-bold rounded hover:bg-gray-700 transition">LINE登録</a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <div class="flex items-center md:hidden">
+          <button type="button" id="menu-btn" class="text-slate-500 hover:text-brand-base p-2 focus:outline-none">
+            <i class="fa-solid fa-bars text-2xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Content -->
+    <div id="mobile-menu" class="md:hidden bg-white border-t border-gray-100">
+      <div class="px-4 py-4 space-y-4">
+        <a href="#news" class="block text-sm font-bold text-gray-600 hover:text-brand-base" onclick="toggleMenu()">News</a>
+        <a href="#mission" class="block text-sm font-bold text-gray-600 hover:text-brand-base" onclick="toggleMenu()">Mission</a>
+        <a href="#services" class="block text-sm font-bold text-gray-600 hover:text-brand-base" onclick="toggleMenu()">Services</a>
+        <a href="#story" class="block text-sm font-bold text-gray-600 hover:text-brand-base" onclick="toggleMenu()">Story</a>
+        <a href="#voice" class="block text-sm font-bold text-gray-600 hover:text-brand-base" onclick="toggleMenu()">Voice</a>
+        <div class="pt-4 border-t border-gray-100">
+          <a href="#" class="block w-full text-center px-6 py-3 bg-gray-800 text-white text-sm font-bold rounded hover:bg-gray-700 transition">LINE登録</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- FV -->
+  <section class="pt-20 relative h-screen flex items-center justify-center bg-gray-100">
+    <div class="absolute inset-0 z-0">
+      <img src="http://googleusercontent.com/image_collection/image_retrieval/18326650985209950053" class="w-full h-full object-cover opacity-50 grayscale" alt="FV Background">
+    </div>
+    <div class="relative z-10 text-center px-4">
+      <h1 class="text-4xl md:text-6xl font-bold mb-6 text-gray-900">農業界に、<br>情報で革新を。</h1>
+      <p class="text-lg md:text-xl font-medium text-gray-800">
+        農家が報われる社会を、情報とつながりで実現する<br>次世代の農業インフラメディア
+      </p>
+    </div>
+  </section>
+
+  <!-- NEWS (Updated Layout) -->
+  <!-- MicroCMSで記事を取得して表示するエリア -->
+  <section id="news" class="py-10 bg-white border-b border-gray-100">
+    <!-- max-w-5xl に変更してコンテンツ幅を少し絞り、左右の間延びを防ぐ -->
+    <div class="max-w-5xl mx-auto px-4">
+      <div class="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-10">
+        <!-- タイトルエリア：縮小しないように設定 -->
+        <div class="flex items-center flex-shrink-0 min-w-fit">
+          <h2 class="text-xl font-bold font-en text-brand-base tracking-widest mr-4">NEWS</h2>
+          <span class="text-xs text-gray-400 whitespace-nowrap">お知らせ</span>
+        </div>
+
+        <div class="flex-grow w-full">
+          <ul class="space-y-4 md:space-y-2">
+            <!-- News Item 1 -->
+            <li class="flex flex-col md:flex-row md:items-center gap-2 md:gap-6 border-b md:border-none border-gray-100 pb-2 md:pb-0">
+              <time class="text-sm text-gray-500 font-en flex-shrink-0">2025.12.20</time>
+              <!-- ラベル色統一 -->
+              <span class="text-xs font-bold text-white bg-gray-800 px-2 py-0.5 rounded w-fit flex-shrink-0">プレスリリース</span>
+              <a href="#" class="text-sm font-bold text-gray-800 hover:text-brand-base hover:underline line-clamp-1">
+                農業情報インフラ「NOUVATION」公式サイトをリニューアルオープンしました
+              </a>
+            </li>
+            <!-- News Item 2 -->
+            <li class="flex flex-col md:flex-row md:items-center gap-2 md:gap-6">
+              <time class="text-sm text-gray-500 font-en flex-shrink-0">2025.11.15</time>
+              <!-- ラベル色統一 -->
+              <span class="text-xs font-bold text-white bg-gray-800 px-2 py-0.5 rounded w-fit flex-shrink-0">メディア掲載</span>
+              <a href="#" class="text-sm font-bold text-gray-800 hover:text-brand-base hover:underline line-clamp-1">
+                日本農業新聞にて、当社のAI相談サービスが紹介されました
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="hidden md:block flex-shrink-0">
+          <a href="#" class="text-xs font-bold text-gray-500 hover:text-brand-base flex items-center group whitespace-nowrap">
+            VIEW ALL <i class="fa-solid fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+          </a>
+        </div>
+        <!-- Mobile View All Button -->
+        <div class="md:hidden w-full text-right">
+          <a href="#" class="text-xs font-bold text-gray-500 hover:text-brand-base">VIEW ALL →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL ISSUES -->
+  <section class="py-20 bg-gray-900 text-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <p class="font-en text-sm tracking-widest mb-4 text-gray-400">SOCIAL ISSUES</p>
+      <h2 class="text-3xl font-bold mb-8">農業が抱える「情報格差」</h2>
+      <p class="leading-loose text-gray-300 text-justify md:text-center">
+        農業界には根深い課題が存在します。努力や根性では解決できない“構造不全”です。<br>
+        多くの農家が補助金や助成金を取り逃し、市場価格が分からず不利な取引を強いられ、そしてSNS発信が点在することで若手農家は孤立し、夢を描けずにいます。<br>
+        情報の欠如と分断が、経済格差や世代間の格差を生み、地域を衰退させ、農業の未来を奪っているのです。
+      </p>
+    </div>
+  </section>
+
+  <!-- MISSION -->
+  <section id="mission" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <span class="font-en font-bold text-brand-base block mb-2">OUR MISSION</span>
+          <h2 class="text-3xl md:text-4xl font-bold mb-8 leading-snug">
+            「知らなかった」で失われる機会をなくし、<br>「伝わらなかった」を「届いた」に変える。
+          </h2>
+          <p class="leading-relaxed text-gray-600 mb-6">
+            汗と努力が報われる社会へ。<br>私たちは情報の力で、農業の構造を変革します。
+          </p>
+        </div>
+        <div class="bg-gray-200 aspect-video flex items-center justify-center border border-gray-300">
+          <span class="text-gray-500 font-bold">Concept Image Area</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-20">
+        <h2 class="text-3xl font-bold font-en mb-2">NOUVATIONが提供する4つのサービス</h2>
+        <div class="w-16 h-1 bg-brand-base mx-auto"></div>
+      </div>
+
+      <div class="space-y-24">
+        <!-- Service 01: Market Data -->
+        <article class="bg-white border border-gray-200 p-8 md:p-12">
+          <span class="font-en text-4xl font-bold text-gray-200 mb-6 block">Service 01</span>
+          <div class="mb-10 max-w-3xl">
+            <h3 class="text-2xl md:text-3xl font-bold mb-3 leading-tight">「生きた数字」が見える。迷いが消える。</h3>
+            <p class="text-brand-base font-bold text-lg mb-4 flex items-center"><i class="fa-solid fa-chart-line mr-2"></i> 市場価格推移グラフ</p>
+            <p class="text-gray-600 leading-relaxed">全国7市場・14品目の価格情報を一元化。<br>過去データと比較することで、意思決定（出荷タイミング）の自信に繋がります。</p>
+          </div>
+          <div class="border border-gray-300 p-6 bg-gray-50 h-80 flex items-center justify-center">
+            <span class="text-gray-400">Interactive Graph UI Area</span>
+          </div>
+        </article>
+
+        <!-- Service 02: Instagram -->
+        <article class="bg-white border border-gray-200 p-8 md:p-12">
+          <span class="font-en text-4xl font-bold text-gray-200 mb-6 block">Service 02</span>
+          <div class="grid md:grid-cols-2 gap-12">
+            <div>
+              <h3 class="text-2xl md:text-3xl font-bold mb-3 leading-tight">選ばれている理由はその「質」</h3>
+              <p class="text-brand-base font-bold text-lg mb-6 flex items-center"><i class="fa-brands fa-instagram mr-2"></i> Instagramメディア</p>
+              <div class="space-y-4 text-gray-700 leading-relaxed">
+                <p>農家・農業関係者の年齢層が16~64歳で96%を占めており、次世代を担う若手・現役プレイヤーにリーチできます。</p>
+                <p>また、農家・農業関係者比率が約8割。<br>農業界でも数少ない“実働世代向け”メディアとして、高い行動率（エンゲージメント）を誇ります。</p>
+              </div>
+              <div class="mt-8 p-4 bg-gray-50 border border-gray-200 inline-block">
+                <div class="text-3xl font-bold font-en">17,500<span class="text-xl">+</span> <span class="text-sm font-normal text-gray-500">Followers</span></div>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 h-full">
+              <div class="bg-gray-200 aspect-[4/5] flex items-center justify-center border border-gray-300"><span class="text-xs text-gray-500">Post Image</span></div>
+              <div class="bg-gray-200 aspect-[4/5] flex items-center justify-center border border-gray-300"><span class="text-xs text-gray-500">Post Image</span></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Service 03: AI Support -->
+        <article class="bg-white border border-gray-200 p-8 md:p-12 relative overflow-hidden">
+          <div class="absolute top-0 right-0 bg-gray-800 text-white text-xs font-bold px-4 py-2">COMING SOON</div>
+          <span class="font-en text-4xl font-bold text-gray-200 mb-6 block">Service 03</span>
+          <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h3 class="text-2xl md:text-3xl font-bold mb-3 leading-tight">栽培の悩みも、補助金のことも。<br>「誰に聞けばいいか分からない」を無くします。</h3>
+              <p class="text-brand-base font-bold text-lg mb-6 flex items-center"><i class="fa-solid fa-robot mr-2"></i> 農業AI専用サポート</p>
+              <p class="text-gray-600 leading-relaxed mb-4">栽培技術から補助金申請まで。24時間365日、あなたの疑問に即座に応えるパートナーAI。</p>
+              <p class="text-sm text-gray-400">※現在サービス構築中です</p>
+            </div>
+            <div class="bg-gray-100 h-64 flex items-center justify-center border border-gray-300"><span class="text-gray-500 font-bold">AI Chat UI Image</span></div>
+          </div>
+        </article>
+
+        <!-- Service 04: Web Production -->
+        <article class="bg-white border border-gray-200 p-8 md:p-12">
+          <span class="font-en text-4xl font-bold text-gray-200 mb-6 block">Service 04</span>
+          <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="order-2 md:order-1 bg-gray-100 h-64 flex items-center justify-center border border-gray-300">
+              <span class="text-gray-500 font-bold">Web Design Mockup</span>
+            </div>
+            <div class="order-1 md:order-2">
+              <h3 class="text-2xl md:text-3xl font-bold mb-3 leading-tight">農業の現場を知る私たちだから、<br>想いが伝わるHPが作れる。</h3>
+              <p class="text-brand-base font-bold text-lg mb-6 flex items-center"><i class="fa-solid fa-pen-nib mr-2"></i> 農業特化型Web制作</p>
+              <div class="space-y-4 text-gray-600 leading-relaxed">
+                <p>「ITはよく分からない」という方でもご安心ください。農業界の知見とWebの技術を持つ私たちが、ヒアリングから公開まで丸ごとサポートします。</p>
+                <p>採用強化や販路拡大に必要な機能を絞り込み、高品質かつリーズナブルな価格で提供します。</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section id="story" class="py-24 bg-white border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="bg-gray-200 h-[500px] border border-gray-300 flex items-center justify-center">
+          <span class="text-gray-500 font-bold">Founder Image</span>
+        </div>
+        <div>
+          <span class="font-en font-bold text-brand-base block mb-2">FOUNDER'S STORY</span>
+          <h2 class="text-3xl font-bold mb-8 leading-snug">
+            「祖父が創り、父が守ったものを、<br>テクノロジーで拡げていく」
+          </h2>
+          <div class="space-y-6 text-gray-600 leading-relaxed">
+            <p>
+              家業で農業に関わる中で、「真面目に頑張る農家さんが、情報のなさゆえに損をする現実」を目の当たりにしてきました。
+              この不均衡を解消することが、私の使命だと感じました。
+            </p>
+            <p>
+              父の背中から学んだ「地域と共に生きる」という経営スタンス。
+              これらを掛け合わせ、向井工業が「モノ」で支えた農業を、私は「情報」と「テクノロジー」で支えたいと考えています。
+            </p>
+            <div class="mt-4 font-bold text-gray-900">
+              Founder / CEO
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VOICE -->
+  <section id="voice" class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold font-en mb-2">Voice</h2>
+        <p class="text-gray-500">利用者の声</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white p-8 border border-gray-200">
+          <div class="flex items-center mb-4">
+            <div class="w-10 h-10 bg-gray-300 rounded-full mr-3"></div>
+            <span class="font-bold text-sm">30代・施設野菜</span>
+          </div>
+          <h3 class="font-bold mb-3">「出荷の迷いがなくなりました」</h3>
+          <p class="text-sm text-gray-600">
+            毎朝LINEでグラフを見てから出荷量を決めています。前年比が見れるのが本当に便利で、経営判断のスピードが上がりました。
+          </p>
+        </div>
+        <div class="bg-white p-8 border border-gray-200">
+          <div class="flex items-center mb-4">
+            <div class="w-10 h-10 bg-gray-300 rounded-full mr-3"></div>
+            <span class="font-bold text-sm">20代・新規就農</span>
+          </div>
+          <h3 class="font-bold mb-3">「孤独感が消えました」</h3>
+          <p class="text-sm text-gray-600">
+            同世代の農家さんが頑張っている様子を見るだけでモチベーションになります。
+          </p>
+        </div>
+        <div class="bg-white p-8 border border-gray-200">
+          <div class="flex items-center mb-4">
+            <div class="w-10 h-10 bg-gray-300 rounded-full mr-3"></div>
+            <span class="font-bold text-sm">50代・露地栽培</span>
+          </div>
+          <h3 class="font-bold mb-3">「これなら私にも使えます」</h3>
+          <p class="text-sm text-gray-600">
+            難しいアプリは苦手で避けてきましたが、いつも使っているLINEに届くので抵抗なく使えています。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-24 bg-white border-t border-gray-200">
+    <div class="max-w-3xl mx-auto px-4">
+      <h2 class="text-3xl font-bold font-en text-center mb-12">Q&A</h2>
+      <div class="space-y-6">
+        <div class="border border-gray-200 p-6">
+          <h3 class="font-bold mb-2">Q. 企業ですが、協業や広告掲載は可能ですか？</h3>
+          <p class="text-sm text-gray-600">A. はい、可能です。お問い合わせフォームよりご連絡ください。</p>
+        </div>
+        <div class="border border-gray-200 p-6">
+          <h3 class="font-bold mb-2">Q. サービスは誰でも使えますか？</h3>
+          <p class="text-sm text-gray-600">A. はい、農家の方はもちろん、農業関係者様もご利用いただけます。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-white pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        <div class="md:col-span-1">
+          <h2 class="text-2xl font-bold font-en tracking-tighter mb-4">NOUVATION</h2>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            農業を稼げる産業に変える<br>情報インフラカンパニー
+          </p>
+        </div>
+        <div>
+          <h3 class="font-bold text-sm text-slate-300 uppercase mb-4 tracking-wider">Contents</h3>
+          <ul class="space-y-3 text-sm text-slate-400">
+            <li><a href="#mission" class="hover:text-white transition">Mission</a></li>
+            <li><a href="#services" class="hover:text-white transition">Services</a></li>
+            <li><a href="#story" class="hover:text-white transition">Story</a></li>
+            <li><a href="#voice" class="hover:text-white transition">Voice</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-sm text-slate-300 uppercase mb-4 tracking-wider">Legal & Contact</h3>
+          <ul class="space-y-3 text-sm text-slate-400">
+            <li><a href="#" class="hover:text-white transition">プライバシーポリシー</a></li>
+            <li><a href="#" class="hover:text-white transition">特定商取引法に基づく表記</a></li>
+            <li><a href="#" class="hover:text-white transition">お問い合わせ</a></li>
+          </ul>
+        </div>
+        <div>
+          <a href="#" class="block bg-brand-base hover:bg-brand-dark transition text-white p-4 rounded-lg text-center group">
+            <span class="block text-xs text-brand-light mb-1 font-bold">市場価格速報を受け取る</span>
+            <div class="flex items-center justify-center font-bold">
+              <i class="fa-brands fa-line text-2xl mr-2"></i>
+              <span>公式LINE登録</span>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="border-t border-slate-800 pt-8 text-center text-xs text-slate-500 font-en">
+        &copy; 2025 NOUVATION. All Rights Reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script for Mobile Menu Toggle -->
+  <script>
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
+    });
+
+    // Close menu when clicking a link
+    function toggleMenu() {
+      mobileMenu.classList.remove('open');
+    }
+  </script>
+
+</body>
+
+</html>
