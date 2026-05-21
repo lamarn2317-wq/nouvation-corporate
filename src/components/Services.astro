@@ -5,7 +5,7 @@ const marketPrices = await getMarketPrices();
 ---
 
 <!-- Section Title -->
-<section data-section-theme="light" id="services" class="pt-16 md:pt-24 pb-0 bg-[#F6F6EE]">
+<section data-section-theme="light" id="services" class="pt-8 md:pt-12 pb-0 bg-[#F6F6EE]">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
     <div class="text-center fade-up">
       <h2 class="text-4xl md:text-[5rem] font-bold mb-2 leading-[1.2] text-[#231815]">
@@ -19,32 +19,32 @@ const marketPrices = await getMarketPrices();
 </section>
 
 <!-- Service 01: Market Graph -->
-<section data-section-theme="light" id="service-01" class="pt-8 md:pt-12 pb-24 md:pb-32 bg-[#F6F6EE]">
+<section data-section-theme="light" id="service-01" class="pt-8 md:pt-12 pb-16 md:pb-20 bg-[#F6F6EE]">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
     <div class="fade-up">
-      <div class="flex items-center gap-2 mb-6">
+      <div class="flex items-center gap-2 mb-3">
         <span class="text-[#2e7d32] text-2xl">⚫︎</span>
         <span class="font-display text-2xl font-bold text-[#231815]">01</span>
       </div>
-      
-      <div class="mb-10">        
+
+      <div class="mb-6 md:mb-8">
         <div class="max-w-3xl">
-          <h3 class="char-reveal text-2xl md:text-[2.8rem] font-bold mb-6 leading-relaxed text-[#231815]">
+          <h3 class="char-reveal text-2xl md:text-[2.8rem] font-bold mb-4 leading-relaxed text-[#231815]">
             「生きた数字」が見える。<br />迷いが消える。
           </h3>
-          
+
           <p class="text-[#231815] leading-loose mb-8 text-[0.78rem] md:text-base ja-keep">
             全国主要都市7市場・16品目の価格情報を一元化。<br />
             過去データと比較することで、意思決定（出荷タイミング）の自信に繋がります。
           </p>
         </div>
-        <div class="flex flex-col items-center gap-3 text-center mt-4">
-          <span class="market-pill inline-flex items-center gap-2 rounded-full border border-[#2e7d32]/15 px-4 py-1.5 text-[10px] md:text-xs font-bold tracking-[0.22em] text-[#2e7d32]">
+        <div class="flex flex-col items-center gap-2 text-center mt-3">
+          <span class="market-pill inline-flex items-center gap-2 rounded-full border border-[#2e7d32]/15 px-3 py-1 text-[10px] md:text-xs font-bold tracking-[0.22em] text-[#2e7d32]">
             <span class="market-pill__dot relative inline-block h-2 w-2 rounded-full bg-[#2e7d32]"></span>
             MARKET PRICE LIVE MONITOR
           </span>
-          <p class="text-[#2e7d32] font-bold text-2xl md:text-4xl flex items-center justify-center tracking-wide">
-            <svg class="mr-2 md:mr-3 w-6 h-6 md:w-8 md:h-8 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+          <p class="text-[#2e7d32] font-bold text-xl md:text-2xl flex items-center justify-center tracking-wide">
+            <svg class="mr-2 w-5 h-5 md:w-6 md:h-6 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
             </svg>
             市場価格速報
@@ -52,26 +52,18 @@ const marketPrices = await getMarketPrices();
         </div>
       </div>
       
-      <div class="market-card relative rounded-3xl p-6 md:p-8 overflow-hidden fade-up">
-        <div class="mb-6 flex flex-wrap gap-3 md:gap-4 items-center justify-between relative z-10">
+      <div class="market-card relative rounded-3xl p-4 md:p-5 pb-3 overflow-hidden fade-up">
+        <div class="mb-3 flex flex-wrap gap-3 md:gap-4 items-center justify-between relative z-10">
           <div class="flex gap-2 flex-1 min-w-0">
             <select id="itemFilter" class="market-card__select bg-[#F6F6EE] border-none rounded-lg px-3 md:px-4 py-2 text-xs md:text-sm font-bold text-[#231815] focus:ring-2 focus:ring-[#2e7d32] cursor-pointer min-w-0">
             </select>
             <select id="marketFilter" class="market-card__select bg-[#F6F6EE] border-none rounded-lg px-3 md:px-4 py-2 text-xs md:text-sm font-bold text-[#231815] focus:ring-2 focus:ring-[#2e7d32] cursor-pointer min-w-0">
             </select>
           </div>
-          <div class="text-right flex-shrink-0 flex flex-col items-end gap-0.5">
-            <span class="text-[10px] md:text-xs text-[#231815]/45 font-mono tracking-wider">Unit: 円/kg</span>
-            <span class="market-card__live inline-flex items-center gap-1.5 text-[9px] md:text-[10px] text-[#2e7d32] font-bold tracking-[0.18em]">
-              <span class="market-card__live-dot relative inline-block h-1.5 w-1.5 rounded-full bg-[#2e7d32]"></span>
-              LIVE DATA
-            </span>
-            <span id="kpiLastUpdated" class="text-[9px] md:text-[10px] text-[#231815]/40 font-mono tracking-wider" aria-live="polite">—</span>
-          </div>
         </div>
 
         <!-- KPI Cards: Current / Day Change / Week Range / Summary -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-3 mb-6">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-2.5 mb-3">
           <div class="kpi-card kpi-card--primary">
             <p class="kpi-card__label">CURRENT</p>
             <p id="kpiCurrent" class="kpi-card__value kpi-card__value--mono">—</p>
@@ -93,7 +85,7 @@ const marketPrices = await getMarketPrices();
           </div>
         </div>
         
-        <div class="market-card__chart-wrap relative h-[300px] md:h-[400px] w-full flex items-center justify-center rounded-2xl overflow-hidden">
+        <div class="market-card__chart-wrap relative h-[200px] md:h-[260px] w-full flex items-center justify-center rounded-2xl overflow-hidden">
           <!-- ローディング表示 -->
           <div id="chartLoader" class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/85 backdrop-blur-sm transition-opacity duration-500">
             <div class="w-12 h-12 border-4 border-[#2e7d32]/20 border-t-[#2e7d32] rounded-full animate-spin mb-4"></div>
@@ -103,43 +95,32 @@ const marketPrices = await getMarketPrices();
         </div>
 
         <!-- 詳細ダッシュボードへのリンク (右下配置) -->
-        <div class="mt-5 md:mt-6 flex justify-end relative z-10">
+        <div class="mt-3 md:mt-4 flex flex-col items-end gap-1.5 relative z-10">
           <a
             href="https://nouvation-agri-omega.vercel.app"
             target="_blank"
             rel="noopener noreferrer"
-            class="group inline-flex items-center gap-2 px-5 md:px-6 py-2.5 md:py-3 bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold rounded-full text-xs md:text-sm transition-all shadow-md hover:shadow-lg tracking-wider"
+            class="group inline-flex items-center gap-2 px-5 md:px-6 py-2 md:py-2.5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold rounded-full text-xs md:text-sm transition-all shadow-md hover:shadow-lg tracking-wider"
           >
             <span>📊 見返せる市場価格速報</span>
             <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>
           </a>
+          <span id="kpiLastUpdated" class="text-xs md:text-sm text-[#231815]/70 font-mono tracking-wider" aria-live="polite">—</span>
         </div>
       </div>
 
       <!-- 注釈テキスト：最低限必要な計算ルールを開示。さらに詳しくはFAQへ。 -->
-      <div class="mt-4 px-2 space-y-1">
+      <div class="mt-3 px-2 space-y-0.5">
         <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
-          ※価格は原則「相対取引の中値（1kgあたり）」を表示。
+          ※価格は「相対取引の中値（1kgあたり）」を表示。中値がない場合は推定値（高値+安値）÷2、または高値を代替。せり値・第三販売は除外/補完。
         </p>
         <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
-          中値が取れない場合は推定値「（高値+安値）÷2」または高値を代替表示。
+          ※箱・束・小袋は単位併記、前日比は単位違い時「±0」表記。産地は生産量上位を優先。水・日曜・祝日は市場休市のため非配信。
         </p>
-        <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
-          相対取引がない品目はせり値を補完。
-        </p>
-        <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
-          箱・束・小袋取引は単位を併記、前日比は単位違い時「±0」表記。
-        </p>
-        <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
-          産地は生産量上位の主要産地を優先、外国産混入の可能性がある第三販売は除外。
-        </p>
-        <p class="text-[10px] md:text-xs text-[#231815]/60 leading-relaxed">
-          水・日曜・祝日は市場休市のため配信を行いません。
-        </p>
-        <p class="text-[10px] md:text-xs text-[#231815]/50 leading-relaxed mt-2 pt-2 border-t border-[#231815]/10">
-          ※データは各卸売市場の公開情報を統合したものです。「中値」は取引中位価格を指す業界慣習に基づきます。本情報は出荷判断の参考であり、最終的な意思決定はご自身の責任でお願いします。
+        <p class="text-[10px] md:text-xs text-[#231815]/50 leading-relaxed mt-1.5 pt-1.5 border-t border-[#231815]/10">
+          ※各卸売市場の公開情報を統合した参考値です。最終的な意思決定はご自身の責任でお願いします。
         </p>
       </div>
 
@@ -216,26 +197,21 @@ const marketPrices = await getMarketPrices();
       <div class="flex items-center gap-2 mb-6">
         <span class="text-[#2e7d32] text-2xl">⚫︎</span>
         <span class="font-display text-2xl font-bold text-[#231815]">03</span>
-        <span class="bg-[#2e7d32] text-white text-xs font-bold px-4 py-1.5 rounded-full ml-2">
-          NEW
-        </span>
       </div>
-      
-      <div class="grid md:grid-cols-2 gap-12 items-end">
+
+      <div class="grid md:grid-cols-2 gap-12 items-center">
         <div>
-          <h3 class="char-reveal ja-keep text-2xl md:text-[2.8rem] font-bold mb-4 leading-relaxed text-[#231815]">
+          <p class="text-[#231815]/60 text-xs tracking-[0.25em] mb-3 font-bold">
+            農業AIアシスタント
+          </p>
+          <p class="char-reveal ai-logo-text mb-6">
+            <span class="ai-logo-en">NOUVATION</span><span class="ai-logo-jp">農業AIサポート</span>
+          </p>
+          <h3 class="ja-keep ai-hero-title text-2xl md:text-[2.8rem] font-bold mb-6 leading-relaxed">
             「あの時知っていれば」を<br>なくす。
           </h3>
-          
-          <p class="text-[#231815] font-bold text-lg mb-6 flex items-center">
-            <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></rect>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-            </svg>
-            NOUVATION農業AIサポート
-          </p>
-          
-          <p class="text-[#231815] leading-loose mb-4 text-[0.8rem] md:text-base ja-keep">
+
+          <p class="text-[#231815] leading-loose mb-8 text-[0.8rem] md:text-base ja-keep">
             病害虫・補助金・天気・経営、<br>
 さらに市場価格と異常気象通知まで。<br>
 「誰に聞けばいいか分からない」も、<br>
@@ -1058,8 +1034,8 @@ const marketPrices = await getMarketPrices();
   /* ===== KPI Cards (Current / Day Change / Week Range / Insight) ===== */
   .kpi-card {
     position: relative;
-    padding: 0.875rem 1rem;
-    border-radius: 1rem;
+    padding: 0.625rem 0.85rem;
+    border-radius: 0.875rem;
     background: linear-gradient(145deg,
       rgba(255, 255, 255, 0.95) 0%,
       rgba(246, 246, 238, 0.85) 100%);
@@ -1249,5 +1225,39 @@ const marketPrices = await getMarketPrices();
                 0 0 45px rgba(243, 156, 18, 0.25) !important;
     transform: translateY(-2px) !important;
     opacity: 1 !important;
+  }
+
+  /* Service 03 ブランド名：farmatch ロゴと同じ構造（黒 + 緑グラデ） */
+  .ai-logo-text {
+    font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    display: inline-block;
+  }
+  .ai-logo-en {
+    color: #231815;
+    margin-right: 0.3em;
+  }
+  .ai-logo-jp {
+    background: linear-gradient(180deg, #2e7d32 0%, #5ba83f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Service 03 見出し：Farmatch fm-hero-title と同じ緑グラデーション shimmer */
+  .ai-hero-title {
+    background: linear-gradient(120deg, #1a5e1f 0%, #2e7d32 30%, #45d468 60%, #2e7d32 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 30px rgba(46, 125, 50, 0.15);
+    animation: aiHeroShimmer 8s ease-in-out infinite;
+  }
+  @keyframes aiHeroShimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
   }
 </style>
