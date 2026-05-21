@@ -34,11 +34,11 @@ export async function getNewsList(limit = 10): Promise<NewsItem[]> {
     return [
       {
         id: "1",
-        createdAt: "2025-12-20T00:00:00.000Z",
-        updatedAt: "2025-12-20T00:00:00.000Z",
-        publishedAt: "2025-12-20T00:00:00.000Z",
-        revisedAt: "2025-12-20T00:00:00.000Z",
-        date: "2025.12.20",
+        createdAt: "2026-05-21T00:00:00.000Z",
+        updatedAt: "2026-05-21T00:00:00.000Z",
+        publishedAt: "2026-05-21T00:00:00.000Z",
+        revisedAt: "2026-05-21T00:00:00.000Z",
+        date: "2026.05.21",
         category: "プレスリリース",
         title:
           "農業情報インフラ「NOUVATION」公式サイトをリニューアルオープンしました",
@@ -95,11 +95,11 @@ export async function getNewsList(limit = 10): Promise<NewsItem[]> {
     return [
       {
         id: "1",
-        createdAt: "2025-12-20T00:00:00.000Z",
-        updatedAt: "2025-12-20T00:00:00.000Z",
-        publishedAt: "2025-12-20T00:00:00.000Z",
-        revisedAt: "2025-12-20T00:00:00.000Z",
-        date: "2025.12.20",
+        createdAt: "2026-05-21T00:00:00.000Z",
+        updatedAt: "2026-05-21T00:00:00.000Z",
+        publishedAt: "2026-05-21T00:00:00.000Z",
+        revisedAt: "2026-05-21T00:00:00.000Z",
+        date: "2026.05.21",
         category: "プレスリリース",
         title:
           "農業情報インフラ「NOUVATION」公式サイトをリニューアルオープンしました",
