@@ -75,6 +75,9 @@ const {
     /* iOS Safariでスクロール時の横揺れ・縦サイズ変動を抑止 */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    /* iOS Safari の transform はみ出し対策（html 側にも overflow 制御） */
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 
   body {
@@ -84,8 +87,14 @@ const {
     transition: background-color var(--theme-transition), color var(--theme-transition);
     /* 横スクロール防止（レイアウトシフト防止） */
     overflow-x: hidden;
-    /* 常にスクロールバー分の幅を確保してレイアウト安定 */
-    scrollbar-gutter: stable;
+    max-width: 100vw;
+    position: relative;
+    /* デスクトップのみスクロールバー幅予約（モバイルではスクロールバーなしで誤動作するため除外） */
+  }
+  @media (min-width: 768px) {
+    body {
+      scrollbar-gutter: stable;
+    }
   }
   
   /* Dark Theme (Default) */

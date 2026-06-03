@@ -315,6 +315,10 @@ const categories = [
     /* GPU合成 */
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
+    /* iOS Safari でカード translate3d(-118%) が画面外にはみ出してページ全体を縮小表示する問題対策 */
+    overflow-x: hidden;
+    overflow-y: visible;
+    max-width: 100vw;
   }
 
   .voice-carousel {
