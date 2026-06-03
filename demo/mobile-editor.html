@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOUVATION モバイル編集ツール</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Zen+Maru+Gothic:wght@400;500;700&family=Shippori+Mincho:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --green: #2e7d32;
+    --cream: #F6F6EE;
+    --beige: #F0ECDE;
+    --ink: #231815;
+  }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    color: #e5e5e5;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+
+  .top-bar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(20, 20, 20, 0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .top-bar h1 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin: 0;
+  }
+  .top-bar .badge {
+    background: var(--green);
+    color: #fff;
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-left: 8px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+  }
+  .btn {
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    letter-spacing: 0.05em;
+  }
+  .btn-save {
+    background: var(--green);
+    color: white;
+  }
+  .btn-save:hover {
+    background: #1b5e20;
+    transform: translateY(-1px);
+  }
+  .btn-reset {
+    background: rgba(255,255,255,0.08);
+    color: #ddd;
+  }
+  .btn-reset:hover {
+    background: rgba(255,255,255,0.15);
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  @media (min-width: 1024px) {
+    .container { grid-template-columns: 420px 1fr; }
+  }
+
+  /* iPhone Frame */
+  .phone-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .iphone {
+    position: sticky;
+    top: 90px;
+    width: 390px;
+    height: 760px;
+    background: #111;
+    border-radius: 50px;
+    padding: 14px;
+    box-shadow:
+      0 0 0 1.5px #333,
+      0 0 0 4px #1a1a1a,
+      0 20px 60px rgba(0,0,0,0.7),
+      0 0 80px rgba(46, 125, 50, 0.08);
+  }
+  .iphone-screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 38px;
+    overflow: hidden;
+    overflow-y: auto;
+    background: var(--cream);
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+  }
+  /* Notch */
+  .iphone-notch {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 28px;
+    background: #111;
+    border-radius: 20px;
+    z-index: 10;
+  }
+  /* Status bar */
+  .status-bar {
+    height: 44px;
+    padding: 14px 24px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  /* Editable styles */
+  [contenteditable] {
+    outline: none;
+    border: 1.5px dashed transparent;
+    border-radius: 4px;
+    transition: all 0.15s;
+    cursor: text;
+    padding: 1px 3px;
+    margin: 0 -3px;
+  }
+  [contenteditable]:hover {
+    border-color: rgba(46,125,50,0.4);
+    background: rgba(46,125,50,0.04);
+  }
+  [contenteditable]:focus {
+    border-color: var(--green);
+    background: rgba(46,125,50,0.08);
+    box-shadow: 0 0 0 3px rgba(46,125,50,0.1);
+  }
+  [contenteditable].changed::before {
+    content: '●';
+    color: var(--green);
+    margin-right: 4px;
+    font-size: 8px;
+    vertical-align: middle;
+  }
+
+  /* Mock production sections (mobile look) */
+  .sec { padding: 20px 16px; }
+  .sec-dark { background: #111; color: #fff; min-height: 280px; position: relative; }
+  .sec-dark-img {
+    background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%),
+                url('/images/issues_bg.jpg') center/cover;
+    color: #fff;
+    text-align: center;
+    padding: 30px 16px;
+  }
+  .sec-cream { background: var(--cream); color: var(--ink); }
+  .sec-beige { background: var(--beige); color: var(--ink); }
+
+  .small-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    color: rgba(35,24,21,0.6);
+    margin-bottom: 8px;
+  }
+  .small-label-light {
+    color: rgba(255,255,255,0.6);
+  }
+  .h-page {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.3;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    margin-bottom: 10px;
+  }
+  .h-section {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .body-text {
+    font-size: 14.7px; /* 0.92rem */
+    line-height: 1.85;
+    color: var(--ink);
+  }
+  .body-text-light { color: #fff; }
+  .num-badge {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  /* JSON output */
+  .json-panel {
+    background: #161616;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 20px;
+    position: sticky;
+    top: 90px;
+  }
+  .json-panel h2 {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+    color: #fff;
+    letter-spacing: 0.08em;
+  }
+  .json-panel .desc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+  #output-json {
+    background: #0a0a0a;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 16px;
+    font-family: 'SF Mono', monospace;
+    font-size: 12px;
+    color: #a5d6a7;
+    max-height: 50vh;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    margin: 0;
+    line-height: 1.6;
+  }
+  .json-panel .empty {
+    color: rgba(255,255,255,0.35);
+    font-style: italic;
+    padding: 20px;
+    text-align: center;
+  }
+  .copy-btn {
+    margin-top: 12px;
+    width: 100%;
+    padding: 10px;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 9999px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.15s;
+  }
+  .copy-btn:hover { background: #1b5e20; }
+  .copy-btn.copied {
+    background: #1565c0;
+  }
+
+  .help {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 16px;
+    line-height: 1.7;
+    padding: 14px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 8px;
+    border-left: 2px solid var(--green);
+  }
+  .help b { color: #fff; }
+
+  .changed-count {
+    background: rgba(46,125,50,0.18);
+    color: #81c784;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    margin-left: 8px;
+    font-weight: 700;
+  }
+
+  /* Scrollbar */
+  .iphone-screen::-webkit-scrollbar {
+    width: 0;
+  }
+  #output-json::-webkit-scrollbar { width: 8px; }
+  #output-json::-webkit-scrollbar-track { background: transparent; }
+  #output-json::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <h1>📱 NOUVATION モバイル編集ツール<span class="badge">EDIT</span><span id="changed-count" class="changed-count" style="display:none">0件変更</span></h1>
+  </div>
+  <div class="actions">
+    <button class="btn btn-reset" id="resetBtn">リセット</button>
+    <button class="btn btn-save" id="saveBtn">💾 JSON 出力</button>
+  </div>
+</div>
+
+<div class="container">
+  <!-- iPhone Frame Preview -->
+  <div class="phone-wrap">
+    <div class="iphone">
+      <div class="iphone-notch"></div>
+      <div class="iphone-screen">
+        <div class="status-bar">
+          <span>21:00</span>
+          <span style="font-size:11px;letter-spacing:0.05em">📶 5G ▮</span>
+        </div>
+
+        <!-- FV (簡易表現) -->
+        <section class="sec sec-dark" style="background: linear-gradient(180deg, rgba(0,0,0,0.4), rgba(0,0,0,0.85)), url('/images/issues_bg.jpg') center/cover; min-height: 460px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+          <h1
+            data-id="fv.title"
+            contenteditable="true"
+            style="font-family: 'Shippori Mincho', serif; font-size: 26.4px; font-weight: 700; line-height: 1.45; letter-spacing: -0.01em; padding: 0 12px; color: #fff;"
+          >農業界に、情報で革新を。</h1>
+          <p
+            data-id="fv.desc"
+            contenteditable="true"
+            style="font-size: 14px; line-height: 1.85; margin-top: 20px; color: rgba(255,255,255,0.95); padding: 0 12px;"
+          >農家が報われる社会を、情報とつながりで実現する<br>次世代農業インフラメディア</p>
+        </section>
+
+        <!-- Social Issues -->
+        <section class="sec sec-dark-img">
+          <p class="small-label small-label-light">SOCIAL ISSUES</p>
+          <h2 data-id="social.heading" contenteditable="true" style="font-size: 22px; font-weight: 700; margin: 10px 0 22px; color: #fff;">農業が抱える「情報格差」</h2>
+          <div style="color: #fff; font-size: 14.7px; line-height: 1.85; text-align: center;">
+            <p data-id="social.text1" contenteditable="true" style="margin-bottom: 18px;">農業界には根深い課題が存在します。それは、努力や根性では解決できない"構造不全"です。</p>
+            <p data-id="social.text2" contenteditable="true" style="margin-bottom: 18px;">多くの農家が補助金や助成金を取り逃し、市場価格が分からず不利な取引を強いられ、そしてSNS発信が点在することで若手農家は孤立し、夢を描けずにいます。</p>
+            <p data-id="social.text3" contenteditable="true" style="font-weight: 700; margin-bottom: 0;">情報の欠如と分断が、経済格差や世代間の格差を生み、地域を衰退させ、農業の未来を奪っているのです。</p>
+          </div>
+        </section>
+
+        <!-- Mission -->
+        <section class="sec sec-beige" style="padding: 30px 16px;">
+          <h2 style="font-family: 'Zen Maru Gothic', sans-serif; font-size: 34px; font-weight: 700; text-align: center; margin-bottom: 30px;">MISSION</h2>
+          <h3 class="h-section" style="font-size: 22px; line-height: 1.55;">
+            <span data-id="mission.heading1" contenteditable="true">情報格差をなくし、</span><br>
+            <span data-id="mission.heading2" contenteditable="true">農家の利益を最大化する。</span>
+          </h3>
+          <div class="body-text" style="margin-top: 16px;">
+            <p data-id="mission.text1" contenteditable="true" style="margin-bottom: 16px;">農業界には、優れた技術や想いがありながらも、情報が届かないために正当な評価を受けられていない現場がまだ数多く残っています。</p>
+            <p data-id="mission.text2" contenteditable="true">市場動向・補助金制度・現場ノウハウをSNSで全国の農家さんに届ける。農業の情報インフラとして農家の皆さまが持つ可能性を最大限に引き出します。</p>
+          </div>
+        </section>
+
+        <!-- Service 01 -->
+        <section class="sec sec-cream" style="padding: 30px 16px;">
+          <p style="font-weight: 700; font-size: 18px; margin-bottom: 12px;">⚫︎ 01</p>
+          <h3 class="h-section" data-id="service01.heading" contenteditable="true" style="font-size: 22px; line-height: 1.55;">「生きた数字」が見える。迷いが消える。</h3>
+          <p class="body-text" data-id="service01.desc" contenteditable="true">全国主要都市7市場・16品目の価格情報を一元化。過去データと比較することで、意思決定（出荷タイミング）の自信に繋がります。</p>
+          <p style="margin-top: 14px; font-weight: 700; font-size: 16px; color: var(--green); text-align: center;" data-id="service01.title" contenteditable="true">市場価格速報</p>
+        </section>
+
+        <!-- Service 02 -->
+        <section class="sec sec-beige" style="padding: 30px 16px;">
+          <p style="font-weight: 700; font-size: 18px; margin-bottom: 12px;">⚫︎ 02</p>
+          <h3 class="h-section" data-id="service02.heading" contenteditable="true" style="font-size: 20px; line-height: 1.5;">選ばれている理由はその「質」</h3>
+          <p data-id="service02.sublabel" contenteditable="true" style="font-weight: 700; font-size: 15px; margin: 8px 0 14px;">📷 Instagramメディア</p>
+          <p class="body-text" data-id="service02.desc" contenteditable="true" style="font-size: 14.4px; line-height: 1.85;">Instagramのインサイトでは、フォロワーの18〜64歳が全体の96%を占めており、次世代の農業界を担う若手〜現役プレイヤー層に効率よくリーチできます。さらに、フォロワーの約8割が農家・農業関係者で、農業界でも数少ない"実働世代向けメディア"として、高い反応率（エンゲージメント)のコミュニティを築いています。</p>
+        </section>
+
+        <!-- Service 03 (AI Support) -->
+        <section class="sec sec-cream" style="padding: 30px 16px;">
+          <p style="font-weight: 700; font-size: 18px; margin-bottom: 12px;">⚫︎ 03</p>
+          <p data-id="service03.small" contenteditable="true" style="font-size: 11px; font-weight: 700; letter-spacing: 0.25em; color: rgba(35,24,21,0.6); margin-bottom: 10px;">農業AIアシスタント</p>
+          <p style="font-size: 26px; font-weight: 900; line-height: 1.15; margin-bottom: 16px;"><span data-id="service03.brand_en" contenteditable="true">NOUVATION</span> <span data-id="service03.brand_jp" contenteditable="true" style="color: var(--green);">農業AIサポート</span></p>
+          <h3 class="h-section" data-id="service03.heading" contenteditable="true" style="color: var(--green); font-size: 20px;">「あの時知っていれば」をなくす。</h3>
+          <p class="body-text" data-id="service03.desc" contenteditable="true" style="white-space: pre-wrap;">病害虫・補助金・天気・経営、さらに市場価格と異常気象通知まで。「誰に聞けばいいか分からない」も、「調べても答えが出ない」も無くします。
+
+あなたの疑問に即座に応え、使うほど地域・作物・規模を覚えて、あなた専用の答えを返す農業専門パートナーAI。
+
+補助金1件で年数十万、肥料節約で年数万円。検索の手間が、利益に変わる。</p>
+        </section>
+
+        <!-- Farmatch -->
+        <section class="sec sec-beige" style="padding: 30px 16px;">
+          <p style="font-weight: 700; font-size: 18px; margin-bottom: 12px;">⚫︎ 04</p>
+          <p data-id="farmatch.small" contenteditable="true" style="font-size: 11px; font-weight: 700; letter-spacing: 0.25em; color: rgba(35,24,21,0.6); margin-bottom: 10px;">耕作放棄地マッチングプラットフォーム</p>
+          <p style="font-size: 32px; font-weight: 900; line-height: 1; margin-bottom: 16px;"><span data-id="farmatch.brand1" contenteditable="true">farm</span><span data-id="farmatch.brand2" contenteditable="true" style="color: var(--green);">atch</span></p>
+          <h3 class="h-section" data-id="farmatch.heading" contenteditable="true" style="color: var(--green); font-size: 20px;">眠っている農地を、次の挑戦の場所へ。</h3>
+          <p class="body-text" data-id="farmatch.desc" contenteditable="true">農地を持て余す地主と、農業を始めたい就農希望者を直接つなぐ、新しい仕組み。固定資産税だけ払い続けている農地も、探しても見つからなかった農地も、farmatchが地域の農業を動かします。</p>
+        </section>
+
+        <!-- Contact Hero -->
+        <section class="sec sec-cream" style="padding: 30px 16px; text-align: center;">
+          <p style="font-size: 11px; letter-spacing: 0.3em; color: var(--green); font-weight: 700; margin-bottom: 10px;">CONTACT</p>
+          <h2 style="font-family: 'Zen Maru Gothic'; font-size: 32px; font-weight: 700; margin-bottom: 16px;">お問い合わせ</h2>
+          <p data-id="contact.lead" contenteditable="true" class="body-text">ご記入いただいたメールアドレスに、自動で確認メールをお送りします。通常 2〜3 営業日以内に担当より個別にご返信いたします。</p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- JSON Output Panel -->
+  <div>
+    <div class="json-panel">
+      <h2>📄 編集後の JSON 出力</h2>
+      <p class="desc">
+        編集後に「💾 JSON 出力」ボタンを押すと、変更分の JSON がここに表示されます。<br>
+        コピーして向井さんに渡せば、本番ファイルに反映できます。
+      </p>
+      <pre id="output-json"><span class="empty">「💾 JSON 出力」ボタンを押すと結果がここに表示されます</span></pre>
+      <button class="copy-btn" id="copyBtn">📋 JSON をクリップボードにコピー</button>
+
+      <div class="help">
+        <b>使い方</b><br>
+        1. 左のスマホ画面で編集したい文字をタップ<br>
+        2. 文字を書き換え or 改行を調整<br>
+        3. 「💾 JSON 出力」ボタンで JSON を生成<br>
+        4. 「📋 コピー」して Claude に貼り付け<br><br>
+        <b>改行のヒント</b><br>
+        • <b>Enter</b> で改行（&lt;br&gt; が入る）<br>
+        • <b>Shift+Enter</b> でも改行<br>
+        • 改行は JSON 内では \\n になる
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const editables = document.querySelectorAll('[contenteditable="true"]');
+  const initialValues = new Map();
+  editables.forEach(el => {
+    initialValues.set(el.dataset.id, el.innerHTML.trim());
+  });
+
+  const changedCountEl = document.getElementById('changed-count');
+  const updateChangedBadge = () => {
+    let count = 0;
+    editables.forEach(el => {
+      const current = el.innerHTML.trim();
+      const initial = initialValues.get(el.dataset.id);
+      if (current !== initial) {
+        el.classList.add('changed');
+        count++;
+      } else {
+        el.classList.remove('changed');
+      }
+    });
+    if (count > 0) {
+      changedCountEl.textContent = `${count}件変更`;
+      changedCountEl.style.display = 'inline-block';
+    } else {
+      changedCountEl.style.display = 'none';
+    }
+  };
+
+  editables.forEach(el => {
+    el.addEventListener('input', updateChangedBadge);
+    el.addEventListener('blur', updateChangedBadge);
+  });
+
+  // Save → JSON 出力
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    const result = {};
+    editables.forEach(el => {
+      const current = el.innerHTML.trim();
+      const initial = initialValues.get(el.dataset.id);
+      if (current !== initial) {
+        result[el.dataset.id] = {
+          before: initial,
+          after: current,
+        };
+      }
+    });
+    const output = document.getElementById('output-json');
+    if (Object.keys(result).length === 0) {
+      output.innerHTML = '<span class="empty">変更がありません。先に左のスマホ画面で文字を編集してください。</span>';
+    } else {
+      output.textContent = JSON.stringify(result, null, 2);
+    }
+  });
+
+  // コピー
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    const text = document.getElementById('output-json').textContent;
+    if (!text || text.includes('「💾 JSON 出力」') || text.includes('変更がありません')) {
+      alert('先に「💾 JSON 出力」ボタンを押してください');
+      return;
+    }
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      const orig = btn.textContent;
+      btn.textContent = '✓ コピーしました！';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.classList.remove('copied');
+      }, 1800);
+    });
+  });
+
+  // リセット
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if (!confirm('すべての編集をリセットしますか？')) return;
+    editables.forEach(el => {
+      el.innerHTML = initialValues.get(el.dataset.id) || '';
+    });
+    updateChangedBadge();
+    document.getElementById('output-json').innerHTML = '<span class="empty">「💾 JSON 出力」ボタンを押すと結果がここに表示されます</span>';
+  });
+})();
+</script>
+</body>
+</html>
