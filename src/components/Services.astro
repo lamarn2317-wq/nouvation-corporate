@@ -165,7 +165,7 @@ const marketPrices = await getMarketPrices();
           </div>
         </div>
         
-        <div id="instagram-embed-zone" class="lg:w-2/3 grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6 items-end justify-items-center mx-auto">
+        <div id="instagram-embed-zone" class="lg:w-2/3 grid grid-cols-3 gap-2 sm:gap-4 lg:gap-6 items-end justify-items-center mx-auto">
           <div class="flex justify-center w-full">
             <div class="w-full max-w-[320px] shadow-sm rounded-2xl overflow-hidden instagram-clip-box bg-white border border-[#231815]/10 ig-skeleton">
               <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIuN5gjy6W/" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:0; margin: 0; width:100%; min-width:100%;"></blockquote>
@@ -1168,7 +1168,11 @@ const marketPrices = await getMarketPrices();
   }
   @media (max-width: 768px) {
     .instagram-clip-box {
-      height: 540px;
+      height: 240px;
+    }
+    /* モバイルの 3 列表示時：ヘッダー隠す translate を緩めて、コンパクトに収める */
+    :global(.instagram-media) {
+      transform: translateY(-30px) !important;
     }
   }
 
