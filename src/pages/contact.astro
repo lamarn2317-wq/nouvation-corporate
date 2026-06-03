@@ -226,13 +226,16 @@ import Footer from '../components/Footer.astro';
     letter-spacing: 0.02em;
   }
   .field-req {
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     font-weight: 700;
     color: #b91c1c;
     background: #fee2e2;
     padding: 0.125rem 0.5rem;
     border-radius: 9999px;
     letter-spacing: 0.1em;
+  }
+  @media (min-width: 768px) {
+    .field-req { font-size: 0.625rem; }
   }
   .field-input {
     width: 100%;
@@ -271,19 +274,25 @@ import Footer from '../components/Footer.astro';
     line-height: 1.7;
   }
   .field-hint {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: rgba(35, 24, 21, 0.55);
     margin-top: 0.5rem;
     line-height: 1.5;
   }
+  @media (min-width: 768px) {
+    .field-hint { font-size: 0.75rem; }
+  }
   .field-error {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     font-weight: 600;
     color: #dc2626;
     margin-top: 0.5rem;
     min-height: 0;
     line-height: 1.5;
     display: none;
+  }
+  @media (min-width: 768px) {
+    .field-error { font-size: 0.75rem; }
   }
   .field-error.is-visible {
     display: block;
@@ -352,9 +361,12 @@ import Footer from '../components/Footer.astro';
     line-height: 1.4;
   }
   .category-desc {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     color: rgba(35, 24, 21, 0.6);
     line-height: 1.5;
+  }
+  @media (min-width: 768px) {
+    .category-desc { font-size: 0.7rem; }
   }
 
   /* ===== Consent checkbox ===== */

@@ -181,7 +181,7 @@ NOUVATIONは農業の現役世代（35〜54歳の現役決裁者）に
                 
                 {item.isExpandable ? (
                   <details class="group">
-                    <summary class="list-none cursor-pointer text-[#2e7d32] text-sm font-bold flex items-center group-open:mb-4">
+                    <summary class="list-none cursor-pointer text-[#2e7d32] text-sm font-bold flex items-center group-open:mb-4 min-h-[44px] md:min-h-0 py-2 md:py-0 -my-2 md:my-0">
                       <span>回答を見る</span>
                       <svg class="w-4 h-4 ml-1 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -218,10 +218,15 @@ NOUVATIONは農業の現役世代（35〜54歳の現役決裁者）に
 
 <style is:global>
   .faq-note {
-    font-size: 0.8rem !important;
+    font-size: 0.875rem !important;
     color: #555 !important;
     display: inline-block;
     margin-top: 0.2rem;
+  }
+  @media (min-width: 768px) {
+    .faq-note {
+      font-size: 0.8rem !important;
+    }
   }
 </style>
 

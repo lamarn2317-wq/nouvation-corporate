@@ -33,13 +33,13 @@ const marketPrices = await getMarketPrices();
             「生きた数字」が見える。<br />迷いが消える。
           </h3>
 
-          <p class="text-[#231815] leading-loose mb-8 text-[0.78rem] md:text-base ja-keep">
-            全国主要都市7市場・16品目の価格情報を一元化。<br />
+          <p class="text-[#231815] leading-loose mb-8 text-[0.92rem] md:text-base ja-keep">
+            全国主要都市7市場・16品目の価格情報を一元化。<br class="max-md:hidden" />
             過去データと比較することで、意思決定（出荷タイミング）の自信に繋がります。
           </p>
         </div>
         <div class="flex flex-col items-center gap-2 text-center mt-3">
-          <span class="market-pill inline-flex items-center gap-2 rounded-full border border-[#2e7d32]/15 px-3 py-1 text-[10px] md:text-xs font-bold tracking-[0.22em] text-[#2e7d32]">
+          <span class="market-pill inline-flex items-center gap-2 rounded-full border border-[#2e7d32]/15 px-3 py-1 text-[11px] md:text-xs font-bold tracking-[0.12em] md:tracking-[0.22em] text-[#2e7d32]">
             <span class="market-pill__dot relative inline-block h-2 w-2 rounded-full bg-[#2e7d32]"></span>
             MARKET PRICE LIVE MONITOR
           </span>
@@ -149,7 +149,7 @@ const marketPrices = await getMarketPrices();
             Instagramメディア
           </p>
           
-          <div class="space-y-4 text-[#231815] leading-loose text-[0.72rem] md:text-base ja-keep">
+          <div class="space-y-4 text-[#231815] leading-loose text-[0.9rem] md:text-base ja-keep">
             Instagramのインサイトでは、<br />
             フォロワーの18〜64歳が全体の96%を占めており、<br>次世代の農業界を担う
             若手〜現役プレイヤー層に<br />効率よくリーチできます。<br /><br />
@@ -211,7 +211,7 @@ const marketPrices = await getMarketPrices();
             「あの時知っていれば」を<br>なくす。
           </h3>
 
-          <p class="text-[#231815] leading-loose mb-8 text-[0.8rem] md:text-base ja-keep">
+          <p class="text-[#231815] leading-loose mb-8 text-[0.92rem] md:text-base ja-keep">
             病害虫・補助金・天気・経営、<br>
 さらに市場価格と異常気象通知まで。<br>
 「誰に聞けばいいか分からない」も、<br>
@@ -1079,14 +1079,14 @@ const marketPrices = await getMarketPrices();
   }
   .kpi-card__label {
     font-family: ui-monospace, "SF Mono", "JetBrains Mono", monospace;
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.16em;
     color: rgba(35, 24, 21, 0.45);
     margin-bottom: 0.25rem;
   }
   @media (min-width: 768px) {
-    .kpi-card__label { font-size: 10px; }
+    .kpi-card__label { font-size: 10px; letter-spacing: 0.18em; }
   }
   .kpi-card__value {
     font-size: 1.5rem;
@@ -1113,7 +1113,7 @@ const marketPrices = await getMarketPrices();
   .kpi-card__value--flat  { color: rgba(35, 24, 21, 0.55); }
   .kpi-card__sub {
     margin-top: 0.25rem;
-    font-size: 10px;
+    font-size: 12px;
     color: rgba(35, 24, 21, 0.5);
     font-weight: 500;
   }
