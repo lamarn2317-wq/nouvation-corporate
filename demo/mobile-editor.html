@@ -3,32 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NOUVATION モバイル編集ツール</title>
+<title>NOUVATION モバイル編集ツール (iPhone 17)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Zen+Maru+Gothic:wght@400;500;700&family=Shippori+Mincho:wght@400;500;700&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
 <style>
   :root {
     --green: #2e7d32;
+    --green-dark: #1b5e20;
+    --green-light: #45d468;
     --cream: #F6F6EE;
     --beige: #F0ECDE;
     --ink: #231815;
   }
 
+  * { box-sizing: border-box; }
+
   body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-    color: #e5e5e5;
     margin: 0;
     padding: 0;
+    font-family: 'Noto Sans JP', sans-serif;
+    background: linear-gradient(135deg, #0f0f0f 0%, #1f1f1f 100%);
+    color: #e5e5e5;
     min-height: 100vh;
   }
 
   .top-bar {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(20, 20, 20, 0.96);
-    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 15, 15, 0.96);
+    backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(255,255,255,0.06);
     padding: 14px 24px;
     display: flex;
@@ -38,26 +43,35 @@
     flex-wrap: wrap;
   }
   .top-bar h1 {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     letter-spacing: 0.04em;
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   .top-bar .badge {
     background: var(--green);
     color: #fff;
-    font-size: 10px;
+    font-size: 9px;
     padding: 3px 10px;
     border-radius: 9999px;
     font-weight: 700;
-    letter-spacing: 0.1em;
-    margin-left: 8px;
+    letter-spacing: 0.12em;
   }
+  .changed-count {
+    background: rgba(46,125,50,0.18);
+    color: #81c784;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-weight: 700;
+    display: none;
+  }
+  .changed-count.has-changes { display: inline-block; }
 
-  .actions {
-    display: flex;
-    gap: 8px;
-  }
+  .actions { display: flex; gap: 8px; }
   .btn {
     padding: 8px 18px;
     font-size: 13px;
@@ -66,23 +80,12 @@
     border: none;
     cursor: pointer;
     transition: all 0.15s ease;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
   }
-  .btn-save {
-    background: var(--green);
-    color: white;
-  }
-  .btn-save:hover {
-    background: #1b5e20;
-    transform: translateY(-1px);
-  }
-  .btn-reset {
-    background: rgba(255,255,255,0.08);
-    color: #ddd;
-  }
-  .btn-reset:hover {
-    background: rgba(255,255,255,0.15);
-  }
+  .btn-save { background: var(--green); color: white; }
+  .btn-save:hover { background: var(--green-dark); transform: translateY(-1px); }
+  .btn-reset { background: rgba(255,255,255,0.08); color: #ddd; }
+  .btn-reset:hover { background: rgba(255,255,255,0.15); }
 
   .container {
     display: grid;
@@ -93,64 +96,151 @@
     margin: 0 auto;
   }
   @media (min-width: 1024px) {
-    .container { grid-template-columns: 420px 1fr; }
+    .container { grid-template-columns: 440px 1fr; }
   }
 
-  /* iPhone Frame */
+  /* ===== iPhone Frame ===== */
   .phone-wrap {
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
   }
+
+  /* デバイスセレクター */
+  .device-switcher {
+    display: flex;
+    gap: 6px;
+    padding: 8px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 12px;
+    align-self: center;
+  }
+  .device-btn {
+    padding: 8px 14px;
+    background: transparent;
+    color: rgba(255,255,255,0.55);
+    border: 1.5px solid transparent;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+  }
+  .device-btn:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.06);
+  }
+  .device-btn.active {
+    background: var(--green);
+    color: #fff;
+    border-color: var(--green);
+    box-shadow: 0 4px 12px rgba(46,125,50,0.4);
+  }
+  .device-info {
+    text-align: center;
+    color: rgba(255,255,255,0.5);
+    font-size: 11px;
+    font-family: 'SF Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
   .iphone {
     position: sticky;
     top: 90px;
-    width: 390px;
-    height: 760px;
-    background: #111;
-    border-radius: 50px;
-    padding: 14px;
+    /* device-width + 24px (左右の額縁 padding 12px ずつ) → screen は正確に device-width */
+    width: calc(var(--device-width, 402px) + 24px);
+    background: linear-gradient(135deg, #2a2a2c 0%, #1a1a1c 100%);
+    border-radius: 55px;
+    padding: 12px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow:
-      0 0 0 1.5px #333,
-      0 0 0 4px #1a1a1a,
-      0 20px 60px rgba(0,0,0,0.7),
-      0 0 80px rgba(46, 125, 50, 0.08);
+      0 0 0 1px rgba(255,255,255,0.06),
+      0 0 0 3px #1a1a1a,
+      0 25px 70px rgba(0,0,0,0.85),
+      0 0 100px rgba(46, 125, 50, 0.06);
+    align-self: center;
   }
   .iphone-screen {
     width: 100%;
-    height: 100%;
-    border-radius: 38px;
+    height: 850px;
+    border-radius: 44px;
     overflow: hidden;
     overflow-y: auto;
-    background: var(--cream);
+    background: #000;
     -webkit-overflow-scrolling: touch;
     position: relative;
+    scrollbar-width: none;
+    /* コンテナクエリ：内部要素は iPhone 画面幅基準で計算 */
+    container-type: inline-size;
+    container-name: device;
   }
-  /* Notch */
-  .iphone-notch {
+  .iphone-screen::-webkit-scrollbar { display: none; }
+
+  /* Dynamic Island (iPhone 17 style) */
+  .dynamic-island {
     position: absolute;
-    top: 6px;
+    top: 11px;
     left: 50%;
     transform: translateX(-50%);
-    width: 120px;
-    height: 28px;
-    background: #111;
-    border-radius: 20px;
-    z-index: 10;
+    width: 124px;
+    height: 36px;
+    background: #000;
+    border-radius: 100px;
+    z-index: 100;
   }
-  /* Status bar */
+  /* Status Bar */
   .status-bar {
-    height: 44px;
-    padding: 14px 24px 0;
+    height: 58px;
+    padding: 18px 32px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
-    color: var(--ink);
+    color: #fff;
+    background: transparent;
+    position: relative;
+    z-index: 10;
+  }
+  .status-bar .right {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+  }
+  .status-bar .right svg { width: 16px; height: 11px; fill: currentColor; }
+  .status-bar .right .battery {
+    width: 25px;
+    height: 12px;
+    border: 1.5px solid currentColor;
+    border-radius: 3px;
+    position: relative;
+  }
+  .status-bar .right .battery::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -3.5px;
+    transform: translateY(-50%);
+    width: 1.5px;
+    height: 5px;
+    background: currentColor;
+    border-radius: 0 1px 1px 0;
+  }
+  .status-bar .right .battery::before {
+    content: '';
+    position: absolute;
+    top: 1px; left: 1px;
+    bottom: 1px;
+    width: 75%;
+    background: #2e7d32;
+    border-radius: 1.5px;
   }
 
-  /* Editable styles */
+  /* ===== Editable Styles ===== */
   [contenteditable] {
     outline: none;
     border: 1.5px dashed transparent;
@@ -159,79 +249,291 @@
     cursor: text;
     padding: 1px 3px;
     margin: 0 -3px;
+    position: relative;
   }
   [contenteditable]:hover {
-    border-color: rgba(46,125,50,0.4);
-    background: rgba(46,125,50,0.04);
+    border-color: rgba(46,125,50,0.5);
+    background: rgba(46,125,50,0.06);
   }
   [contenteditable]:focus {
     border-color: var(--green);
-    background: rgba(46,125,50,0.08);
-    box-shadow: 0 0 0 3px rgba(46,125,50,0.1);
+    background: rgba(46,125,50,0.12);
+    box-shadow: 0 0 0 3px rgba(46,125,50,0.12);
+  }
+  [contenteditable].changed {
+    border-color: rgba(46,125,50,0.4);
+    border-style: solid;
+    background: rgba(46,125,50,0.05);
   }
   [contenteditable].changed::before {
     content: '●';
     color: var(--green);
-    margin-right: 4px;
-    font-size: 8px;
-    vertical-align: middle;
+    position: absolute;
+    top: -8px;
+    left: -10px;
+    font-size: 10px;
+    background: #fff;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   }
 
-  /* Mock production sections (mobile look) */
-  .sec { padding: 20px 16px; }
-  .sec-dark { background: #111; color: #fff; min-height: 280px; position: relative; }
-  .sec-dark-img {
-    background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%),
-                url('/images/issues_bg.jpg') center/cover;
+  /* ============================================
+     本番モバイル表示の完全コピー styles
+     ============================================ */
+
+  /* FV Section */
+  .sec-fv {
+    background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.78)),
+                url('https://nouvation-corporate.vercel.app/images/issues_bg.jpg') center/cover, #1a1a1a;
     color: #fff;
     text-align: center;
-    padding: 30px 16px;
+    padding: 80px 16px;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .fv-title {
+    font-family: 'Shippori Mincho', 'YuMincho', serif;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 7.0cqw, 1.85rem);
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    color: #fff;
+    padding-left: 1.15rem;
+    padding-right: 0.55rem;
+    margin: 0;
+  }
+  .fv-desc {
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 2;
+    color: #fff;
+    margin: 1.5rem 0 0 0;
+  }
+
+  /* Social Issues */
+  .sec-social {
+    background: linear-gradient(180deg, rgba(35,24,21,0.78), rgba(35,24,21,0.86)),
+                url('https://nouvation-corporate.vercel.app/images/issues_bg.jpg') center/cover, #231815;
+    color: #fff;
+    padding: 96px 16px;
+    text-align: center;
+  }
+  .social-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 16px;
+  }
+  .social-heading {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #fff;
+    margin: 0 0 48px 0;
+  }
+  .social-body {
+    font-size: 0.92rem;
+    line-height: 2;
+    color: #fff;
+  }
+  .social-body p {
+    margin: 0 0 24px 0;
+  }
+  .social-body p:last-child {
+    margin-bottom: 0;
+    font-weight: 700;
+  }
+
+  /* Mission */
+  .sec-mission {
+    background: var(--beige);
+    color: var(--ink);
+    padding: 96px 16px;
+  }
+  .mission-title {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+    margin: 0 0 64px 0;
+  }
+  .mission-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.55;
+    margin: 0 0 16px 0;
+  }
+  .mission-body {
+    font-size: 0.92rem;
+    line-height: 2;
+    color: var(--ink);
+  }
+  .mission-body p {
+    margin: 0 0 24px 0;
+  }
+  .mission-body p:last-child { margin-bottom: 0; }
+
+  /* Services common */
+  .sec-service {
+    padding: 64px 16px;
   }
   .sec-cream { background: var(--cream); color: var(--ink); }
   .sec-beige { background: var(--beige); color: var(--ink); }
-
-  .small-label {
+  .num-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .num-badge .dot {
+    color: var(--green);
+    font-size: 22px;
+  }
+  .num-badge .num {
+    font-family: 'Zen Maru Gothic';
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .service-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.55;
+    margin: 0 0 16px 0;
+  }
+  .service-body {
+    font-size: 0.92rem;
+    line-height: 2;
+    margin: 0 0 32px 0;
+  }
+  .service-small-label {
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.25em;
     color: rgba(35,24,21,0.6);
-    margin-bottom: 8px;
-  }
-  .small-label-light {
-    color: rgba(255,255,255,0.6);
-  }
-  .h-page {
-    font-size: 30px;
-    font-weight: 700;
-    line-height: 1.3;
-    font-family: 'Zen Maru Gothic', sans-serif;
     margin-bottom: 10px;
   }
-  .h-section {
+
+  /* Service 01 Specific */
+  .market-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(46,125,50,0.15);
+    border-radius: 9999px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--green);
+    margin: 12px auto 0;
+  }
+  .market-pill .dot {
+    width: 8px;
+    height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+  }
+  .market-title {
+    color: var(--green);
+    font-weight: 700;
     font-size: 20px;
-    font-weight: 700;
-    line-height: 1.5;
-    color: var(--ink);
-    margin-bottom: 12px;
+    text-align: center;
+    margin-top: 8px;
   }
-  .body-text {
-    font-size: 14.7px; /* 0.92rem */
-    line-height: 1.85;
-    color: var(--ink);
+  .service01-notes {
+    font-size: 10px;
+    color: rgba(35,24,21,0.6);
+    line-height: 1.6;
+    padding: 12px 8px 0;
   }
-  .body-text-light { color: #fff; }
-  .num-badge {
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 12px;
+  .service01-notes p { margin: 2px 0; }
+  .service01-notes .border-top {
+    border-top: 1px solid rgba(35,24,21,0.1);
+    padding-top: 6px;
+    margin-top: 6px;
+    color: rgba(35,24,21,0.5);
   }
 
-  /* JSON output */
+  /* Service 03 brand */
+  .ai-brand {
+    font-size: clamp(1.6rem, 3.6cqw, 2.4rem);
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0 0 24px 0;
+  }
+  .ai-brand .en { color: var(--ink); margin-right: 0.3em; }
+  .ai-brand .jp {
+    background: linear-gradient(180deg, #2e7d32 0%, #5ba83f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .ai-hero {
+    background: linear-gradient(120deg, #1a5e1f 0%, #2e7d32 40%, #45d468 70%, #2e7d32 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Farmatch brand */
+  .fm-brand {
+    font-size: clamp(2.2rem, 5cqw, 3rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin: 0 0 24px 0;
+  }
+  .fm-brand .farm { color: var(--ink); }
+  .fm-brand .atch {
+    background: linear-gradient(180deg, #2e7d32 0%, #5ba83f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Contact */
+  .sec-contact {
+    background: var(--cream);
+    padding: 80px 16px;
+    text-align: center;
+  }
+  .contact-label {
+    color: var(--green);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .contact-h2 {
+    font-family: 'Zen Maru Gothic';
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 24px 0;
+  }
+  .contact-lead {
+    font-size: 0.875rem;
+    line-height: 2;
+    color: rgba(35,24,21,0.75);
+  }
+
+  /* ===== JSON Panel ===== */
   .json-panel {
-    background: #161616;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    padding: 20px;
+    background: #141414;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 18px;
+    padding: 24px;
     position: sticky;
     top: 90px;
   }
@@ -251,27 +553,29 @@
   #output-json {
     background: #0a0a0a;
     border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 8px;
-    padding: 16px;
-    font-family: 'SF Mono', monospace;
+    border-radius: 10px;
+    padding: 18px;
+    font-family: 'SF Mono', 'Menlo', monospace;
     font-size: 12px;
     color: #a5d6a7;
     max-height: 50vh;
     overflow-y: auto;
     white-space: pre-wrap;
+    word-break: break-all;
     margin: 0;
-    line-height: 1.6;
+    line-height: 1.65;
   }
-  .json-panel .empty {
-    color: rgba(255,255,255,0.35);
+  #output-json .empty {
+    color: rgba(255,255,255,0.32);
     font-style: italic;
-    padding: 20px;
     text-align: center;
+    display: block;
+    padding: 12px;
   }
   .copy-btn {
     margin-top: 12px;
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     background: var(--green);
     color: white;
     border: none;
@@ -280,49 +584,35 @@
     cursor: pointer;
     font-size: 13px;
     transition: all 0.15s;
+    letter-spacing: 0.04em;
   }
-  .copy-btn:hover { background: #1b5e20; }
-  .copy-btn.copied {
-    background: #1565c0;
-  }
-
+  .copy-btn:hover { background: var(--green-dark); transform: translateY(-1px); }
+  .copy-btn.copied { background: #1565c0; }
   .help {
     font-size: 12px;
-    color: rgba(255,255,255,0.5);
+    color: rgba(255,255,255,0.55);
     margin-top: 16px;
-    line-height: 1.7;
-    padding: 14px;
+    line-height: 1.8;
+    padding: 14px 16px;
     background: rgba(255,255,255,0.03);
-    border-radius: 8px;
+    border-radius: 10px;
     border-left: 2px solid var(--green);
   }
   .help b { color: #fff; }
-
-  .changed-count {
-    background: rgba(46,125,50,0.18);
-    color: #81c784;
+  .help kbd {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    padding: 1px 6px;
     font-size: 11px;
-    padding: 3px 10px;
-    border-radius: 9999px;
-    margin-left: 8px;
-    font-weight: 700;
+    font-family: 'SF Mono', monospace;
   }
-
-  /* Scrollbar */
-  .iphone-screen::-webkit-scrollbar {
-    width: 0;
-  }
-  #output-json::-webkit-scrollbar { width: 8px; }
-  #output-json::-webkit-scrollbar-track { background: transparent; }
-  #output-json::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
 </style>
 </head>
 <body>
 
 <div class="top-bar">
-  <div>
-    <h1>📱 NOUVATION モバイル編集ツール<span class="badge">EDIT</span><span id="changed-count" class="changed-count" style="display:none">0件変更</span></h1>
-  </div>
+  <h1>📱 NOUVATION モバイル編集ツール v2 <span class="badge">iPhone 17 - 402×874</span><span id="changed-count" class="changed-count">0件変更</span></h1>
   <div class="actions">
     <button class="btn btn-reset" id="resetBtn">リセット</button>
     <button class="btn btn-save" id="saveBtn">💾 JSON 出力</button>
@@ -330,97 +620,104 @@
 </div>
 
 <div class="container">
-  <!-- iPhone Frame Preview -->
   <div class="phone-wrap">
-    <div class="iphone">
-      <div class="iphone-notch"></div>
+    <div class="device-switcher">
+      <button class="device-btn" data-w="375" data-h="667">iPhone SE</button>
+      <button class="device-btn" data-w="393" data-h="852">iPhone 17</button>
+      <button class="device-btn active" data-w="402" data-h="874">iPhone 17 Pro</button>
+      <button class="device-btn" data-w="440" data-h="956">17 Pro Max</button>
+    </div>
+    <div class="device-info" id="deviceInfo">📱 iPhone 17 Pro · 402 × 874 px</div>
+    <div class="iphone" id="iphoneFrame" style="--device-width: 402px;">
       <div class="iphone-screen">
+        <div class="dynamic-island"></div>
         <div class="status-bar">
-          <span>21:00</span>
-          <span style="font-size:11px;letter-spacing:0.05em">📶 5G ▮</span>
+          <span>22:30</span>
+          <span class="right">
+            <span style="font-size:12px">📶</span>
+            <span style="font-size:11px;letter-spacing:0.05em">5G</span>
+            <span class="battery"></span>
+          </span>
         </div>
 
-        <!-- FV (簡易表現) -->
-        <section class="sec sec-dark" style="background: linear-gradient(180deg, rgba(0,0,0,0.4), rgba(0,0,0,0.85)), url('/images/issues_bg.jpg') center/cover; min-height: 460px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
-          <h1
-            data-id="fv.title"
-            contenteditable="true"
-            style="font-family: 'Shippori Mincho', serif; font-size: 26.4px; font-weight: 700; line-height: 1.45; letter-spacing: -0.01em; padding: 0 12px; color: #fff;"
-          >農業界に、情報で革新を。</h1>
-          <p
-            data-id="fv.desc"
-            contenteditable="true"
-            style="font-size: 14px; line-height: 1.85; margin-top: 20px; color: rgba(255,255,255,0.95); padding: 0 12px;"
-          >農家が報われる社会を、情報とつながりで実現する<br>次世代農業インフラメディア</p>
+        <!-- ===== FV ===== -->
+        <section class="sec-fv">
+          <h1 class="fv-title" contenteditable="true" data-id="fv.title">農業界に、情報で革新を。</h1>
+          <p class="fv-desc" contenteditable="true" data-id="fv.desc">農家が報われる社会を、情報とつながりで実現する<br>次世代農業インフラメディア</p>
         </section>
 
-        <!-- Social Issues -->
-        <section class="sec sec-dark-img">
-          <p class="small-label small-label-light">SOCIAL ISSUES</p>
-          <h2 data-id="social.heading" contenteditable="true" style="font-size: 22px; font-weight: 700; margin: 10px 0 22px; color: #fff;">農業が抱える「情報格差」</h2>
-          <div style="color: #fff; font-size: 14.7px; line-height: 1.85; text-align: center;">
-            <p data-id="social.text1" contenteditable="true" style="margin-bottom: 18px;">農業界には根深い課題が存在します。それは、努力や根性では解決できない"構造不全"です。</p>
-            <p data-id="social.text2" contenteditable="true" style="margin-bottom: 18px;">多くの農家が補助金や助成金を取り逃し、市場価格が分からず不利な取引を強いられ、そしてSNS発信が点在することで若手農家は孤立し、夢を描けずにいます。</p>
-            <p data-id="social.text3" contenteditable="true" style="font-weight: 700; margin-bottom: 0;">情報の欠如と分断が、経済格差や世代間の格差を生み、地域を衰退させ、農業の未来を奪っているのです。</p>
+        <!-- ===== Social Issues ===== -->
+        <section class="sec-social">
+          <p class="social-label">SOCIAL ISSUES</p>
+          <h2 class="social-heading" contenteditable="true" data-id="social.heading">農業が抱える「情報格差」</h2>
+          <div class="social-body">
+            <p contenteditable="true" data-id="social.text1">農業界には根深い課題が存在します。<br>それは、努力や根性では解決できない<br>"構造不全"です。</p>
+            <p contenteditable="true" data-id="social.text2">多くの農家が補助金や助成金を取り逃し、<br>市場価格が分からず不利な取引を強いられ、<br>そしてSNS発信が点在することで<br>若手農家は孤立し、夢を描けずにいます。</p>
+            <p contenteditable="true" data-id="social.text3">情報の欠如と分断が、<br>経済格差や世代間の格差を生み、<br>地域を衰退させ、<br>農業の未来を奪っているのです。</p>
           </div>
         </section>
 
-        <!-- Mission -->
-        <section class="sec sec-beige" style="padding: 30px 16px;">
-          <h2 style="font-family: 'Zen Maru Gothic', sans-serif; font-size: 34px; font-weight: 700; text-align: center; margin-bottom: 30px;">MISSION</h2>
-          <h3 class="h-section" style="font-size: 22px; line-height: 1.55;">
-            <span data-id="mission.heading1" contenteditable="true">情報格差をなくし、</span><br>
-            <span data-id="mission.heading2" contenteditable="true">農家の利益を最大化する。</span>
-          </h3>
-          <div class="body-text" style="margin-top: 16px;">
-            <p data-id="mission.text1" contenteditable="true" style="margin-bottom: 16px;">農業界には、優れた技術や想いがありながらも、情報が届かないために正当な評価を受けられていない現場がまだ数多く残っています。</p>
-            <p data-id="mission.text2" contenteditable="true">市場動向・補助金制度・現場ノウハウをSNSで全国の農家さんに届ける。農業の情報インフラとして農家の皆さまが持つ可能性を最大限に引き出します。</p>
+        <!-- ===== Mission ===== -->
+        <section class="sec-mission">
+          <h2 class="mission-title">MISSION</h2>
+          <h3 class="mission-heading" contenteditable="true" data-id="mission.heading">情報格差をなくし、<br>農家の利益を最大化する。</h3>
+          <div class="mission-body">
+            <p contenteditable="true" data-id="mission.text1">農業界には、優れた技術や想いがありながらも、情報が届かないために正当な評価を受けられていない現場がまだ数多く残っています。</p>
+            <p contenteditable="true" data-id="mission.text2">市場動向・補助金制度・現場ノウハウを<br>SNSで全国の農家さんに届ける。<br>農業の情報インフラとして農家の皆さまが<br>持つ可能性を最大限に引き出します。</p>
           </div>
         </section>
 
-        <!-- Service 01 -->
-        <section class="sec sec-cream" style="padding: 30px 16px;">
-          <p style="font-weight: 700; font-size: 18px; margin-bottom: 12px;">⚫︎ 01</p>
-          <h3 class="h-section" data-id="service01.heading" contenteditable="true" style="font-size: 22px; line-height: 1.55;">「生きた数字」が見える。迷いが消える。</h3>
-          <p class="body-text" data-id="service01.desc" contenteditable="true">全国主要都市7市場・16品目の価格情報を一元化。過去データと比較することで、意思決定（出荷タイミング）の自信に繋がります。</p>
-          <p style="margin-top: 14px; font-weight: 700; font-size: 16px; color: var(--green); text-align: center;" data-id="service01.title" contenteditable="true">市場価格速報</p>
+        <!-- ===== Service 01 ===== -->
+        <section class="sec-service sec-cream">
+          <div class="num-badge"><span class="dot">⚫︎</span><span class="num">01</span></div>
+          <h3 class="service-heading" contenteditable="true" data-id="service01.heading">「生きた数字」が見える。<br>迷いが消える。</h3>
+          <p class="service-body" contenteditable="true" data-id="service01.desc">全国主要都市7市場・16品目の価格情報を一元化。過去データと比較することで、<br>意思決定（出荷タイミング）の<br>自信に繋がります。</p>
+          <div style="text-align: center;">
+            <span class="market-pill"><span class="dot"></span>MARKET PRICE LIVE MONITOR</span>
+            <p class="market-title" contenteditable="true" data-id="service01.title">市場価格速報</p>
+          </div>
+          <div class="service01-notes">
+            <p contenteditable="true" data-id="service01.note1">※価格は「相対取引の中値（1kgあたり）」を表示。中値がない場合は推定値（高値+安値）÷2、または高値を代替。せり値・第三販売は除外/補完。</p>
+            <p contenteditable="true" data-id="service01.note2">※箱・束・小袋は単位併記、前日比は単位違い時「±0」表記。産地は生産量上位を優先。水・日曜・祝日は市場休市のため非配信。</p>
+            <p class="border-top" contenteditable="true" data-id="service01.note3">※各卸売市場の公開情報を統合した参考値です。<br>最終的な意思決定はご自身の責任でお願いします。</p>
+          </div>
         </section>
 
-        <!-- Service 02 -->
-        <section class="sec sec-beige" style="padding: 30px 16px;">
-          <p style="font-weight: 700; font-size: 18px; margin-bottom: 12px;">⚫︎ 02</p>
-          <h3 class="h-section" data-id="service02.heading" contenteditable="true" style="font-size: 20px; line-height: 1.5;">選ばれている理由はその「質」</h3>
-          <p data-id="service02.sublabel" contenteditable="true" style="font-weight: 700; font-size: 15px; margin: 8px 0 14px;">📷 Instagramメディア</p>
-          <p class="body-text" data-id="service02.desc" contenteditable="true" style="font-size: 14.4px; line-height: 1.85;">Instagramのインサイトでは、フォロワーの18〜64歳が全体の96%を占めており、次世代の農業界を担う若手〜現役プレイヤー層に効率よくリーチできます。さらに、フォロワーの約8割が農家・農業関係者で、農業界でも数少ない"実働世代向けメディア"として、高い反応率（エンゲージメント)のコミュニティを築いています。</p>
+        <!-- ===== Service 02 ===== -->
+        <section class="sec-service sec-beige">
+          <div class="num-badge"><span class="dot">⚫︎</span><span class="num">02</span></div>
+          <h3 class="service-heading" contenteditable="true" data-id="service02.heading">選ばれている理由はその「質」</h3>
+          <p contenteditable="true" data-id="service02.sublabel" style="font-size: 18px; font-weight: 700; margin: 8px 0 16px;">📷 Instagramメディア</p>
+          <p class="service-body" contenteditable="true" data-id="service02.desc">Instagramのインサイトでは、<br>フォロワーの18〜64歳が全体の96%を占めており、次世代の農業界を担う若手〜現役プレイヤー層に効率よくリーチできます。さらに、フォロワーの約8割が農家・農業関係者で、<br>農業界でも数少ない"実働世代向けメディア"として、高い反応率（エンゲージメント)の<br>コミュニティを築いています。</p>
         </section>
 
-        <!-- Service 03 (AI Support) -->
-        <section class="sec sec-cream" style="padding: 30px 16px;">
-          <p style="font-weight: 700; font-size: 18px; margin-bottom: 12px;">⚫︎ 03</p>
-          <p data-id="service03.small" contenteditable="true" style="font-size: 11px; font-weight: 700; letter-spacing: 0.25em; color: rgba(35,24,21,0.6); margin-bottom: 10px;">農業AIアシスタント</p>
-          <p style="font-size: 26px; font-weight: 900; line-height: 1.15; margin-bottom: 16px;"><span data-id="service03.brand_en" contenteditable="true">NOUVATION</span> <span data-id="service03.brand_jp" contenteditable="true" style="color: var(--green);">農業AIサポート</span></p>
-          <h3 class="h-section" data-id="service03.heading" contenteditable="true" style="color: var(--green); font-size: 20px;">「あの時知っていれば」をなくす。</h3>
-          <p class="body-text" data-id="service03.desc" contenteditable="true" style="white-space: pre-wrap;">病害虫・補助金・天気・経営、さらに市場価格と異常気象通知まで。「誰に聞けばいいか分からない」も、「調べても答えが出ない」も無くします。
-
-あなたの疑問に即座に応え、使うほど地域・作物・規模を覚えて、あなた専用の答えを返す農業専門パートナーAI。
-
-補助金1件で年数十万、肥料節約で年数万円。検索の手間が、利益に変わる。</p>
+        <!-- ===== Service 03 ===== -->
+        <section class="sec-service sec-cream">
+          <div class="num-badge"><span class="dot">⚫︎</span><span class="num">03</span></div>
+          <p class="service-small-label" contenteditable="true" data-id="service03.small">農業AIアシスタント</p>
+          <p class="ai-brand">
+            <span class="en" contenteditable="true" data-id="service03.brand_en">NOUVATION</span><br><span class="jp" contenteditable="true" data-id="service03.brand_jp">農業AIサポート</span>
+          </p>
+          <h3 class="service-heading" contenteditable="true" data-id="service03.heading">「あの時知っていれば」を<br>なくす。</h3>
+          <p class="service-body" contenteditable="true" data-id="service03.desc">病害虫・補助金・天気・経営、<br>さらに市場価格と異常気象通知まで。<br>「誰に聞けばいいか分からない」も、<br>「調べても答えが出ない」も無くします。<br><br>あなたの疑問に即座に応え、<br>使うほど地域・作物・規模を覚えて、<br>あなた専用の答えを返す農業専門パートナーAI。<br><br>補助金1件で年数十万、肥料節約で年数万円。<br>検索の手間が、利益に変わる。</p>
         </section>
 
-        <!-- Farmatch -->
-        <section class="sec sec-beige" style="padding: 30px 16px;">
-          <p style="font-weight: 700; font-size: 18px; margin-bottom: 12px;">⚫︎ 04</p>
-          <p data-id="farmatch.small" contenteditable="true" style="font-size: 11px; font-weight: 700; letter-spacing: 0.25em; color: rgba(35,24,21,0.6); margin-bottom: 10px;">耕作放棄地マッチングプラットフォーム</p>
-          <p style="font-size: 32px; font-weight: 900; line-height: 1; margin-bottom: 16px;"><span data-id="farmatch.brand1" contenteditable="true">farm</span><span data-id="farmatch.brand2" contenteditable="true" style="color: var(--green);">atch</span></p>
-          <h3 class="h-section" data-id="farmatch.heading" contenteditable="true" style="color: var(--green); font-size: 20px;">眠っている農地を、次の挑戦の場所へ。</h3>
-          <p class="body-text" data-id="farmatch.desc" contenteditable="true">農地を持て余す地主と、農業を始めたい就農希望者を直接つなぐ、新しい仕組み。固定資産税だけ払い続けている農地も、探しても見つからなかった農地も、farmatchが地域の農業を動かします。</p>
+        <!-- ===== Farmatch (Service 04) ===== -->
+        <section class="sec-service sec-beige">
+          <div class="num-badge"><span class="dot">⚫︎</span><span class="num">04</span></div>
+          <p class="service-small-label" contenteditable="true" data-id="farmatch.small">耕作放棄地マッチングプラットフォーム</p>
+          <p class="fm-brand">
+            <span class="farm" contenteditable="true" data-id="farmatch.brand1">farm</span><span class="atch" contenteditable="true" data-id="farmatch.brand2">atch</span>
+          </p>
+          <h3 class="service-heading ai-hero" contenteditable="true" data-id="farmatch.heading">眠っている農地を、<br>次の挑戦の場所へ。</h3>
+          <p class="service-body" contenteditable="true" data-id="farmatch.desc">農地を持て余す地主と、<br>農業を始めたい就農希望者を直接つなぐ、<br>新しい仕組み。固定資産税だけ払い続けている農地も、探しても見つからなかった農地も、farmatchが地域の農業を動かします。</p>
         </section>
 
-        <!-- Contact Hero -->
-        <section class="sec sec-cream" style="padding: 30px 16px; text-align: center;">
-          <p style="font-size: 11px; letter-spacing: 0.3em; color: var(--green); font-weight: 700; margin-bottom: 10px;">CONTACT</p>
-          <h2 style="font-family: 'Zen Maru Gothic'; font-size: 32px; font-weight: 700; margin-bottom: 16px;">お問い合わせ</h2>
-          <p data-id="contact.lead" contenteditable="true" class="body-text">ご記入いただいたメールアドレスに、自動で確認メールをお送りします。通常 2〜3 営業日以内に担当より個別にご返信いたします。</p>
+        <!-- ===== Contact ===== -->
+        <section class="sec-contact">
+          <p class="contact-label">CONTACT</p>
+          <h2 class="contact-h2">お問い合わせ</h2>
+          <p class="contact-lead" contenteditable="true" data-id="contact.lead">ご記入いただいたメールアドレスに、<br>自動で確認メールをお送りします。<br>通常 2〜3 営業日以内に<br>担当者より個別にご返信いたします。</p>
         </section>
       </div>
     </div>
@@ -431,22 +728,22 @@
     <div class="json-panel">
       <h2>📄 編集後の JSON 出力</h2>
       <p class="desc">
-        編集後に「💾 JSON 出力」ボタンを押すと、変更分の JSON がここに表示されます。<br>
-        コピーして向井さんに渡せば、本番ファイルに反映できます。
+        編集後に「💾 JSON 出力」を押すと、<b style="color:#fff">変更分だけ</b>がここに表示されます。<br>
+        コピーして Claude に貼り付ければ本番ファイルに反映されます。
       </p>
-      <pre id="output-json"><span class="empty">「💾 JSON 出力」ボタンを押すと結果がここに表示されます</span></pre>
+      <pre id="output-json"><span class="empty">「💾 JSON 出力」ボタンで結果がここに表示されます</span></pre>
       <button class="copy-btn" id="copyBtn">📋 JSON をクリップボードにコピー</button>
 
       <div class="help">
         <b>使い方</b><br>
-        1. 左のスマホ画面で編集したい文字をタップ<br>
-        2. 文字を書き換え or 改行を調整<br>
-        3. 「💾 JSON 出力」ボタンで JSON を生成<br>
-        4. 「📋 コピー」して Claude に貼り付け<br><br>
-        <b>改行のヒント</b><br>
-        • <b>Enter</b> で改行（&lt;br&gt; が入る）<br>
-        • <b>Shift+Enter</b> でも改行<br>
-        • 改行は JSON 内では \\n になる
+        1️⃣ 左の iPhone 画面で編集したい文字をタップ<br>
+        2️⃣ <kbd>Enter</kbd> で改行（&lt;br&gt; が入る）<br>
+        3️⃣ 文字を書き換え・改行を調整<br>
+        4️⃣ 「💾 JSON 出力」→「📋 コピー」<br>
+        5️⃣ Claude に貼り付けて反映依頼<br><br>
+        <b>注意</b><br>
+        この画面は<b style="color:#fff">本番モバイル状態の完全コピー</b>。<br>
+        編集はモバイル表示にのみ反映され、PC は変更されません。
       </div>
     </div>
   </div>
@@ -454,17 +751,69 @@
 
 <script>
 (function() {
+  // ===== デバイスセレクター =====
+  const deviceBtns = document.querySelectorAll('.device-btn');
+  const iphoneFrame = document.getElementById('iphoneFrame');
+  const deviceInfo = document.getElementById('deviceInfo');
+  deviceBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      deviceBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const w = btn.dataset.w;
+      const h = btn.dataset.h;
+      iphoneFrame.style.setProperty('--device-width', w + 'px');
+      deviceInfo.textContent = `📱 ${btn.textContent.trim()} · ${w} × ${h} px`;
+    });
+  });
+
   const editables = document.querySelectorAll('[contenteditable="true"]');
   const initialValues = new Map();
+
+  // Normalize HTML for comparison
+  const normalize = (html) => {
+    return html
+      .replace(/<br\s*\/?>/gi, '<br>')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/ /g, ' ')
+      .trim();
+  };
+
   editables.forEach(el => {
-    initialValues.set(el.dataset.id, el.innerHTML.trim());
+    initialValues.set(el.dataset.id, normalize(el.innerHTML));
+
+    // ===== Enter キーで <br> を挿入（<div> 防止） =====
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+        const br = document.createElement('br');
+        range.insertNode(br);
+        // 改行直後にカーソルを移動
+        range.setStartAfter(br);
+        range.setEndAfter(br);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        // Trigger input event
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    });
+
+    // ペースト時はプレーンテキストにする
+    el.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+      document.execCommand('insertText', false, text);
+    });
   });
 
   const changedCountEl = document.getElementById('changed-count');
   const updateChangedBadge = () => {
     let count = 0;
     editables.forEach(el => {
-      const current = el.innerHTML.trim();
+      const current = normalize(el.innerHTML);
       const initial = initialValues.get(el.dataset.id);
       if (current !== initial) {
         el.classList.add('changed');
@@ -475,9 +824,9 @@
     });
     if (count > 0) {
       changedCountEl.textContent = `${count}件変更`;
-      changedCountEl.style.display = 'inline-block';
+      changedCountEl.classList.add('has-changes');
     } else {
-      changedCountEl.style.display = 'none';
+      changedCountEl.classList.remove('has-changes');
     }
   };
 
@@ -486,28 +835,23 @@
     el.addEventListener('blur', updateChangedBadge);
   });
 
-  // Save → JSON 出力
   document.getElementById('saveBtn').addEventListener('click', () => {
     const result = {};
     editables.forEach(el => {
-      const current = el.innerHTML.trim();
+      const current = normalize(el.innerHTML);
       const initial = initialValues.get(el.dataset.id);
       if (current !== initial) {
-        result[el.dataset.id] = {
-          before: initial,
-          after: current,
-        };
+        result[el.dataset.id] = { before: initial, after: current };
       }
     });
     const output = document.getElementById('output-json');
     if (Object.keys(result).length === 0) {
-      output.innerHTML = '<span class="empty">変更がありません。先に左のスマホ画面で文字を編集してください。</span>';
+      output.innerHTML = '<span class="empty">変更がありません。先に左の iPhone 画面で文字を編集してください。</span>';
     } else {
       output.textContent = JSON.stringify(result, null, 2);
     }
   });
 
-  // コピー
   document.getElementById('copyBtn').addEventListener('click', () => {
     const text = document.getElementById('output-json').textContent;
     if (!text || text.includes('「💾 JSON 出力」') || text.includes('変更がありません')) {
@@ -522,18 +866,19 @@
       setTimeout(() => {
         btn.textContent = orig;
         btn.classList.remove('copied');
-      }, 1800);
+      }, 2000);
     });
   });
 
-  // リセット
   document.getElementById('resetBtn').addEventListener('click', () => {
     if (!confirm('すべての編集をリセットしますか？')) return;
     editables.forEach(el => {
-      el.innerHTML = initialValues.get(el.dataset.id) || '';
+      const id = el.dataset.id;
+      const initial = initialValues.get(id);
+      if (initial !== undefined) el.innerHTML = initial;
     });
     updateChangedBadge();
-    document.getElementById('output-json').innerHTML = '<span class="empty">「💾 JSON 出力」ボタンを押すと結果がここに表示されます</span>';
+    document.getElementById('output-json').innerHTML = '<span class="empty">「💾 JSON 出力」ボタンで結果がここに表示されます</span>';
   });
 })();
 </script>
