@@ -63,6 +63,14 @@ const {
     line-break: strict;
     overflow-wrap: normal;
   }
+  /* モバイルでは禁則を弱めて自動折り返しを許可（はみ出し防止） */
+  @media (max-width: 767px) {
+    .ja-keep {
+      word-break: normal;
+      line-break: auto;
+      overflow-wrap: break-word;
+    }
+  }
 
   /* ============================================
      CSS Variables - Dynamic Theme System
