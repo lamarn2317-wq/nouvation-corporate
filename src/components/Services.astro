@@ -1167,12 +1167,13 @@ const marketPrices = await getMarketPrices();
     }
   }
   @media (max-width: 768px) {
+    /* モバイル 3 列表示：動画部分だけタイトに見せる */
     .instagram-clip-box {
-      height: 240px;
+      height: 170px;
     }
-    /* モバイルの 3 列表示時：ヘッダー隠す translate を緩めて、コンパクトに収める */
+    /* ヘッダー部分（プロフィール）を完全に画面外へ */
     :global(.instagram-media) {
-      transform: translateY(-30px) !important;
+      transform: translateY(-58px) !important;
     }
   }
 
