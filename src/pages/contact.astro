@@ -1,0 +1,657 @@
+---
+export const prerender = true;
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="お問い合わせ | NOUVATION">
+  <Header />
+
+  <main class="bg-[#F6F6EE] min-h-screen">
+    <!-- Hero -->
+    <section class="pt-28 md:pt-36 pb-10 md:pb-14">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+        <p class="text-[#2e7d32] text-xs md:text-sm font-bold tracking-[0.3em] mb-4">CONTACT</p>
+        <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-[1.2] text-[#231815]">
+          <span class="font-maru">お問い合わせ</span>
+        </h1>
+        <p class="text-sm md:text-base text-[#231815]/75 leading-loose ja-keep">
+          ご記入いただいたメールアドレスに、<br class="hidden md:block" />
+          自動で確認メールをお送りします。<br />
+          通常 2〜3 営業日以内に担当より個別にご返信いたします。
+        </p>
+      </div>
+    </section>
+
+    <!-- Form Card -->
+    <section class="pb-24 md:pb-32">
+      <div class="max-w-2xl mx-auto px-4 sm:px-6">
+        <!-- Form -->
+        <form id="contactForm" class="bg-white rounded-3xl shadow-sm border border-[#231815]/10 p-6 md:p-10 space-y-7 md:space-y-8" novalidate>
+          <!-- ハニーポット（人間には不可視、ボットだけが入力） -->
+          <div class="hp-field" aria-hidden="true">
+            <label for="website">Website</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <!-- 氏名 -->
+          <div class="field">
+            <label for="name" class="field-label">
+              <span>お名前</span>
+              <span class="field-req">必須</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              autocomplete="name"
+              placeholder="山田 太郎"
+              class="field-input"
+              aria-describedby="name-error"
+            />
+            <p id="name-error" class="field-error" role="alert"></p>
+          </div>
+
+          <!-- メールアドレス -->
+          <div class="field">
+            <label for="email" class="field-label">
+              <span>メールアドレス</span>
+              <span class="field-req">必須</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              autocomplete="email"
+              inputmode="email"
+              placeholder="sample@example.com"
+              class="field-input"
+              aria-describedby="email-error email-hint"
+            />
+            <p id="email-hint" class="field-hint">ご返信先のメールアドレスをご記入ください</p>
+            <p id="email-error" class="field-error" role="alert"></p>
+          </div>
+
+          <!-- カテゴリ -->
+          <div class="field">
+            <span class="field-label" id="category-label">
+              <span>お問い合わせ種別</span>
+              <span class="field-req">必須</span>
+            </span>
+            <div class="category-group" role="radiogroup" aria-labelledby="category-label" aria-describedby="category-error">
+              <label class="category-option">
+                <input type="radio" name="category" value="法人提携・スポンサー" required class="category-radio" />
+                <span class="category-card">
+                  <span class="category-icon" aria-hidden="true">🏢</span>
+                  <span class="category-text">
+                    <span class="category-title">法人提携・スポンサー</span>
+                    <span class="category-desc">共同企画 / 販路支援 / 契約販売マッチング等</span>
+                  </span>
+                </span>
+              </label>
+              <label class="category-option">
+                <input type="radio" name="category" value="取材・メディア掲載" required class="category-radio" />
+                <span class="category-card">
+                  <span class="category-icon" aria-hidden="true">🎤</span>
+                  <span class="category-text">
+                    <span class="category-title">取材・メディア掲載</span>
+                    <span class="category-desc">取材依頼 / 寄稿 / 出演オファー等</span>
+                  </span>
+                </span>
+              </label>
+            </div>
+            <p id="category-error" class="field-error" role="alert"></p>
+          </div>
+
+          <!-- お問い合わせ内容 -->
+          <div class="field">
+            <label for="message" class="field-label">
+              <span>お問い合わせ内容</span>
+              <span class="field-req">必須</span>
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              rows="6"
+              maxlength="2000"
+              placeholder="お問い合わせ内容をご記入ください。（できるだけ具体的にお書きいただけますと、スムーズにご返信できます）"
+              class="field-input field-textarea"
+              aria-describedby="message-error message-counter"
+            ></textarea>
+            <div class="flex justify-between items-center mt-1.5">
+              <p id="message-error" class="field-error flex-1" role="alert"></p>
+              <p id="message-counter" class="text-xs text-[#231815]/50 font-mono tabular-nums">0 / 2000</p>
+            </div>
+          </div>
+
+          <!-- プライバシーポリシー同意 -->
+          <div class="field">
+            <label class="consent-label">
+              <input type="checkbox" name="consent" id="consent" required class="consent-checkbox" />
+              <span class="consent-text">
+                <a href="/privacy" target="_blank" rel="noopener" class="text-[#2e7d32] underline hover:opacity-80">プライバシーポリシー</a>
+                に同意します
+              </span>
+            </label>
+            <p id="consent-error" class="field-error" role="alert"></p>
+          </div>
+
+          <!-- Submit -->
+          <div class="pt-2">
+            <button
+              type="submit"
+              id="submitBtn"
+              class="submit-btn"
+            >
+              <span class="submit-btn__label">
+                <span>この内容で送信</span>
+                <svg class="w-5 h-5 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                </svg>
+              </span>
+              <span class="submit-btn__loading">
+                <span class="submit-btn__spinner" aria-hidden="true"></span>
+                <span>送信中...</span>
+              </span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Success Card (initially hidden) -->
+        <div id="successCard" class="hidden bg-white rounded-3xl shadow-sm border border-[#2e7d32]/30 p-8 md:p-12 text-center">
+          <div class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-6 rounded-full bg-[#2e7d32]/10 flex items-center justify-center">
+            <svg class="w-10 h-10 md:w-12 md:h-12 text-[#2e7d32]" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+          <h2 class="text-2xl md:text-3xl font-bold text-[#231815] mb-4 font-maru">送信が完了しました</h2>
+          <p class="text-sm md:text-base text-[#231815]/75 leading-loose mb-2">
+            お問い合わせありがとうございます。<br />
+            確認メールをお送りいたしましたのでご確認ください。
+          </p>
+          <p class="text-xs md:text-sm text-[#231815]/60 leading-loose mb-8">
+            通常 2〜3 営業日以内に担当より個別にご返信いたします。<br />
+            メールが届かない場合は迷惑メールフォルダもご確認ください。
+          </p>
+          <a href="/" class="inline-flex items-center gap-2 px-6 py-3 bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold rounded-full text-sm md:text-base transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5">
+            <span>トップページへ戻る</span>
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+
+        <!-- Error Card (initially hidden) -->
+        <div id="errorCard" class="hidden bg-white rounded-3xl shadow-sm border border-red-300 p-6 md:p-8 mt-4">
+          <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01"/></svg>
+            <div class="flex-1">
+              <p class="font-bold text-[#231815] mb-1">送信に失敗しました</p>
+              <p id="errorMessage" class="text-sm text-[#231815]/75 leading-relaxed">時間をおいて再度お試しいただくか、直接 info@nouvation-official.com までご連絡ください。</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  /* ===== Honeypot (人間には不可視) ===== */
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* ===== Field common ===== */
+  .field {
+    display: block;
+  }
+  .field-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #231815;
+    margin-bottom: 0.625rem;
+    letter-spacing: 0.02em;
+  }
+  .field-req {
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: #b91c1c;
+    background: #fee2e2;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    letter-spacing: 0.1em;
+  }
+  .field-input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 1.5px solid rgba(35, 24, 21, 0.12);
+    border-radius: 0.75rem;
+    background: #fafaf7;
+    font-size: 1rem;
+    color: #231815;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .field-input::placeholder {
+    color: rgba(35, 24, 21, 0.32);
+  }
+  .field-input:hover {
+    border-color: rgba(35, 24, 21, 0.22);
+  }
+  .field-input:focus {
+    outline: none;
+    border-color: #2e7d32;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+  }
+  .field-input.is-error {
+    border-color: #dc2626;
+    background: #fef2f2;
+  }
+  .field-input.is-error:focus {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+  }
+  .field-textarea {
+    min-height: 140px;
+    resize: vertical;
+    line-height: 1.7;
+  }
+  .field-hint {
+    font-size: 0.75rem;
+    color: rgba(35, 24, 21, 0.55);
+    margin-top: 0.5rem;
+    line-height: 1.5;
+  }
+  .field-error {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #dc2626;
+    margin-top: 0.5rem;
+    min-height: 0;
+    line-height: 1.5;
+    display: none;
+  }
+  .field-error.is-visible {
+    display: block;
+  }
+
+  /* ===== Category radio cards ===== */
+  .category-group {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+  }
+  @media (min-width: 640px) {
+    .category-group {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .category-option {
+    position: relative;
+    cursor: pointer;
+  }
+  .category-radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .category-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem 1.125rem;
+    border: 1.5px solid rgba(35, 24, 21, 0.12);
+    border-radius: 0.875rem;
+    background: #fafaf7;
+    transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    height: 100%;
+  }
+  .category-option:hover .category-card {
+    border-color: rgba(46, 125, 50, 0.4);
+    background: #ffffff;
+    transform: translateY(-1px);
+  }
+  .category-radio:focus-visible + .category-card {
+    border-color: #2e7d32;
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.18);
+  }
+  .category-radio:checked + .category-card {
+    border-color: #2e7d32;
+    background: #ffffff;
+    box-shadow: 0 0 0 1px #2e7d32, 0 6px 20px -8px rgba(46, 125, 50, 0.3);
+  }
+  .category-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .category-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    text-align: left;
+  }
+  .category-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #231815;
+    line-height: 1.4;
+  }
+  .category-desc {
+    font-size: 0.7rem;
+    color: rgba(35, 24, 21, 0.6);
+    line-height: 1.5;
+  }
+
+  /* ===== Consent checkbox ===== */
+  .consent-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
+    cursor: pointer;
+    padding: 0.875rem 1rem;
+    background: #fafaf7;
+    border: 1.5px solid rgba(35, 24, 21, 0.12);
+    border-radius: 0.75rem;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .consent-label:hover {
+    border-color: rgba(46, 125, 50, 0.3);
+    background: #ffffff;
+  }
+  .consent-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.1rem;
+    border: 2px solid rgba(35, 24, 21, 0.3);
+    border-radius: 0.3rem;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .consent-checkbox:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+  }
+  .consent-checkbox:checked {
+    background: #2e7d32;
+    border-color: #2e7d32;
+  }
+  .consent-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 0px;
+    width: 6px;
+    height: 11px;
+    border: solid white;
+    border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg);
+  }
+  .consent-text {
+    font-size: 0.875rem;
+    color: #231815;
+    line-height: 1.5;
+  }
+
+  /* ===== Submit button ===== */
+  .submit-btn {
+    position: relative;
+    width: 100%;
+    padding: 1.125rem 1.5rem;
+    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.2s ease,
+                opacity 0.2s ease;
+    box-shadow: 0 8px 24px -8px rgba(46, 125, 50, 0.5);
+    letter-spacing: 0.04em;
+    overflow: hidden;
+  }
+  .submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px -8px rgba(46, 125, 50, 0.65);
+  }
+  .submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  .submit-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  .submit-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 8px 24px -8px rgba(46, 125, 50, 0.5),
+                0 0 0 4px rgba(46, 125, 50, 0.3);
+  }
+  .submit-btn__label,
+  .submit-btn__loading {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .submit-btn__loading {
+    display: none;
+  }
+  .submit-btn.is-loading .submit-btn__label {
+    display: none;
+  }
+  .submit-btn.is-loading .submit-btn__loading {
+    display: inline-flex;
+  }
+  .submit-btn__spinner {
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: btn-spin 0.7s linear infinite;
+  }
+  @keyframes btn-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ===== Reduce motion ===== */
+  @media (prefers-reduced-motion: reduce) {
+    .submit-btn,
+    .category-card,
+    .field-input,
+    .consent-label {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  type FieldEl = HTMLInputElement | HTMLTextAreaElement;
+
+  const form = document.getElementById('contactForm') as HTMLFormElement | null;
+  const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement | null;
+  const successCard = document.getElementById('successCard');
+  const errorCard = document.getElementById('errorCard');
+  const errorMessage = document.getElementById('errorMessage');
+  const messageInput = document.getElementById('message') as HTMLTextAreaElement | null;
+  const messageCounter = document.getElementById('message-counter');
+
+  // ===== 文字数カウンター =====
+  if (messageInput && messageCounter) {
+    const updateCounter = () => {
+      const len = messageInput.value.length;
+      messageCounter.textContent = `${len} / 2000`;
+      if (len > 1800) {
+        messageCounter.classList.add('text-amber-600');
+        messageCounter.classList.remove('text-[#231815]/50');
+      } else {
+        messageCounter.classList.remove('text-amber-600');
+        messageCounter.classList.add('text-[#231815]/50');
+      }
+    };
+    messageInput.addEventListener('input', updateCounter);
+    updateCounter();
+  }
+
+  // ===== バリデーション =====
+  type ValidationRule = (value: string) => string | null;
+  const rules: Record<string, ValidationRule> = {
+    name: (v) => !v.trim() ? 'お名前をご入力ください' : v.trim().length > 60 ? 'お名前は60文字以内でご入力ください' : null,
+    email: (v) => {
+      if (!v.trim()) return 'メールアドレスをご入力ください';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())) return '正しいメールアドレスをご入力ください';
+      return null;
+    },
+    message: (v) => {
+      if (!v.trim()) return 'お問い合わせ内容をご入力ください';
+      if (v.trim().length < 10) return 'お問い合わせ内容は10文字以上でご入力ください';
+      if (v.length > 2000) return 'お問い合わせ内容は2000文字以内でご入力ください';
+      return null;
+    },
+  };
+
+  const setFieldError = (fieldName: string, message: string | null) => {
+    const errorEl = document.getElementById(`${fieldName}-error`);
+    const inputEl = document.getElementById(fieldName) as FieldEl | null;
+    if (!errorEl) return;
+    if (message) {
+      errorEl.textContent = message;
+      errorEl.classList.add('is-visible');
+      inputEl?.classList.add('is-error');
+    } else {
+      errorEl.textContent = '';
+      errorEl.classList.remove('is-visible');
+      inputEl?.classList.remove('is-error');
+    }
+  };
+
+  // リアルタイムバリデーション（blur 時）
+  ['name', 'email', 'message'].forEach((fieldName) => {
+    const input = document.getElementById(fieldName) as FieldEl | null;
+    if (!input) return;
+    input.addEventListener('blur', () => {
+      const rule = rules[fieldName];
+      if (rule) setFieldError(fieldName, rule(input.value));
+    });
+    input.addEventListener('input', () => {
+      // エラー状態のフィールドのみ、入力時に再検証してリアルタイム解除
+      if (input.classList.contains('is-error')) {
+        const rule = rules[fieldName];
+        if (rule) setFieldError(fieldName, rule(input.value));
+      }
+    });
+  });
+
+  // ===== 送信 =====
+  if (form && submitBtn) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // 全フィールド検証
+      const data = new FormData(form);
+      const name = String(data.get('name') || '');
+      const email = String(data.get('email') || '');
+      const message = String(data.get('message') || '');
+      const category = String(data.get('category') || '');
+      const consent = data.get('consent') === 'on';
+      const website = String(data.get('website') || ''); // honeypot
+
+      let hasError = false;
+      const nameError = rules.name!(name);
+      const emailError = rules.email!(email);
+      const messageError = rules.message!(message);
+
+      setFieldError('name', nameError);
+      setFieldError('email', emailError);
+      setFieldError('message', messageError);
+
+      if (nameError || emailError || messageError) hasError = true;
+
+      const categoryError = document.getElementById('category-error');
+      if (!category) {
+        if (categoryError) {
+          categoryError.textContent = 'お問い合わせ種別を選択してください';
+          categoryError.classList.add('is-visible');
+        }
+        hasError = true;
+      } else if (categoryError) {
+        categoryError.textContent = '';
+        categoryError.classList.remove('is-visible');
+      }
+
+      const consentError = document.getElementById('consent-error');
+      if (!consent) {
+        if (consentError) {
+          consentError.textContent = 'プライバシーポリシーへの同意が必要です';
+          consentError.classList.add('is-visible');
+        }
+        hasError = true;
+      } else if (consentError) {
+        consentError.textContent = '';
+        consentError.classList.remove('is-visible');
+      }
+
+      if (hasError) {
+        // 最初のエラーフィールドにスクロール
+        const firstError = form.querySelector('.is-error, .field-error.is-visible') as HTMLElement | null;
+        firstError?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      // 送信
+      submitBtn.classList.add('is-loading');
+      submitBtn.disabled = true;
+      errorCard?.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, category, message, website }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ message: '送信に失敗しました' }));
+          throw new Error(err.message || '送信に失敗しました');
+        }
+
+        // 成功 → 成功カード表示・フォーム非表示
+        form.classList.add('hidden');
+        successCard?.classList.remove('hidden');
+        // スムーズに上部へスクロール
+        successCard?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (err) {
+        if (errorCard && errorMessage) {
+          errorMessage.textContent = err instanceof Error ? err.message : '時間をおいて再度お試しください。';
+          errorCard.classList.remove('hidden');
+          errorCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } finally {
+        submitBtn.classList.remove('is-loading');
+        submitBtn.disabled = false;
+      }
+    });
+  }
+</script>
+</Layout>
