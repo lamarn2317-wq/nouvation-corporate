@@ -265,10 +265,13 @@ const {
   }
   
   /* Utility */
-  /* Parallax Background */
+  /* Parallax Background
+     ⚠️ transition: transform は付けない（スクロール毎にJSが書き込むため、
+     補間させると 0.1s 遅れて追従し「揺れ」として知覚される。即時反映が正解） */
   .parallax-bg {
     will-change: transform;
-    transition: transform 0.1s linear;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 
   /* 3D Tilt Card */
@@ -486,31 +489,52 @@ const {
   // ============================================
   // Scroll Progress Bar
   // ============================================
+  // ============================================
+  // 統合スクロールハンドラー
+  // 進捗バー + パララックスを 1 つの requestAnimationFrame に集約
+  // → リスナー競合解消、layout thrashing 防止、iOS URLバー揺れ吸収
+  // ============================================
   const progressBar = document.getElementById('scroll-progress');
-  if (progressBar) {
-    window.addEventListener('scroll', () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = (scrollTop / docHeight) * 100;
-      progressBar.style.width = scrollPercent + '%';
-    }, { passive: true });
-  }
+  const parallaxElements = document.querySelectorAll<HTMLElement>('.parallax-bg');
 
-  // ============================================
-  // Parallax Scrolling
-  // ============================================
-  const parallaxElements = document.querySelectorAll('.parallax-bg');
-  if (parallaxElements.length > 0) {
-    window.addEventListener('scroll', () => {
+  if (progressBar || parallaxElements.length > 0) {
+    let scrollScheduled = false;
+
+    const updateOnScroll = () => {
+      const scrollTop = window.scrollY;
+      // iOS Safari の URL バー伸縮で innerHeight が揺れる問題を回避
+      const viewportH = (window.visualViewport?.height) || window.innerHeight;
+
+      // 進捗バー更新
+      if (progressBar) {
+        const docHeight = document.documentElement.scrollHeight - viewportH;
+        const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = scrollPercent + '%';
+      }
+
+      // パララックス更新
       parallaxElements.forEach((el) => {
-        const speed = parseFloat((el as HTMLElement).dataset.parallaxSpeed || '0.3');
+        const speed = parseFloat(el.dataset.parallaxSpeed || '0.3');
         const parent = el.parentElement;
         if (!parent) return;
         const rect = parent.getBoundingClientRect();
-        const scrollPercent = rect.top / window.innerHeight;
-        (el as HTMLElement).style.transform = `scale(1.1) translateY(${scrollPercent * speed * 100}px)`;
+        const scrollPercent = rect.top / viewportH;
+        // translate3d で GPU 合成を強制（揺れ抑制）
+        el.style.transform = `translate3d(0, ${scrollPercent * speed * 100}px, 0) scale(1.1)`;
       });
+
+      scrollScheduled = false;
+    };
+
+    window.addEventListener('scroll', () => {
+      if (!scrollScheduled) {
+        scrollScheduled = true;
+        requestAnimationFrame(updateOnScroll);
+      }
     }, { passive: true });
+
+    // 初回実行（リロード時の初期位置を正しく反映）
+    updateOnScroll();
   }
 
   // ============================================
