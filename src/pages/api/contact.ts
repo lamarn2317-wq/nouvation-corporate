@@ -14,9 +14,15 @@ import { Resend } from 'resend';
 
 export const prerender = false;
 
-const TO_EMAIL = import.meta.env.CONTACT_EMAIL_TO || 'info@nouvation-official.com';
-const FROM_EMAIL = import.meta.env.CONTACT_EMAIL_FROM || 'NOUVATION <onboarding@resend.dev>';
-const REPLY_TO = import.meta.env.CONTACT_EMAIL_REPLY_TO || 'info@nouvation-official.com';
+// Vercel Functions のランタイム env var は process.env から確実に取れる。
+// import.meta.env はビルド時 inline されるため Vercel ダッシュボードで後から
+// 設定した値が拾えないことがある。process.env 優先で安全側に。
+const getEnv = (key: string): string | undefined =>
+  process.env[key] ?? (import.meta.env as Record<string, string | undefined>)[key];
+
+const TO_EMAIL = getEnv('CONTACT_EMAIL_TO') || 'info@nouvation-official.com';
+const FROM_EMAIL = getEnv('CONTACT_EMAIL_FROM') || 'NOUVATION <onboarding@resend.dev>';
+const REPLY_TO = getEnv('CONTACT_EMAIL_REPLY_TO') || 'info@nouvation-official.com';
 
 interface ContactBody {
   name?: string;
@@ -83,9 +89,12 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   // ===== Resend API キーチェック =====
-  const apiKey = import.meta.env.RESEND_API_KEY;
+  const apiKey = getEnv('RESEND_API_KEY');
   if (!apiKey) {
-    console.error('[contact] RESEND_API_KEY is not set');
+    console.error('[contact] RESEND_API_KEY is not set', {
+      hasProcessEnv: !!process.env.RESEND_API_KEY,
+      hasImportMeta: !!(import.meta.env as Record<string, string | undefined>).RESEND_API_KEY,
+    });
     return jsonResponse(
       { message: 'メール送信が現在利用できません。お手数ですが直接メールでご連絡ください。' },
       500
