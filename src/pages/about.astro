@@ -24,8 +24,40 @@ const companyInfo = [
 
 <Layout title="会社概要 | NOUVATION">
   <Fragment slot="head">
-    <!-- 検索エンジンにインデックスさせない、かつリンクを辿らせない設定 -->
-    <meta name="robots" content="noindex, nofollow" />
+    <!-- ============================================
+         🛡️ 多層 SEO ブロック（日本最高級レベル）
+         ============================================ -->
+    <!-- ① 全クローラー向け：index/follow/archive/snippet/imageindex すべて拒否 -->
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, nocache" />
+    <!-- ② Google 専用に明示（Googlebot は googlebot タグを優先する） -->
+    <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+    <!-- ③ Bing 専用に明示 -->
+    <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+    <!-- ④ Yandex 等その他主要エンジン -->
+    <meta name="yandex" content="noindex, nofollow, noarchive" />
+    <meta name="slurp" content="noindex, nofollow, noarchive" />
+    <!-- ⑤ DuckDuckGo（プライバシー検索）-->
+    <meta name="duckduckbot" content="noindex, nofollow" />
+    <!-- ⑥ AI クローラー対策（OpenAI / Anthropic / Common Crawl 等）-->
+    <meta name="GPTBot" content="noindex, nofollow" />
+    <meta name="ChatGPT-User" content="noindex, nofollow" />
+    <meta name="ClaudeBot" content="noindex, nofollow" />
+    <meta name="anthropic-ai" content="noindex, nofollow" />
+    <meta name="CCBot" content="noindex, nofollow" />
+    <meta name="PerplexityBot" content="noindex, nofollow" />
+    <meta name="Google-Extended" content="noindex, nofollow" />
+    <!-- ⑦ Wayback Machine / インターネットアーカイブを拒否 -->
+    <meta name="archive.org_bot" content="noindex, nofollow, noarchive" />
+    <meta name="ia_archiver" content="noindex, nofollow, noarchive" />
+    <!-- ⑧ OGP / SNS シェア時のプレビューも最小化 -->
+    <meta property="og:title" content="" />
+    <meta property="og:description" content="" />
+    <meta property="og:image" content="" />
+    <meta name="twitter:card" content="summary" />
+    <!-- ⑨ canonical をトップページへ向ける（このページ自体を "代表" させない） -->
+    <link rel="canonical" href="https://nouvation.ai/" />
+    <!-- ⑩ X-Robots-Tag 相当を referrer policy で補強 -->
+    <meta name="referrer" content="no-referrer" />
   </Fragment>
 
   <Header />

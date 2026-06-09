@@ -12,6 +12,13 @@ export default defineConfig({
       changefreq: "weekly",
       priority: 0.7,
       lastmod: new Date(),
+      // noindex ページを sitemap からも除外
+      // → 検索エンジンに存在自体を教えない（多層防御）
+      filter: (page) =>
+        !page.includes("/about") &&
+        !page.includes("/privacy") &&
+        !page.includes("/legal") &&
+        !page.includes("/404"),
     }),
   ],
   // Server output: 既存ページは prerender = true で SSG 維持、
