@@ -1,0 +1,185 @@
+---
+export const prerender = true;
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const companyInfo = [
+  { label: '会社名', value: '合同会社NOUVATION' },
+  { label: '設立', value: '2026年2月19日' },
+  { label: '代表者', value: '代表社員　向井 章人' },
+  { label: '所在地', value: '大阪府八尾市福万寺町2-43' },
+  {
+    label: '事業内容',
+    value: [
+      '① 農業情報メディア運営（公式SNS / 公式LINE / Threads）',
+      '② 農業専門AIサポート「ノヴェル君」',
+      '③ 耕作放棄地マッチングプラットフォーム「farmatch」',
+      '④ 市場価格速報サービス',
+    ],
+  },
+  { label: 'お問い合わせ', value: 'info@nouvation.ai', isEmail: true },
+];
+---
+
+<Layout title="会社概要 | NOUVATION">
+  <Fragment slot="head">
+    <!-- 検索エンジンにインデックスさせない、かつリンクを辿らせない設定 -->
+    <meta name="robots" content="noindex, nofollow" />
+  </Fragment>
+
+  <Header />
+
+  <main class="pt-28 md:pt-36 bg-[#F6F6EE] min-h-screen">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 pb-24 md:pb-32">
+      <!-- Hero -->
+      <div class="text-center mb-12 md:mb-16">
+        <p class="text-[#2e7d32] text-xs md:text-sm font-bold tracking-[0.3em] mb-4">ABOUT</p>
+        <h1 class="text-3xl md:text-5xl font-bold mb-3 leading-[1.2] text-[#231815]">
+          <span class="font-maru">会社概要</span>
+        </h1>
+      </div>
+
+      <!-- Company Info Card -->
+      <div class="about-card">
+        <dl class="divide-y divide-[#231815]/8">
+          {companyInfo.map((item) => (
+            <div class="about-row">
+              <dt class="about-label">{item.label}</dt>
+              <dd class="about-value">
+                {Array.isArray(item.value) ? (
+                  <ul class="about-list">
+                    {item.value.map((line) => <li>{line}</li>)}
+                  </ul>
+                ) : item.isEmail ? (
+                  <a href={`mailto:${item.value}`} class="about-email">{item.value}</a>
+                ) : (
+                  <span>{item.value}</span>
+                )}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      <!-- CTA -->
+      <div class="mt-10 md:mt-12 text-center">
+        <p class="text-xs md:text-sm text-[#231815]/60 leading-loose mb-6">
+          ご相談・お問い合わせは下記フォームよりお気軽にどうぞ。
+        </p>
+        <a href="/contact" class="about-cta">
+          <span>お問い合わせフォームへ</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Back to top -->
+      <div class="mt-12 text-center">
+        <a href="/" class="text-[#2e7d32] font-bold hover:underline text-sm md:text-base">トップページへ戻る</a>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .about-card {
+    background: #ffffff;
+    border: 1px solid rgba(35, 24, 21, 0.08);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 24px -8px rgba(35, 24, 21, 0.04);
+  }
+
+  .about-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 1.5rem 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .about-row {
+      grid-template-columns: 160px 1fr;
+      gap: 2rem;
+      padding: 1.75rem 2rem;
+    }
+  }
+
+  .about-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: rgba(35, 24, 21, 0.5);
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+  }
+  @media (min-width: 640px) {
+    .about-label {
+      font-size: 0.95rem;
+      padding-top: 0.1rem;
+    }
+  }
+
+  .about-value {
+    font-size: 0.95rem;
+    color: #231815;
+    line-height: 1.7;
+    font-weight: 500;
+    margin: 0;
+  }
+  @media (min-width: 640px) {
+    .about-value {
+      font-size: 1rem;
+    }
+  }
+
+  .about-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .about-list li {
+    padding: 0.15rem 0;
+    line-height: 1.85;
+  }
+
+  .about-email {
+    color: #2e7d32;
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(46, 125, 50, 0.4);
+    transition: all 0.15s ease;
+    font-weight: 600;
+  }
+  .about-email:hover {
+    border-bottom-color: #2e7d32;
+    opacity: 0.85;
+  }
+
+  .about-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.75rem;
+    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 6px 18px -6px rgba(46, 125, 50, 0.5);
+    letter-spacing: 0.04em;
+  }
+  @media (min-width: 768px) {
+    .about-cta {
+      padding: 1rem 2rem;
+      font-size: 0.95rem;
+    }
+  }
+  .about-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -6px rgba(46, 125, 50, 0.6);
+  }
+</style>
