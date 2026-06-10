@@ -7,7 +7,8 @@ import Footer from '../components/Footer.astro';
 const companyInfo = [
   { label: '会社名', value: '合同会社NOUVATION' },
   { label: '設立', value: '2026年2月19日' },
-  { label: '代表者', value: '代表社員　向井 章人' },
+  // 代表者名はテキスト掲載せず画像で表示（検索エンジン・スクレイパーに名前を読ませないため）
+  { label: '代表者', value: '代表社員', isRepImage: true },
   { label: '所在地', value: '大阪府八尾市福万寺町2-43' },
   {
     label: '事業内容',
@@ -85,6 +86,12 @@ const companyInfo = [
                   </ul>
                 ) : item.isEmail ? (
                   <a href={`mailto:${item.value}`} class="about-email">{item.value}</a>
+                ) : item.isRepImage ? (
+                  <span class="about-rep">
+                    {item.value}
+                    {/* 氏名はテキスト化せず画像表示（alt も空にして機械可読にしない） */}
+                    <img src="/images/about_rep.png" alt="" width="282" height="73" decoding="async" class="about-rep__name" />
+                  </span>
                 ) : (
                   <span>{item.value}</span>
                 )}
@@ -175,6 +182,20 @@ const companyInfo = [
   .about-list li {
     padding: 0.15rem 0;
     line-height: 1.85;
+  }
+
+  /* 代表者名（画像表示）：周囲のテキストとサイズ・ベースラインを揃える */
+  .about-rep {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.55em;
+  }
+  .about-rep__name {
+    height: 1.15em;
+    width: auto;
+    transform: translateY(0.18em);
+    user-select: none;
+    -webkit-user-drag: none;
   }
 
   .about-email {
