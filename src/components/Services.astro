@@ -647,8 +647,52 @@ const marketPrices = await getMarketPrices();
     itemFilter.addEventListener('change', updateChart);
     marketFilter.addEventListener('change', updateChart);
 
-    // 初期状態で最初の品目を選択
-    if (items.length > 0) itemFilter.value = items[0];
+    // 初期表示：トレンド（方向性のある値動き）が一番見える品目×市場を自動選択する。
+    // 固定で items[0]（きゅうり）にすると、きゅうり×仙台のように凪いだ組み合わせが
+    // 初期表示になり LIVE MONITOR が一直線に見えて印象が悪いため。
+    // スコア = |始点→終点の変化率| × (0.5 + 値動きの一貫性)。
+    // 振れ幅だけだとギザギザのノイズ型が選ばれるので、方向性と単調性を重視する。
+    function pickInitialCombo(): { item: string; market: string } | null {
+      let best: { item: string; market: string; score: number } | null = null;
+      for (const item of items) {
+        for (const market of markets) {
+          const series = prices
+            .filter(p => p.item === item && p.market === market)
+            .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+          if (series.length < 2) continue;
+          // updateChart と同じ「最新日から7日」のウィンドウで評価
+          const baseDay = new Date(series[series.length - 1].date);
+          const today = new Date(baseDay.getFullYear(), baseDay.getMonth(), baseDay.getDate());
+          const weekAgo = new Date(today);
+          weekAgo.setDate(today.getDate() - 7);
+          const wk = series
+            .filter(p => { const d = new Date(p.date); return d >= weekAgo && d <= today; })
+            .map(p => p.price);
+          if (wk.length < 4) continue;
+          const avg = wk.reduce((a, b) => a + b, 0) / wk.length;
+          if (!avg) continue;
+          const netRate = Math.abs(wk[wk.length - 1] - wk[0]) / avg;
+          let pos = 0, neg = 0;
+          for (let i = 1; i < wk.length; i++) {
+            if (wk[i] > wk[i - 1]) pos++;
+            else if (wk[i] < wk[i - 1]) neg++;
+          }
+          const mono = (wk.length - 1) ? Math.abs(pos - neg) / (wk.length - 1) : 0;
+          const score = netRate * (0.5 + mono);
+          if (!best || score > best.score) best = { item, market, score };
+        }
+      }
+      return best;
+    }
+
+    // 初期状態：動きのある組み合わせを優先。見つからなければ最初の品目。
+    const initialCombo = pickInitialCombo();
+    if (initialCombo) {
+      itemFilter.value = initialCombo.item;
+      marketFilter.value = initialCombo.market;
+    } else if (items.length > 0) {
+      itemFilter.value = items[0];
+    }
     updateChart();
 
     // ============================================================
