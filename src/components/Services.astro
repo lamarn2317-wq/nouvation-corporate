@@ -1158,12 +1158,12 @@ const marketPrices = await getMarketPrices();
 
   /* はみ出したヘッダーと、下すぎるフッターをカットする */
   .instagram-clip-box {
-    height: 348px; /* 3つ並べるために高さを抑える（下側の黒帯をカット） */
+    height: 375px; /* 3つ並べるために高さを少し抑える（最下部の黒帯を5pxだけカット） */
     overflow: hidden;
   }
   @media (max-width: 1024px) {
     .instagram-clip-box {
-      height: 405px;
+      height: 432px;
     }
   }
   @media (max-width: 768px) {
