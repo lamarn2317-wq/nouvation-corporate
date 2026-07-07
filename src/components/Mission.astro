@@ -8,10 +8,13 @@
     <div class="w-full h-[40vh] md:h-[60vh] overflow-hidden mb-16 md:mb-24 relative fade-up">
       <div class="parallax-bg absolute inset-0 scale-110" data-parallax-speed="0.2">
         <video
+          id="mission-video"
           autoplay
           muted
           loop
           playsinline
+          preload="metadata"
+          poster="/images/mission_poster.jpg"
           class="w-full h-full object-cover"
           aria-label="NOUVATION MISSION"
         >
@@ -70,3 +73,26 @@
   </div>
 
 </section>
+
+<script>
+  // 背景動画を確実に再生させる。autoplay属性だけだと Safari が
+  // 画面外/省電力時に再生しそこね、poster も無いと透明のまま「空白」に見えるため、
+  // 明示 play() ＋ ビューポート進入時の再生で取りこぼしを防ぐ。
+  function initMissionVideo() {
+    const v = document.getElementById('mission-video') as HTMLVideoElement | null;
+    if (!v) return;
+    v.muted = true;
+    const kick = () => { const p = v.play(); if (p) p.catch(() => {}); };
+    kick();
+    v.addEventListener('loadeddata', kick, { once: true });
+    v.addEventListener('canplay', kick, { once: true });
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) kick(); });
+      }, { threshold: 0.1 });
+      io.observe(v);
+    }
+  }
+  document.addEventListener('astro:page-load', initMissionVideo);
+  initMissionVideo();
+</script>
