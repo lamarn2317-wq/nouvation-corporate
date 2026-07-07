@@ -15,7 +15,7 @@
     muted
     loop
     playsinline
-    preload="auto"
+    preload="metadata"
     poster="/images/fv_poster.jpg"
     class="absolute inset-0 w-full h-full object-cover"
     aria-label="農業の風景"
@@ -122,6 +122,21 @@
     const video = document.getElementById('fv-video') as HTMLVideoElement;
 
     if (!overlay || !line || !title || !desc) return;
+
+    // 動画はオープニングの黒オーバーレイ裏で「最初から」再生を開始しておく。
+    // play() をオープニング完了(約1.9秒後)まで遅らせると、Safari 等で autoplay が
+    // 抑制される/バッファ未完了のとき、幕が晴れた瞬間に最初のフレームが静止して
+    // 「動画が止まっている」ように見えるため。黒幕で隠れているので演出の見た目は変わらない。
+    if (video) {
+      video.muted = true;
+      const kickPlay = () => {
+        const p = video.play();
+        if (p !== undefined) p.catch(() => { video.muted = true; video.play().catch(() => {}); });
+      };
+      kickPlay();
+      video.addEventListener('loadeddata', kickPlay, { once: true });
+      video.addEventListener('canplay', kickPlay, { once: true });
+    }
 
     // 1. 横線アニメーションが完了するのを確実に待つ
     line.addEventListener('animationend', () => {
