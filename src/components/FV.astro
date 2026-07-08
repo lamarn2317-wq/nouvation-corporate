@@ -15,7 +15,7 @@
     muted
     loop
     playsinline
-    preload="metadata"
+    preload="auto"
     poster="/images/fv_poster.jpg"
     class="absolute inset-0 w-full h-full object-cover"
     aria-label="農業の風景"
@@ -148,8 +148,20 @@
         title.style.opacity = "1";
         title.classList.add('zoom-in');
 
-        // 4. タイトルのズームが進んだ後（0.8秒後）に背景動画をフェードイン開始
-        setTimeout(() => {
+        // 4. 幕を晴らす瞬間を、固定タイマーではなく「動画の再生準備完了」にゲートする。
+        //    演出上の 0.8 秒の「間」は維持しつつ、その後 video.readyState>=3
+        //    （または playing/canplaythrough）を満たしてから幕を晴らす。
+        //    preload=auto でヒーロー動画を t=0 から先読みしているため、通常回線では
+        //    この 0.8 秒地点で既に準備完了＝従来と同じ約1.9秒で幕が晴れる。
+        //    cold-load で未準備の遅い回線のみ、準備できるまで待って幕を晴らす
+        //    （＝幕が晴れた瞬間のフリーズを防ぐ）。上限 3500ms で強制的に晴らして保険。
+        let revealed = false;
+        const REVEAL_CAP_MS = 3500;
+
+        const revealBg = () => {
+          if (revealed) return;      // once ガード（多重発火防止）
+          revealed = true;
+
           overlay.classList.add('fade-out');
 
           if (video) {
@@ -173,6 +185,16 @@
           setTimeout(() => {
             overlay.style.display = 'none';
           }, 1200);
+        };
+
+        setTimeout(() => {
+          if (!video || video.readyState >= 3) {
+            revealBg();
+          } else {
+            video.addEventListener('playing', revealBg, { once: true });
+            video.addEventListener('canplaythrough', revealBg, { once: true });
+            setTimeout(revealBg, REVEAL_CAP_MS); // 遅い回線の保険（黒幕を残し続けない）
+          }
         }, 800);
       }, 100);
     }, { once: true });
