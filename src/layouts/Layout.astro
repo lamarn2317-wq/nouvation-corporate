@@ -1,4 +1,6 @@
 ---
+import Analytics from '@vercel/analytics/astro';
+
 interface Props {
   title?: string;
   description?: string;
@@ -53,6 +55,7 @@ const {
     <div id="scroll-progress" class="fixed top-0 left-0 h-[3px] z-[9999]" style="width: 0%; background: linear-gradient(90deg, #2e7d32, #D4FF00, #2e7d32); box-shadow: 0 0 10px #D4FF00, 0 0 20px rgba(212, 255, 0, 0.3);"></div>
     <div class="noise-texture"></div>
     <slot />
+    <Analytics />
   </body>
 </html>
 
