@@ -14,8 +14,9 @@ export default defineConfig({
       lastmod: new Date(),
       // noindex ページを sitemap からも除外
       // → 検索エンジンに存在自体を教えない（多層防御）
+      // ※ /about（会社概要）は運営者情報として index させる方針のため除外しない。
+      //   代表者氏名は本文で画像表示（alt 空）にしており機械可読ではない。
       filter: (page) =>
-        !page.includes("/about") &&
         !page.includes("/privacy") &&
         !page.includes("/legal") &&
         !page.includes("/404"),
